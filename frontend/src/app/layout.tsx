@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AegisHealth AI — Universal Clinical Intelligence & Safety Verification",
+  title: "LABFLOW — Laboratory Workflow Management Platform",
   description:
-    "Production-grade Clinical Decision Support Platform with sub-second multi-agent debate verification, dual-persona synthesis, and FHIR interoperability.",
+    "Enterprise B2B Laboratory Workflow Management Platform. Manage orders, samples, lab processing, result review, and reports from sample to insight.",
 };
 
 export default function RootLayout({
@@ -26,9 +26,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100 selection:bg-sky-500/20 selection:text-sky-300">
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
         {children}
       </body>
     </html>
