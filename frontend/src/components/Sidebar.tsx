@@ -31,6 +31,7 @@ export type NavView =
   | "team"
   | "settings"
   | "login"
+  | "signup"
   | "landing";
 
 interface SidebarProps {
