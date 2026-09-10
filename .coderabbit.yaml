@@ -1,0 +1,4 @@
+# Pre-configured AI code review rules
+language: "en-US"
+reviews:
+  profile: "default"
