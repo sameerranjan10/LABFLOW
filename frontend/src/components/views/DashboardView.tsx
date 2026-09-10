@@ -198,6 +198,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <td className="py-3 px-4 whitespace-nowrap">
                     <div className="font-semibold text-slate-900">{ord.patient.name}</div>
                     <div className="text-[11px] text-slate-400 font-mono">{ord.patient.mrn}</div>
+                    {ord.patient.email && (
+                      <div className="text-[10px] text-indigo-600 font-sans truncate max-w-[170px]" title={ord.patient.email}>
+                        ✉ {ord.patient.email}
+                      </div>
+                    )}
                   </td>
                   <td className="py-3 px-4 text-slate-700 font-medium max-w-xs truncate">
                     {ord.tests.join(", ")}

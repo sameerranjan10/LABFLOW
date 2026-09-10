@@ -16,6 +16,7 @@ import {
   ExceptionItem,
   WorkflowStageMetric,
   TestResult,
+  ResultParameter,
   TeamMember,
   LabStage,
 } from "@/data/labflowData";
@@ -73,7 +74,7 @@ export interface SentWhatsAppRecord {
   patientName: string;
   message: string;
   timestamp: string;
-  status: "Delivered" | "Sent" | "Pending";
+  status: "Delivered" | "Sent" | "Pending" | "Failed";
   messageId: string;
   directLink?: string;
   notes?: string;
@@ -218,6 +219,7 @@ export function createOrder(order: Partial<LabOrder> & { sampleType?: string; co
   order: LabOrder;
   sample: LabSample;
   report: LabReport;
+  result?: TestResult;
 } {
   const db = readDatabase();
 
@@ -229,13 +231,17 @@ export function createOrder(order: Partial<LabOrder> & { sampleType?: string; co
   const newOrder: LabOrder = {
     id: orderId,
     sampleId: sampleId,
-    patient: order.patient || {
+    patient: order.patient ? {
+      ...order.patient,
+      email: order.patient.email || "",
+    } : {
       id: `PAT-${Date.now().toString().slice(-4)}`,
       name: "Anonymous Patient",
       age: 40,
       gender: "Male",
       phone: "+91 98765 43210",
       mrn: `MRN-${Math.floor(100000 + Math.random() * 900000)}`,
+      email: "",
     },
     tests: order.tests && order.tests.length > 0 ? order.tests : ["Complete Blood Count (CBC)"],
     priority: order.priority || "Normal",
@@ -295,10 +301,14 @@ export function createOrder(order: Partial<LabOrder> & { sampleType?: string; co
   if (!db.orders) db.orders = [];
   if (!db.samples) db.samples = [];
   if (!db.reports) db.reports = [];
+  if (!db.results) db.results = [];
+
+  const newResult = generateTestResultForOrder(newOrder);
 
   db.orders.unshift(newOrder);
   db.samples.unshift(newSample);
   db.reports.unshift(newReport);
+  db.results.unshift(newResult);
 
   // Update workflow stage count
   const orderedStage = db.workflowStages.find((st) => st.key === "ORDERED");
@@ -318,13 +328,13 @@ export function createOrder(order: Partial<LabOrder> & { sampleType?: string; co
     action: "ORDER_CREATED",
     user: newOrder.doctorName || "Physician",
     role: "Doctor",
-    details: `Order ${orderId} created for patient ${newOrder.patient.name} (${newOrder.patient.mrn}) with sample ${sampleId} & report ${reportId}.`,
+    details: `Order ${orderId} created for patient ${newOrder.patient.name} (${newOrder.patient.mrn}) with sample ${sampleId}, report ${reportId} & test result ${newResult.id}.`,
     location: newOrder.location,
   });
 
   writeDatabase(db);
 
-  return { order: newOrder, sample: newSample, report: newReport };
+  return { order: newOrder, sample: newSample, report: newReport, result: newResult };
 }
 
 // SAMPLE OPERATIONS
@@ -452,25 +462,170 @@ export function rejectSample(sampleId: string, reason: string, operator: string 
 }
 
 // TEST RESULTS OPERATIONS
+export function generateTestResultForOrder(order: LabOrder): TestResult {
+  const testsStr = (order.tests || []).join(" ").toLowerCase();
+  let instrument = "Sysmex XN-1000 Hematology System";
+  let comments = "Pathologist medical review: Parameter observations correlate with clinical requisition. Biological reference ranges validated.";
+  const parameters: ResultParameter[] = [];
+
+  if (testsStr.includes("cbc") || testsStr.includes("blood count") || testsStr.includes("hemogram")) {
+    instrument = "Sysmex XN-1000 Automated Hematology";
+    comments = "Hematology review: Hemoglobin, red cell mass, and thrombocyte indices are stable. Differential leukocyte count verified.";
+    parameters.push(
+      { name: "Hemoglobin (Hb)", result: 13.4, unit: "g/dL", referenceRange: "12.0 – 16.0", flag: "Normal", status: "Verified" },
+      { name: "Total Leukocyte Count (WBC)", result: 11.2, unit: "10³/µL", referenceRange: "4.0 – 11.0", flag: "High", status: "Pending Review" },
+      { name: "Platelet Count", result: 245, unit: "10³/µL", referenceRange: "150 – 450", flag: "Normal", status: "Verified" },
+      { name: "Red Blood Cells (RBC)", result: 4.45, unit: "10⁶/µL", referenceRange: "4.0 – 5.2", flag: "Normal", status: "Verified" },
+      { name: "Hematocrit (PCV)", result: 39.5, unit: "%", referenceRange: "36.0 – 46.0", flag: "Normal", status: "Verified" },
+      { name: "Neutrophils", result: 72, unit: "%", referenceRange: "40 – 70", flag: "High", status: "Pending Review" },
+      { name: "Lymphocytes", result: 22, unit: "%", referenceRange: "20 – 45", flag: "Normal", status: "Verified" },
+      { name: "Monocytes", result: 4, unit: "%", referenceRange: "2 – 8", flag: "Normal", status: "Verified" },
+      { name: "Eosinophils", result: 2, unit: "%", referenceRange: "1 – 6", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("lipid") || testsStr.includes("cholesterol")) {
+    instrument = "Cobas 8000 c702 Clinical Chemistry";
+    comments = "Lipid panel analysis: Moderate borderline hypercholesterolemia with elevated non-HDL lipid fractions. Dietary counseling advised.";
+    parameters.push(
+      { name: "Total Cholesterol", result: 218, unit: "mg/dL", referenceRange: "< 200", flag: "High", status: "Pending Review" },
+      { name: "HDL Cholesterol (Good)", result: 44, unit: "mg/dL", referenceRange: "> 40", flag: "Normal", status: "Verified" },
+      { name: "LDL Cholesterol (Calculated)", result: 138, unit: "mg/dL", referenceRange: "< 100", flag: "High", status: "Pending Review" },
+      { name: "Serum Triglycerides", result: 175, unit: "mg/dL", referenceRange: "< 150", flag: "High", status: "Pending Review" },
+      { name: "VLDL Cholesterol", result: 35, unit: "mg/dL", referenceRange: "10 – 30", flag: "High", status: "Pending Review" },
+      { name: "Total / HDL Ratio", result: 4.95, unit: "Ratio", referenceRange: "< 4.5", flag: "High", status: "Pending Review" }
+    );
+  }
+
+  if (testsStr.includes("hba1c") || testsStr.includes("glucose") || testsStr.includes("sugar")) {
+    instrument = "Tosoh G8 Automated HPLC Analyzer";
+    comments = "Glycated hemoglobin fraction within non-diabetic target index. Fasting plasma glucose correlates with adequate glycemic control.";
+    parameters.push(
+      { name: "Fasting Blood Glucose", result: 96, unit: "mg/dL", referenceRange: "70 – 99", flag: "Normal", status: "Verified" },
+      { name: "Glycated Hemoglobin (HbA1c)", result: 5.6, unit: "%", referenceRange: "< 5.7", flag: "Normal", status: "Verified" },
+      { name: "Estimated Average Glucose (eAG)", result: 114, unit: "mg/dL", referenceRange: "90 – 120", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("liver") || testsStr.includes("lft")) {
+    instrument = "Cobas 8000 c702 Clinical Chemistry";
+    comments = "Hepatic biomarker evaluation: Transaminases, bilirubin clearance, and total synthetic protein concentrations within normal limits.";
+    parameters.push(
+      { name: "Total Bilirubin", result: 0.85, unit: "mg/dL", referenceRange: "0.2 – 1.2", flag: "Normal", status: "Verified" },
+      { name: "Direct Bilirubin", result: 0.22, unit: "mg/dL", referenceRange: "0.0 – 0.3", flag: "Normal", status: "Verified" },
+      { name: "SGOT / AST", result: 28, unit: "U/L", referenceRange: "10 – 40", flag: "Normal", status: "Verified" },
+      { name: "SGPT / ALT", result: 32, unit: "U/L", referenceRange: "7 – 56", flag: "Normal", status: "Verified" },
+      { name: "Alkaline Phosphatase (ALP)", result: 84, unit: "U/L", referenceRange: "44 – 147", flag: "Normal", status: "Verified" },
+      { name: "Total Protein", result: 7.2, unit: "g/dL", referenceRange: "6.0 – 8.3", flag: "Normal", status: "Verified" },
+      { name: "Serum Albumin", result: 4.3, unit: "g/dL", referenceRange: "3.5 – 5.0", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("kidney") || testsStr.includes("kft") || testsStr.includes("renal") || testsStr.includes("electrolyte")) {
+    instrument = "Beckman Coulter AU5800 Analyzer";
+    comments = "Renal function profiling: Glomerular filtration capacity normal. Serum electrolytes and nitrogenous clearance adequate.";
+    parameters.push(
+      { name: "Serum Creatinine", result: 0.92, unit: "mg/dL", referenceRange: "0.60 – 1.20", flag: "Normal", status: "Verified" },
+      { name: "Blood Urea Nitrogen (BUN)", result: 14.5, unit: "mg/dL", referenceRange: "7.0 – 20.0", flag: "Normal", status: "Verified" },
+      { name: "Serum Uric Acid", result: 4.6, unit: "mg/dL", referenceRange: "3.5 – 7.2", flag: "Normal", status: "Verified" },
+      { name: "Serum Sodium (Na+)", result: 140, unit: "mEq/L", referenceRange: "135 – 145", flag: "Normal", status: "Verified" },
+      { name: "Serum Potassium (K+)", result: 4.2, unit: "mEq/L", referenceRange: "3.5 – 5.1", flag: "Normal", status: "Verified" },
+      { name: "Serum Chloride (Cl-)", result: 101, unit: "mEq/L", referenceRange: "96 – 106", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("thyroid") || testsStr.includes("tsh") || testsStr.includes("t3") || testsStr.includes("t4")) {
+    instrument = "Abbott Architect i2000SR Immunoassay";
+    comments = "Thyroid function assessment: TSH level within standard therapeutic baseline. Free peripheral thyronine levels normal.";
+    parameters.push(
+      { name: "Total Triiodothyronine (T3)", result: 1.25, unit: "ng/mL", referenceRange: "0.80 – 2.00", flag: "Normal", status: "Verified" },
+      { name: "Total Thyroxine (T4)", result: 8.4, unit: "µg/dL", referenceRange: "5.1 – 14.1", flag: "Normal", status: "Verified" },
+      { name: "Thyroid Stimulating Hormone (TSH)", result: 2.15, unit: "µIU/mL", referenceRange: "0.27 – 4.20", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("d-dimer") || testsStr.includes("dimer")) {
+    instrument = "Stago Compact Max Coagulation";
+    comments = "Hemostasis profile: D-Dimer levels normal. Coagulation cascade and fibrin turnover within physiological limits.";
+    parameters.push(
+      { name: "D-Dimer Quantitative", result: 0.28, unit: "µg/mL FEU", referenceRange: "< 0.50", flag: "Normal", status: "Verified" },
+      { name: "Prothrombin Time (PT)", result: 12.2, unit: "seconds", referenceRange: "11.0 – 13.5", flag: "Normal", status: "Verified" },
+      { name: "INR Ratio", result: 1.04, unit: "Ratio", referenceRange: "0.85 – 1.15", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("urine")) {
+    instrument = "Sysmex UN-Series Automated Urinalysis";
+    comments = "Urinalysis examination: Physical and microscopic examination negative for active infection, cast formation, or nephrotic proteinuria.";
+    parameters.push(
+      { name: "Specific Gravity", result: "1.018", unit: "", referenceRange: "1.005 – 1.030", flag: "Normal", status: "Verified" },
+      { name: "pH", result: "6.0", unit: "", referenceRange: "4.5 – 8.0", flag: "Normal", status: "Verified" },
+      { name: "Urine Protein", result: "Negative", unit: "", referenceRange: "Negative", flag: "Normal", status: "Verified" },
+      { name: "Urine Glucose", result: "Nil", unit: "", referenceRange: "Nil", flag: "Normal", status: "Verified" },
+      { name: "Pus Cells (WBC)", result: "1–2", unit: "/ HPF", referenceRange: "0 – 5", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  // Fallback if no specific panel matched
+  if (parameters.length === 0) {
+    parameters.push(
+      { name: "Hemoglobin (Hb)", result: 12.8, unit: "g/dL", referenceRange: "12.0 – 16.0", flag: "Normal", status: "Verified" },
+      { name: "Total Leukocyte Count (WBC)", result: 8.4, unit: "10³/µL", referenceRange: "4.0 – 11.0", flag: "Normal", status: "Verified" },
+      { name: "Platelet Count", result: 220, unit: "10³/µL", referenceRange: "150 – 450", flag: "Normal", status: "Verified" },
+      { name: "Fasting Blood Glucose", result: 92, unit: "mg/dL", referenceRange: "70 – 99", flag: "Normal", status: "Verified" },
+      { name: "Serum Creatinine", result: 0.88, unit: "mg/dL", referenceRange: "0.60 – 1.20", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  return {
+    id: `RES-${order.id.replace("ORD-", "")}`,
+    orderId: order.id,
+    sampleId: order.sampleId,
+    patient: order.patient,
+    testName: order.tests && order.tests.length > 0 ? order.tests.join(", ") : "Complete Blood Count (CBC)",
+    instrument,
+    completedAt: order.createdAt || new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    reviewer: order.doctorName || "Dr. Arvind Swaminathan, MD",
+    status: order.currentStage === "RELEASED" ? "Approved" : "Pending Review",
+    comments,
+    parameters,
+  };
+}
+
 export function getTestResults(orderId?: string): TestResult[] {
   const db = readDatabase();
-  let results = db.results && db.results.length > 0 ? db.results : [DEMO_TEST_RESULT];
+  let updated = false;
 
-  results = results.map((r: any) => {
-    if (!r.patient) {
-      r.patient = {
-        id: r.patientId || "P-84920",
-        name: r.patientName || "Aditi Rao",
-        age: r.age || 47,
-        gender: r.gender || "Female",
-        phone: r.phone || "+91 98765 43210",
-        mrn: r.mrn || "MRN-84920",
-      };
+  if (!db.results) {
+    db.results = [];
+    updated = true;
+  }
+
+  // Ensure every order in db.orders has a corresponding test result in db.results
+  if (db.orders && Array.isArray(db.orders)) {
+    for (const order of db.orders) {
+      const existingResult = db.results.find(
+        (r) => r.orderId === order.id || r.id === `RES-${order.id.replace("ORD-", "")}`
+      );
+      if (!existingResult) {
+        const synResult = generateTestResultForOrder(order);
+        db.results.push(synResult);
+        updated = true;
+      } else {
+        // Sync patient demographics and email
+        if (order.patient && (!existingResult.patient || !existingResult.patient.email)) {
+          existingResult.patient = { ...existingResult.patient, ...order.patient };
+          updated = true;
+        }
+      }
     }
-    if (!r.instrument) r.instrument = "Sysmex XN-1000 (Serial #SX-9941)";
-    if (!r.completedAt) r.completedAt = "11:15 AM";
-    return r as TestResult;
-  });
+  }
+
+  if (updated) {
+    writeDatabase(db);
+  }
+
+  let results = db.results && db.results.length > 0 ? db.results : [DEMO_TEST_RESULT];
 
   if (orderId) {
     return results.filter((r) => r.orderId === orderId);
@@ -511,18 +666,35 @@ export function verifyTestResult(
   comments?: string
 ): TestResult | null {
   const db = readDatabase();
-  let result = db.results.find((r) => r.id === resultId);
-  if (!result) {
-    result = db.results[0]; // default demo result if id matches general
+  const q = (resultId || "").trim().toLowerCase();
+  let result = db.results.find(
+    (r) =>
+      r.id.toLowerCase() === q ||
+      r.orderId.toLowerCase() === q ||
+      (r.sampleId && r.sampleId.toLowerCase() === q) ||
+      (r.patient?.name && r.patient.name.toLowerCase() === q)
+  );
+  if (!result && (resultId === "DEMO_TEST_RESULT" || !resultId)) {
+    result = db.results[0];
   }
+
+  if (!result) return null;
 
   result.status = "Approved";
   result.reviewer = reviewer;
   if (comments) result.comments = comments;
-  result.parameters = result.parameters.map((p) => ({ ...p, status: "Verified" }));
+  if (result.parameters) {
+    result.parameters = result.parameters.map((p) => ({ ...p, status: "Verified" }));
+  }
 
   // Advance associated sample and order
   updateSampleStage(result.sampleId, "RELEASED", reviewer, "Pathology Office", "Medical sign-off complete.");
+
+  const order = db.orders.find((o) => o.id === result?.orderId);
+  if (order) {
+    order.status = "Completed";
+    order.currentStage = "RELEASED";
+  }
 
   // Also update corresponding report
   const report = db.reports.find((r) => r.orderId === result?.orderId);
@@ -539,7 +711,7 @@ export function verifyTestResult(
     action: "RESULT_VERIFIED_SIGN_OFF",
     user: reviewer,
     role: "Pathologist",
-    details: `Test results for order ${result.orderId} digitally verified and signed by pathologist.`,
+    details: `Test results for order ${result.orderId} (${result.patient?.name || "Patient"}) digitally verified and signed by pathologist.`,
     location: "Main Pathology Department",
   });
 
@@ -852,6 +1024,426 @@ export function logSentWhatsApp(record: SentWhatsAppRecord): SentWhatsAppRecord 
 export function getSentWhatsApp(): SentWhatsAppRecord[] {
   const db = readDatabase();
   return db.sentWhatsApp || [];
+}
+
+// RESILIENCE & FAILURE SIMULATION ENGINE (PHASE 3)
+export function triggerFailureSimulation(scenario: string) {
+  const db = readDatabase();
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const dateStr = now.toISOString().split("T")[0];
+
+  if (scenario === "ANALYZER_MAINTENANCE") {
+    // Inject Analyzer Failure Alert
+    db.alerts.unshift({
+      id: "ALT-SIM-ANALYZER",
+      category: "Critical",
+      title: "Sysmex XN-1000: Laser Sensor Drift (>2.5 SD)",
+      description: "Automated optical flow cytometry sensor drift detected. Sysmex XN-1000 shifted to Maintenance mode. Reagent lot verification and 2-point optical recalibration required.",
+      timestamp: "Just now",
+      entityId: "SYS-XN-1000",
+      actionable: true,
+    });
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "ANALYZER_MAINTENANCE_TRIGGERED",
+      user: "Auto-Analyzer QC Sentinel",
+      role: "System",
+      details: "Sysmex XN-1000 optical flow sensor drifted by +2.8 SD. Ingestion queue halted. Pending specimens routed to backup Sysmex workstation.",
+      location: "Main Hematology Section",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "ACTIVE_SIMULATION",
+      alertId: "ALT-SIM-ANALYZER",
+      affectedEntity: "Sysmex XN-1000",
+      impact: "Workstation halted, backup routing engaged",
+      recoveryAction: "Click 'Recalibrate & Restore' to run optical prime cycle.",
+    };
+  }
+
+  if (scenario === "SAMPLE_REJECTION") {
+    // Reject target sample
+    const sample = db.samples[0] || { id: "SMP-20491", orderId: "ORD-10294", patient: { name: "Aditi Rao" } };
+    sample.status = "Rejected";
+    if (sample.timeline) {
+      sample.timeline.unshift({
+        id: `tl-sim-rej-${Date.now()}`,
+        timestamp: timeStr,
+        date: dateStr,
+        event: "Pre-Analytical Specimen Rejection",
+        location: "Accessioning Bench",
+        operator: "Lead Accessioning Tech",
+        details: "REJECTED: Severe in-vitro hemolysis (Hemolysis Index > 500 mg/dL). Pre-analytical tube invalid for potassium / LDH testing. Automated redraw requisition ORD-REDRAW-" + sample.id + " generated.",
+        status: "completed",
+      });
+    }
+
+    db.alerts.unshift({
+      id: "ALT-SIM-REJ",
+      category: "Rejected",
+      title: `Sample ${sample.id} Rejected (Gross Hemolysis)`,
+      description: `Specimen ${sample.id} rejected due to gross in-vitro hemolysis. Automated redraw requisition ORD-REDRAW-${sample.id} queued for phlebotomy.`,
+      timestamp: "Just now",
+      entityId: sample.id,
+      actionable: true,
+    });
+
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "SAMPLE_REJECTED_PREANALYTICAL",
+      user: "Lead Accessioning Tech",
+      role: "Technologist",
+      details: `Specimen ${sample.id} failed pre-analytical inspection (Hemolysis Index > 500). Redraw order ORD-REDRAW-${sample.id} created.`,
+      location: "Central Accessioning Lab",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "ACTIVE_SIMULATION",
+      sampleId: sample.id,
+      reason: "Gross in-vitro hemolysis (Index > 500 mg/dL)",
+      redrawOrderId: `ORD-REDRAW-${sample.id}`,
+      recoveryAction: "Click 'Dispatch Redraw' to advance redraw requisition.",
+    };
+  }
+
+  if (scenario === "TAT_BREACH") {
+    const targetOrder = db.orders.find((o) => o.priority !== "STAT") || db.orders[0];
+    if (targetOrder) targetOrder.priority = "STAT";
+
+    db.alerts.unshift({
+      id: "ALT-SIM-TAT",
+      category: "Delayed",
+      title: `STAT SLA Breach: Order ${targetOrder?.id || "ORD-10293"} (${targetOrder?.patient?.name || "Rahul Kumar"})`,
+      description: `Turnaround time exceeded by 28 mins (Target SLA: 45m, Elapsed: 73m). Priority auto-escalated to STAT OVERDUE. Expedited bench routing active.`,
+      timestamp: "Just now",
+      entityId: targetOrder?.id || "ORD-10293",
+      actionable: true,
+    });
+
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "TAT_SLA_BREACH_ESCALATED",
+      user: "SLA Monitoring Daemon",
+      role: "System",
+      details: `Order ${targetOrder?.id || "ORD-10293"} breached 45m SLA. Escalated to STAT priority. Notified attending physician.`,
+      location: "Automated Dispatch Sentinel",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "ACTIVE_SIMULATION",
+      orderId: targetOrder?.id || "ORD-10293",
+      elapsedTime: "73m",
+      slaTarget: "45m",
+      recoveryAction: "Click 'Expedite & Clear Breach' to restore normal queue priority.",
+    };
+  }
+
+  if (scenario === "DUPLICATE_ORDER") {
+    db.alerts.unshift({
+      id: "ALT-SIM-DUP",
+      category: "Information",
+      title: "Duplicate Order Blocked (Idempotency Key: IDEMP-84920)",
+      description: "Duplicate requisition for Aditi Rao (CBC panel) submitted within 5-minute debounce window. Intercepted by Idempotency Middleware. Duplicate billing and redraw prevented.",
+      timestamp: "Just now",
+      entityId: "IDEMP-84920",
+      actionable: false,
+    });
+
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "DUPLICATE_REQUISITION_BLOCKED",
+      user: "Idempotency Middleware",
+      role: "System",
+      details: "Blocked duplicate order for Aditi Rao with identical test payload within 5m window. Idempotency Key: IDEMP-ORD-10294-f89a.",
+      location: "API Ingestion Gateway",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "INTERCEPTED",
+      idempotencyKey: "IDEMP-ORD-10294-f89a",
+      httpStatus: 409,
+      protection: "Zero duplicate charges and zero duplicate tube draws created.",
+    };
+  }
+
+  if (scenario === "INVALID_TRANSITION") {
+    db.alerts.unshift({
+      id: "ALT-SIM-INV",
+      category: "Critical",
+      title: "Security: Illegal State Transition Intercepted",
+      description: "Attempted illegal transition ORDERED → RELEASED on un-accessioned specimen. Blocked by State Machine Integrity Guard (Rule: specimen must complete RECEIVED → PROCESSING → REVIEW before release).",
+      timestamp: "Just now",
+      entityId: "STATE-GUARD-01",
+      actionable: false,
+    });
+
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "STATE_MACHINE_INVARIANT_VIOLATION",
+      user: "LIMS Security Sentinel",
+      role: "System",
+      details: "Illegal state transition attempt ORDERED -> RELEASED intercepted. Enforced mandatory clinical chain-of-custody path.",
+      location: "Core State Machine Engine",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "INTERCEPTED",
+      violation: "ORDERED → RELEASED (Bypassed Accessioning & Testing)",
+      enforcedPath: "ORDERED → COLLECTED → IN_TRANSIT → RECEIVED → PROCESSING → REVIEW → RELEASED",
+    };
+  }
+
+  if (scenario === "DELIVERY_FAILURE") {
+    const failedJob: SentEmailRecord = {
+      id: `JOB-DLQ-${Date.now()}`,
+      reportId: "RPT-10290",
+      recipientEmail: "suresh.menon@gmail.com",
+      recipientName: "Suresh Menon",
+      patientName: "Suresh Menon",
+      subject: "Official Diagnostic Report RPT-10290",
+      timestamp: timeStr,
+      status: "Failed",
+      messageId: `msg-fail-${Date.now()}`,
+      notes: "SMTP 421 4.7.0 Connection timeout: mx.google.com. Placed into Dead-Letter Queue (DLQ). Exponential backoff scheduled (Attempt 1/3).",
+    };
+    if (!db.sentEmails) db.sentEmails = [];
+    db.sentEmails.unshift(failedJob);
+
+    db.alerts.unshift({
+      id: "ALT-SIM-DLQ",
+      category: "Critical",
+      title: "Email Delivery Failure: Report RPT-10290",
+      description: "SMTP connection timeout to suresh.menon@gmail.com. Job moved to Dead-Letter Queue (DLQ). Auto-retry scheduled with 2s exponential backoff.",
+      timestamp: "Just now",
+      entityId: failedJob.id,
+      actionable: true,
+    });
+
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "DELIVERY_FAILED_MOVED_TO_DLQ",
+      user: "Notification Worker Pool",
+      role: "System",
+      details: `Delivery of report RPT-10290 to suresh.menon@gmail.com failed with timeout. Moved to Dead-Letter Queue (job ID: ${failedJob.id}).`,
+      location: "Asynchronous Queue Dispatcher",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "QUEUED_IN_DLQ",
+      jobId: failedJob.id,
+      recipient: failedJob.recipientEmail,
+      dlqPolicy: "Max Retries: 3 | Exponential Backoff: 2s, 4s, 8s",
+      recoveryAction: "Click 'Retry Dead-Letter Job' in Message Queues tab to re-dispatch.",
+    };
+  }
+
+  return { scenario, status: "UNKNOWN" };
+}
+
+export function recoverFailureSimulation(scenario: string) {
+  const db = readDatabase();
+  const now = new Date();
+
+  // Remove matching simulation alerts
+  if (scenario === "ANALYZER_MAINTENANCE") {
+    db.alerts = db.alerts.filter((a) => a.id !== "ALT-SIM-ANALYZER");
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "ANALYZER_RECALIBRATION_RECOVERED",
+      user: "Dr. Arvind Swaminathan, MD",
+      role: "Pathologist",
+      details: "Sysmex XN-1000 optical sensors recalibrated across 2 points. Sensor drift normalized to +0.2 SD. Analyzer restored to RUNNING status.",
+      location: "Main Hematology Section",
+    });
+  } else if (scenario === "SAMPLE_REJECTION") {
+    db.alerts = db.alerts.filter((a) => a.id !== "ALT-SIM-REJ");
+    // Restore sample status or mark redraw scheduled
+    if (db.samples[0] && db.samples[0].status === "Rejected") {
+      db.samples[0].status = "In Progress";
+    }
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "REDRAW_REQUISITION_DISPATCHED",
+      user: "Sunita Verma",
+      role: "Collection Staff",
+      details: "Automated redraw requisition dispatched to outpatient phlebotomist. Redraw tube barcode printed.",
+      location: "Central Phlebotomy Hub",
+    });
+  } else if (scenario === "TAT_BREACH") {
+    db.alerts = db.alerts.filter((a) => a.id !== "ALT-SIM-TAT");
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "TAT_SLA_BREACH_RESOLVED",
+      user: "Lab Operations Supervisor",
+      role: "Admin",
+      details: "Specimen processing completed and verified. Turnaround-time breach alert closed.",
+      location: "Operations Desk",
+    });
+  } else if (scenario === "DELIVERY_FAILURE") {
+    db.alerts = db.alerts.filter((a) => a.id !== "ALT-SIM-DLQ");
+    if (db.sentEmails) {
+      const failed = db.sentEmails.find((e) => e.status === "Failed");
+      if (failed) {
+        failed.status = "Delivered";
+        failed.notes = "Re-dispatched successfully from Dead-Letter Queue on retry attempt 2.";
+      }
+    }
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "DLQ_JOB_RETRY_SUCCESSFUL",
+      user: "Asynchronous Queue Worker",
+      role: "System",
+      details: "Dead-letter queue job successfully delivered on retry attempt 2. SMTP 250 OK acknowledged.",
+      location: "Asynchronous Dispatcher",
+    });
+  } else {
+    // Clear any generic simulation alert
+    db.alerts = db.alerts.filter((a) => !a.id.startsWith("ALT-SIM-"));
+  }
+
+  writeDatabase(db);
+  return { success: true, scenario, message: `Scenario ${scenario} recovered successfully. System restored to nominal state.` };
+}
+
+export function retryMessageJob(jobId: string) {
+  const db = readDatabase();
+  const now = new Date();
+  let found = false;
+
+  if (db.sentEmails) {
+    const job = db.sentEmails.find((e) => e.id === jobId || e.id.includes(jobId));
+    if (job) {
+      job.status = "Delivered";
+      job.notes = "Successfully re-dispatched from Dead-Letter Queue (DLQ) on retry attempt 2. SMTP 250 OK.";
+      found = true;
+    }
+  }
+
+  if (!found && db.sentWhatsApp) {
+    const job = db.sentWhatsApp.find((w) => w.id === jobId || w.id.includes(jobId));
+    if (job) {
+      job.status = "Delivered";
+      job.notes = "Successfully delivered via WhatsApp Cloud Gateway retry.";
+      found = true;
+    }
+  }
+
+  // Also clear any matching DLQ alert
+  db.alerts = (db.alerts || []).filter((a) => a.entityId !== jobId && a.id !== "ALT-SIM-DLQ");
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: now.toISOString(),
+    action: "DLQ_JOB_MANUAL_RETRY",
+    user: "Queue Operations Engineer",
+    role: "Admin",
+    details: `Dead-letter queue job ${jobId} manually re-triggered. Delivered successfully with verified acknowledgment.`,
+    location: "Message Queue Telemetry Engine",
+  });
+
+  writeDatabase(db);
+  return { success: true, jobId, message: `Job ${jobId} successfully re-dispatched and marked Delivered.` };
+}
+
+export function flushAllQueues() {
+  const db = readDatabase();
+  const now = new Date();
+  let count = 0;
+
+  if (db.sentEmails) {
+    db.sentEmails.forEach((e) => {
+      if (e.status !== "Delivered") {
+        e.status = "Delivered";
+        e.notes = "Processed & delivered during bulk queue flush.";
+        count++;
+      }
+    });
+  }
+
+  if (db.sentWhatsApp) {
+    db.sentWhatsApp.forEach((w) => {
+      if (w.status !== "Delivered") {
+        w.status = "Delivered";
+        w.notes = "Delivered during bulk queue flush.";
+        count++;
+      }
+    });
+  }
+
+  // Clear DLQ alerts
+  db.alerts = (db.alerts || []).filter((a) => a.id !== "ALT-SIM-DLQ");
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: now.toISOString(),
+    action: "ASYNC_QUEUES_BULK_FLUSH",
+    user: "Queue Operations Engineer",
+    role: "Admin",
+    details: `Flushed all pending/failed async jobs (${count} jobs). All workers processed to 0 backlog.`,
+    location: "BullMQ / Redis Queue Engine",
+  });
+
+  writeDatabase(db);
+  return { success: true, count, message: `Successfully processed and delivered ${count} pending queue jobs.` };
+}
+
+export function dispatchSimulatedQueueJob(channel: "EMAIL" | "WHATSAPP", recipient?: string) {
+  const db = readDatabase();
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+  if (channel === "EMAIL") {
+    const emailJob: SentEmailRecord = {
+      id: `eml-sim-${Date.now()}`,
+      reportId: "RPT-10294",
+      recipientEmail: recipient || "aditi.rao@apexhealth.com",
+      recipientName: "Aditi Rao",
+      patientName: "Aditi Rao",
+      subject: "Diagnostic Laboratory Report Released: Aditi Rao (RPT-10294)",
+      timestamp: timeStr,
+      status: "Delivered",
+      messageId: `MSG-SIM-${Date.now()}`,
+      notes: "Enqueued into BullMQ email-dispatch-queue. Delivered via SendGrid SMTP pool (ACK 250 OK).",
+    };
+    if (!db.sentEmails) db.sentEmails = [];
+    db.sentEmails.unshift(emailJob);
+    writeDatabase(db);
+    return emailJob;
+  } else {
+    const waJob: SentWhatsAppRecord = {
+      id: `wa-sim-${Date.now()}`,
+      reportId: "RPT-10294",
+      recipientPhone: recipient || "+91 98765 43210",
+      recipientName: "Aditi Rao",
+      patientName: "Aditi Rao",
+      message: "Your official diagnostic report RPT-10294 is ready for download.",
+      timestamp: timeStr,
+      status: "Delivered",
+      messageId: `MSG-WA-${Date.now()}`,
+      notes: "Enqueued into BullMQ whatsapp-notify-queue. Meta WhatsApp Cloud API delivered acknowledgment received.",
+    };
+    if (!db.sentWhatsApp) db.sentWhatsApp = [];
+    db.sentWhatsApp.unshift(waJob);
+    writeDatabase(db);
+    return waJob;
+  }
 }
 
 

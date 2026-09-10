@@ -34,11 +34,12 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
   });
 
   const handleExportCSV = () => {
-    const headers = ["Order ID", "Patient Name", "MRN", "Age", "Gender", "Tests", "Priority", "Stage", "Location", "Created", "TAT", "Status"];
+    const headers = ["Order ID", "Patient Name", "MRN", "Email", "Age", "Gender", "Tests", "Priority", "Stage", "Location", "Created", "TAT", "Status"];
     const rows = filtered.map((ord) => [
       ord.id,
       `"${ord.patient.name}"`,
       ord.patient.mrn,
+      `"${ord.patient.email || ""}"`,
       ord.patient.age,
       ord.patient.gender,
       `"${ord.tests.join("; ")}"`,
@@ -190,6 +191,11 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
                       <div className="text-[11px] text-slate-400 font-mono">
                         {ord.patient.mrn} • {ord.patient.gender}, {ord.patient.age}y
                       </div>
+                      {ord.patient.email && (
+                        <div className="text-[10px] text-indigo-600 font-sans truncate max-w-[180px]" title={ord.patient.email}>
+                          ✉ {ord.patient.email}
+                        </div>
+                      )}
                     </td>
                     <td className="py-3.5 px-4 text-slate-700 font-medium max-w-xs truncate">
                       {ord.tests.join(", ")}

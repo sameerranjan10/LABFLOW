@@ -5,6 +5,7 @@ export interface PatientData {
   gender: string;
   phone: string;
   mrn: string;
+  email?: string;
 }
 
 export type OrderPriority = "STAT" | "Urgent" | "Normal";

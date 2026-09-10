@@ -169,7 +169,7 @@ export function generateReportPdfBuffer(report: LabReport): Promise<Buffer> {
 
       // --- 2. PATIENT & SPECIMEN METADATA (ALL ENTERED ORDER DATA) ---
       const metaY = 106;
-      const metaHeight = 66;
+      const metaHeight = 78;
       doc.rect(36, metaY, 523, metaHeight).fill("#ffffff");
       doc.rect(36, metaY, 523, metaHeight).stroke("#cbd5e1");
 
@@ -179,6 +179,8 @@ export function generateReportPdfBuffer(report: LabReport): Promise<Buffer> {
       const sampleType = report.sampleType || "Whole Blood (EDTA)";
       const sampleId = report.sampleId || ("SMP-" + report.id.replace("RPT-", ""));
       const phone = report.patient.phone || "+91 98765 43210";
+      const email = report.patient.email || "patient@apexdiagnostics.com";
+      const collector = report.collector || "Sunita Verma";
       const requisitionDate = report.createdAt || "2026-09-10 09:42";
       const testsOrdered = report.tests && report.tests.length > 0 ? report.tests.join(", ") : "Complete Blood Count (CBC)";
 
@@ -194,6 +196,9 @@ export function generateReportPdfBuffer(report: LabReport): Promise<Buffer> {
 
       doc.fillColor(secondaryColor).fontSize(7).font("Helvetica").text("CONTACT PHONE:", 44, metaY + 47);
       doc.fillColor("#0f172a").fontSize(7.5).font("Helvetica").text(phone, 115, metaY + 47);
+
+      doc.fillColor(secondaryColor).fontSize(7).font("Helvetica").text("PATIENT EMAIL:", 44, metaY + 60);
+      doc.fillColor("#1e40af").fontSize(7).font("Helvetica").text(email, 115, metaY + 60, { width: 95, lineBreak: false });
 
       // Column 2: Clinical Requisition
       const col2X = 220;
@@ -215,6 +220,9 @@ export function generateReportPdfBuffer(report: LabReport): Promise<Buffer> {
       doc.fillColor(secondaryColor).fontSize(7).font("Helvetica").text("REQUISITION DATE:", col2X, metaY + 47);
       doc.fillColor("#0f172a").fontSize(7.5).font("Helvetica").text(requisitionDate, col2X + 85, metaY + 47);
 
+      doc.fillColor(secondaryColor).fontSize(7).font("Helvetica").text("PHLEBOTOMIST:", col2X, metaY + 60);
+      doc.fillColor("#0f172a").fontSize(7.5).font("Helvetica").text(collector, col2X + 85, metaY + 60);
+
       // Column 3: Specimen & Report Tracking
       const col3X = 405;
       doc.fillColor(secondaryColor).fontSize(7).font("Helvetica-Bold").text("REPORT REF ID:", col3X, metaY + 7);
@@ -228,6 +236,9 @@ export function generateReportPdfBuffer(report: LabReport): Promise<Buffer> {
 
       doc.fillColor(secondaryColor).fontSize(7).font("Helvetica").text("SAMPLE BARCODE:", col3X, metaY + 47);
       doc.fillColor("#6b21a8").fontSize(7.5).font("Helvetica-Bold").text(sampleId, col3X + 65, metaY + 47);
+
+      doc.fillColor(secondaryColor).fontSize(7).font("Helvetica").text("DISPATCH STATUS:", col3X, metaY + 60);
+      doc.fillColor(accentGreen).fontSize(7.5).font("Helvetica-Bold").text(isReleased ? "Released & Sent" : "Verified / Ready", col3X + 65, metaY + 60);
 
       // --- TESTS REQUESTED BANNER ---
       const testBannerY = metaY + metaHeight + 6;

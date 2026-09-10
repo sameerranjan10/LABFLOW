@@ -166,9 +166,11 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   const createdAtFormatted = report?.createdAt || (matchingOrder ? `${matchingOrder.createdDate} ${matchingOrder.createdAt}` : "2026-09-10 09:42 AM");
   const collector = report?.collector || "Sunita Verma";
 
+  const initialEmail = report?.patient?.email || matchingOrder?.patient?.email || "niteshnemalpuri17@gmail.com";
+
   // Email State
-  const [parentEmail, setParentEmail] = useState("niteshnemalpuri17@gmail.com");
-  const [parentName, setParentName] = useState(report?.patient ? `${report.patient.name}'s Family` : "Parent / Guardian");
+  const [parentEmail, setParentEmail] = useState(initialEmail);
+  const [parentName, setParentName] = useState(report?.patient ? `${report.patient.name}` : "Patient");
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailSentSuccess, setEmailSentSuccess] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -182,6 +184,20 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   const [waSentSuccess, setWaSentSuccess] = useState<string | null>(null);
   const [waError, setWaError] = useState<string | null>(null);
   const [showWaForm, setShowWaForm] = useState(false);
+
+  React.useEffect(() => {
+    if (report) {
+      const email = report.patient?.email || matchingOrder?.patient?.email || "niteshnemalpuri17@gmail.com";
+      setParentEmail(email);
+      setParentName(report.patient?.name || "Patient");
+      setWhatsappPhone(report.patient?.phone || matchingOrder?.patient?.phone || "+91 98765 43210");
+      setWhatsappRecipient(report.patient?.name || "Patient");
+      setEmailSentSuccess(null);
+      setEmailError(null);
+      setWaSentSuccess(null);
+      setWaError(null);
+    }
+  }, [report, matchingOrder]);
 
   if (!report) return null;
 
@@ -364,6 +380,12 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               <span>Patient: <strong className="text-slate-800">{report.patient.name}</strong></span>
               <span>•</span>
               <span>MRN: <strong className="text-slate-800">{report.patient.mrn}</strong></span>
+              {report.patient.email && (
+                <>
+                  <span>•</span>
+                  <span className="text-indigo-600 font-sans font-medium">✉ {report.patient.email}</span>
+                </>
+              )}
             </div>
           </div>
 

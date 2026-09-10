@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { OrderPriority, LabOrder } from "@/data/labflowData";
-import { X, CheckCircle, Plus, AlertCircle } from "lucide-react";
+import { X, CheckCircle, Plus, AlertCircle, Mail } from "lucide-react";
 
 interface CreateOrderModalProps {
   isOpen: boolean;
@@ -16,6 +16,7 @@ export const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
   const [patientName, setPatientName] = useState("");
   const [mrn, setMrn] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [age, setAge] = useState<number | "">(45);
   const [gender, setGender] = useState("Female");
   
@@ -28,7 +29,7 @@ export const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
   const [scheduledTime, setScheduledTime] = useState("Immediate");
   const [doctorName, setDoctorName] = useState("Dr. V. Sharma");
 
-  const [createdResult, setCreatedResult] = useState<{ orderId: string; sampleId: string } | null>(null);
+  const [createdResult, setCreatedResult] = useState<{ orderId: string; sampleId: string; email?: string } | null>(null);
 
   if (!isOpen) return null;
 
@@ -60,6 +61,7 @@ export const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
         gender: gender,
         phone: phone || "+91 98000 11111",
         mrn: mrn || `MRN-${randomDigits}`,
+        email: email.trim(),
       },
       tests: selectedTests,
       priority: priority,
@@ -76,11 +78,15 @@ export const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
     };
 
     onSubmitOrder(newOrder);
-    setCreatedResult({ orderId: generatedOrderId, sampleId: generatedSampleId });
+    setCreatedResult({ orderId: generatedOrderId, sampleId: generatedSampleId, email: email.trim() });
   };
 
   const handleResetAndClose = () => {
     setCreatedResult(null);
+    setPatientName("");
+    setMrn("");
+    setPhone("");
+    setEmail("");
     onClose();
   };
 
@@ -135,6 +141,20 @@ export const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
                   {createdResult.sampleId}
                 </span>
               </div>
+              {createdResult.email && (
+                <div className="col-span-2 pt-2.5 mt-1 border-t border-slate-200">
+                  <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-sans">
+                    Configured Report Email
+                  </span>
+                  <span className="text-xs font-semibold text-emerald-700 font-mono flex items-center gap-1.5 mt-0.5">
+                    <Mail className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    {createdResult.email}
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-sans block mt-0.5">
+                    PDF report will be sent to this email upon result release.
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="flex justify-center gap-3 pt-2">
@@ -193,6 +213,28 @@ export const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
                 </div>
 
                 <div>
+                  <label className="flex items-center justify-between text-xs font-semibold text-slate-700 mb-1">
+                    <span className="flex items-center gap-1">
+                      <Mail className="w-3.5 h-3.5 text-indigo-600" />
+                      Email ID (Report Recipient)
+                    </span>
+                    <span className="text-[10px] font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 px-1.5 py-0.2 rounded">
+                      Auto-Send
+                    </span>
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="e.g. patient@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+                  />
+                  <span className="text-[10px] text-slate-400 mt-0.5 block">
+                    Diagnostic report PDF will be sent to this email upon release.
+                  </span>
+                </div>
+
+                <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Contact Phone
                   </label>
@@ -232,7 +274,7 @@ export const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
                   </select>
                 </div>
 
-                <div>
+                <div className="md:col-span-3">
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Ordering Doctor
                   </label>

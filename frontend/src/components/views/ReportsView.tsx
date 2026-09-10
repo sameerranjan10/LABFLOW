@@ -130,7 +130,12 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                     <div className="text-[11px] text-slate-500 font-mono">
                       <span>{rpt.patient.mrn}</span> • <span>{rpt.patient.age}y/{rpt.patient.gender}</span>
                     </div>
-                    {rpt.patient.phone && (
+                    {rpt.patient.email && (
+                      <div className="text-[10px] text-indigo-600 font-sans truncate max-w-[170px]" title={rpt.patient.email}>
+                        ✉ {rpt.patient.email}
+                      </div>
+                    )}
+                    {rpt.patient.phone && !rpt.patient.email && (
                       <div className="text-[10px] text-slate-400 font-mono">{rpt.patient.phone}</div>
                     )}
                   </td>
@@ -197,7 +202,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
                       <button
                         onClick={async () => {
-                          const targetEmail = "niteshnemalpuri17@gmail.com";
+                          const targetEmail = rpt.patient.email?.trim() || "niteshnemalpuri17@gmail.com";
                           setEmailStatusMsg(`Preparing email dispatch and PDF for ${targetEmail}...`);
                           
                           // Trigger automated PDF download
@@ -215,7 +220,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                               body: JSON.stringify({
                                 reportId: rpt.id,
                                 recipientEmail: targetEmail,
-                                recipientName: "Parent / Guardian",
+                                recipientName: rpt.patient.name || "Patient",
                                 patientName: rpt.patient.name,
                               }),
                             });
@@ -244,10 +249,10 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                           setTimeout(() => setEmailStatusMsg(null), 7000);
                         }}
                         className="px-2 py-1 text-xs font-semibold rounded bg-sky-50 text-sky-700 hover:bg-sky-100 flex items-center gap-1 cursor-pointer"
-                        title="Send Official PDF Report via Email to Parent"
+                        title={`Send Official PDF Report via Email to ${rpt.patient.email || "Parent / Guardian"}`}
                       >
                         <Mail className="w-3.5 h-3.5" />
-                        Email Parent
+                        Email Report
                       </button>
 
                       <button
