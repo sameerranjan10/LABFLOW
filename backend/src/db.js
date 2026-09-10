@@ -1,0 +1,484 @@
+const fs = require("fs");
+const path = require("path");
+
+const DB_FILE_PATH = path.join(__dirname, "..", "data", "labflow_db.json");
+
+function readDatabase() {
+  try {
+    if (!fs.existsSync(DB_FILE_PATH)) {
+      console.warn("[Backend DB] Database file not found at " + DB_FILE_PATH + ", creating initial structure.");
+      return {
+        orders: [],
+        samples: [],
+        alerts: [],
+        reports: [],
+        exceptions: [],
+        workflowStages: [],
+        results: [],
+        team: [],
+        sentEmails: [],
+        settings: {
+          organization: { name: "Apex Diagnostics", license: "NABL-2026", address: "Main Hub", email: "ops@apex.com" },
+          billing: { plan: "professional", usedQuota: 3840, maxQuota: 5000, renewsAt: "2026-10-01" },
+          testCatalog: [],
+          collectionCenters: []
+        },
+        auditLogs: [],
+        version: "3.0.0-backend",
+        lastUpdated: new Date().toISOString()
+      };
+    }
+    const raw = fs.readFileSync(DB_FILE_PATH, "utf-8");
+    const parsed = JSON.parse(raw);
+    if (!parsed.sentEmails) parsed.sentEmails = [];
+    if (!parsed.auditLogs) parsed.auditLogs = [];
+    return parsed;
+  } catch (err) {
+    console.error("[Backend DB] Read error:", err);
+    return { orders: [], samples: [], reports: [], alerts: [], results: [], team: [], sentEmails: [], auditLogs: [] };
+  }
+}
+
+function writeDatabase(db) {
+  try {
+    db.lastUpdated = new Date().toISOString();
+    fs.writeFileSync(DB_FILE_PATH, JSON.stringify(db, null, 2), "utf-8");
+    return true;
+  } catch (err) {
+    console.error("[Backend DB] Write error:", err);
+    return false;
+  }
+}
+
+// ORDERS
+function getOrders(query = {}) {
+  const db = readDatabase();
+  let orders = db.orders || [];
+  if (query.stage) {
+    orders = orders.filter(o => o.currentStage === query.stage);
+  }
+  if (query.priority) {
+    orders = orders.filter(o => o.priority && o.priority.toLowerCase() === query.priority.toLowerCase());
+  }
+  return orders;
+}
+
+function createOrder(orderData) {
+  const db = readDatabase();
+  const orderId = orderData.id || `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
+  const sampleId = orderData.sampleId || `SMP-${Math.floor(20000 + Math.random() * 80000)}`;
+
+  const newOrder = {
+    id: orderId,
+    sampleId: sampleId,
+    patient: orderData.patient || {
+      id: `PAT-${Date.now().toString().slice(-4)}`,
+      name: "Anonymous Patient",
+      age: 40,
+      gender: "Male",
+      phone: "+91 98765 43210",
+      mrn: `MRN-${Math.floor(100000 + Math.random() * 900000)}`
+    },
+    tests: orderData.tests && orderData.tests.length > 0 ? orderData.tests : ["Complete Blood Count (CBC)"],
+    priority: orderData.priority || "Normal",
+    currentStage: "ORDERED",
+    createdAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    createdDate: new Date().toISOString().split("T")[0],
+    tat: "15m",
+    status: "In Progress",
+    location: orderData.location || "Main Reference Lab (Central)",
+    doctorName: orderData.doctorName || "Dr. Priya Sharma, MD"
+  };
+
+  const newSample = {
+    id: sampleId,
+    orderId: orderId,
+    patient: newOrder.patient,
+    sampleType: "Whole Blood (EDTA)",
+    test: newOrder.tests.join(", "),
+    currentLocation: "Phlebotomy Intake - Reception",
+    stage: "ORDERED",
+    collectedAt: newOrder.createdAt,
+    tat: "15m",
+    status: "Collected",
+    barcode: `LBF-${newOrder.patient.id}`,
+    volume: "3.0 mL",
+    timeline: [
+      {
+        id: `tl-evt-${Date.now()}`,
+        timestamp: newOrder.createdAt,
+        date: newOrder.createdDate,
+        event: "Specimen Requisition & Barcode Label Printed",
+        location: newOrder.location,
+        operator: "Accessioning Clerk",
+        details: "Requisition entered into LabFlow LIMS backend. Vacuum tube prepared.",
+        status: "active"
+      }
+    ]
+  };
+
+  if (!db.orders) db.orders = [];
+  if (!db.samples) db.samples = [];
+
+  db.orders.unshift(newOrder);
+  db.samples.unshift(newSample);
+
+  if (db.workflowStages) {
+    const st = db.workflowStages.find(s => s.key === "ORDERED");
+    if (st) st.count = (st.count || 0) + 1;
+  }
+
+  if (db.settings && db.settings.billing) {
+    db.settings.billing.usedQuota = (db.settings.billing.usedQuota || 0) + 1;
+  }
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "ORDER_CREATED",
+    user: newOrder.doctorName || "Physician",
+    role: "Doctor",
+    details: `Order ${orderId} created for patient ${newOrder.patient.name} with sample ${sampleId}.`,
+    location: newOrder.location
+  });
+
+  writeDatabase(db);
+  return { order: newOrder, sample: newSample };
+}
+
+// SAMPLES
+function getSamples(query = {}) {
+  const db = readDatabase();
+  let samples = db.samples || [];
+  if (query.barcode) {
+    samples = samples.filter(s => s.barcode && s.barcode.toLowerCase() === query.barcode.toLowerCase());
+  }
+  if (query.stage) {
+    samples = samples.filter(s => s.stage === query.stage);
+  }
+  return samples;
+}
+
+function updateSampleStage(sampleId, newStage, operator = "Lab Technologist", location, notes) {
+  const db = readDatabase();
+  const sample = (db.samples || []).find(s => s.id === sampleId);
+  if (!sample) return null;
+
+  const oldStage = sample.stage;
+  sample.stage = newStage;
+  if (location) sample.currentLocation = location;
+
+  if (newStage === "RELEASED") sample.status = "Completed";
+  else if (newStage === "REVIEW" || newStage === "PROCESSING") sample.status = "Processing";
+  else if (newStage === "RECEIVED") sample.status = "Received";
+  else if (newStage === "IN_TRANSIT") sample.status = "In Transit";
+  else if (newStage === "COLLECTED") sample.status = "Collected";
+
+  if (!sample.timeline) sample.timeline = [];
+  sample.timeline.unshift({
+    id: `tl-adv-${Date.now()}`,
+    timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    date: new Date().toISOString().split("T")[0],
+    event: `Custody Advancement: ${oldStage} → ${newStage}`,
+    location: location || sample.currentLocation,
+    operator,
+    details: notes || `Specimen progressed to ${newStage} in chain of custody.`,
+    status: "completed"
+  });
+
+  const order = (db.orders || []).find(o => o.id === sample.orderId);
+  if (order) {
+    order.currentStage = newStage;
+    order.status = newStage === "RELEASED" ? "Completed" : newStage === "REVIEW" ? "Pending Review" : "In Progress";
+  }
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "SAMPLE_STAGE_UPDATED",
+    user: operator,
+    role: "Technologist",
+    details: `Sample ${sampleId} transitioned from ${oldStage} to ${newStage}.`,
+    location: location || sample.currentLocation
+  });
+
+  writeDatabase(db);
+  return sample;
+}
+
+function rejectSample(sampleId, reason = "Specimen Hemolyzed", operator = "Accessioning Tech") {
+  const db = readDatabase();
+  const sample = (db.samples || []).find(s => s.id === sampleId);
+  if (!sample) return null;
+
+  sample.status = "Rejected";
+  if (!sample.timeline) sample.timeline = [];
+  sample.timeline.unshift({
+    id: `tl-rej-${Date.now()}`,
+    timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    date: new Date().toISOString().split("T")[0],
+    event: "Sample Pre-Analytical Rejection",
+    location: sample.currentLocation,
+    operator,
+    details: `REJECTED: ${reason}. Automated redraw order initiated.`,
+    status: "completed"
+  });
+
+  if (!db.alerts) db.alerts = [];
+  db.alerts.unshift({
+    id: `ALT-REJ-${Date.now()}`,
+    category: "Rejected",
+    title: `Sample ${sampleId} Rejected: ${reason}`,
+    description: `Specimen rejected due to ${reason}. Redraw required for patient ${sample.patient ? sample.patient.name : 'Unknown'}.`,
+    timestamp: "Just now",
+    entityId: sampleId,
+    actionable: true
+  });
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "SAMPLE_REJECTED",
+    user: operator,
+    role: "Technologist",
+    details: `Sample ${sampleId} rejected. Reason: ${reason}`,
+    location: sample.currentLocation
+  });
+
+  writeDatabase(db);
+  return sample;
+}
+
+// TEST RESULTS
+function getTestResults(orderId) {
+  const db = readDatabase();
+  if (orderId) {
+    return (db.results || []).filter(r => r.orderId === orderId);
+  }
+  return db.results || [];
+}
+
+function verifyTestResult(resultId, reviewer = "Dr. Arvind Swaminathan, MD", comments) {
+  const db = readDatabase();
+  let result = (db.results || []).find(r => r.id === resultId) || (db.results && db.results[0]);
+  if (!result) return null;
+
+  result.status = "Approved";
+  result.reviewer = reviewer;
+  if (comments) result.comments = comments;
+  if (result.parameters) {
+    result.parameters = result.parameters.map(p => ({ ...p, status: "Verified" }));
+  }
+
+  updateSampleStage(result.sampleId, "RELEASED", reviewer, "Pathology Office", "Medical sign-off complete.");
+
+  const report = (db.reports || []).find(r => r.orderId === result.orderId);
+  if (report) {
+    report.status = "Released";
+    report.reviewer = reviewer;
+    report.releasedAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "RESULT_VERIFIED_SIGN_OFF",
+    user: reviewer,
+    role: "Pathologist",
+    details: `Test results for order ${result.orderId} digitally verified and signed by pathologist.`,
+    location: "Main Pathology Department"
+  });
+
+  writeDatabase(db);
+  return result;
+}
+
+// REPORTS
+function getReports() {
+  const db = readDatabase();
+  return db.reports || [];
+}
+
+function releaseReport(reportId, signedBy = "Dr. Arvind Swaminathan, MD") {
+  const db = readDatabase();
+  const report = (db.reports || []).find(r => r.id === reportId);
+  if (!report) return null;
+
+  report.status = "Released";
+  report.releasedAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  report.reviewer = signedBy;
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "REPORT_DIGITALLY_SIGNED",
+    user: signedBy,
+    role: "Pathologist",
+    details: `Diagnostic report ${reportId} for ${report.patient ? report.patient.name : 'patient'} digitally attested and dispatched.`,
+    location: "Main Reference Lab"
+  });
+
+  writeDatabase(db);
+  return report;
+}
+
+// EMAIL DISPATCH (PARENT EMAIL TO niteshnemalpuri17@gmail.com)
+function logSentEmail(record) {
+  const db = readDatabase();
+  if (!db.sentEmails) db.sentEmails = [];
+  db.sentEmails.unshift(record);
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "REPORT_EMAILED_TO_PARENT",
+    user: "Laboratory Notification Engine",
+    role: "System",
+    details: `Diagnostic Report ${record.reportId} for patient ${record.patientName} dispatched to parent/guardian at ${record.recipientEmail}.`,
+    location: "Automated Dispatch Gateway"
+  });
+
+  writeDatabase(db);
+  return record;
+}
+
+function getSentEmails() {
+  const db = readDatabase();
+  return db.sentEmails || [];
+}
+
+// ALERTS
+function getAlerts() {
+  const db = readDatabase();
+  return db.alerts || [];
+}
+
+function dismissAlert(alertId) {
+  const db = readDatabase();
+  const idx = (db.alerts || []).findIndex(a => a.id === alertId);
+  if (idx !== -1) {
+    db.alerts.splice(idx, 1);
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      action: "ALERT_ACKNOWLEDGED",
+      user: "Operations Admin",
+      role: "Admin",
+      details: `Operational alert ${alertId} acknowledged and dismissed from queue.`
+    });
+    writeDatabase(db);
+    return true;
+  }
+  return false;
+}
+
+// TEAM
+function getTeam() {
+  const db = readDatabase();
+  return db.team || [];
+}
+
+function createTeamMember(memberData) {
+  const db = readDatabase();
+  const newMember = {
+    id: `tm-${Date.now()}`,
+    name: memberData.name || "New Staff Member",
+    role: memberData.role || "Lab Technician",
+    department: memberData.department || "Operations",
+    location: memberData.location || "Main Reference Lab",
+    status: memberData.status || "Active",
+    lastActive: "Just now",
+    email: memberData.email || `staff-${Date.now()}@labflow.io`
+  };
+  if (!db.team) db.team = [];
+  db.team.unshift(newMember);
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "STAFF_MEMBER_PROVISIONED",
+    user: "Operations Director",
+    role: "Admin",
+    details: `Staff member ${newMember.name} (${newMember.role}) added to roster.`,
+    location: newMember.location
+  });
+
+  writeDatabase(db);
+  return newMember;
+}
+
+function updateTeamMemberStatus(id, status) {
+  const db = readDatabase();
+  const member = (db.team || []).find(m => m.id === id);
+  if (!member) return null;
+
+  member.status = status;
+  member.lastActive = "Just now";
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "STAFF_STATUS_UPDATED",
+    user: "Operations Director",
+    role: "Admin",
+    details: `Staff member ${member.name} roster status updated to ${status}.`,
+    location: member.location
+  });
+
+  writeDatabase(db);
+  return member;
+}
+
+// SETTINGS
+function getSettings() {
+  const db = readDatabase();
+  return db.settings || {};
+}
+
+function updateSettings(newSettings) {
+  const db = readDatabase();
+  db.settings = { ...(db.settings || {}), ...newSettings };
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "SETTINGS_UPDATED",
+    user: "Operations Director",
+    role: "Admin",
+    details: "Laboratory platform configuration and parameters updated."
+  });
+
+  writeDatabase(db);
+  return db.settings;
+}
+
+// AUDIT
+function getAuditLogs() {
+  const db = readDatabase();
+  return db.auditLogs || [];
+}
+
+module.exports = {
+  readDatabase,
+  writeDatabase,
+  getOrders,
+  createOrder,
+  getSamples,
+  updateSampleStage,
+  rejectSample,
+  getTestResults,
+  verifyTestResult,
+  getReports,
+  releaseReport,
+  logSentEmail,
+  getSentEmails,
+  getAlerts,
+  dismissAlert,
+  getTeam,
+  createTeamMember,
+  updateTeamMemberStatus,
+  getSettings,
+  updateSettings,
+  getAuditLogs,
+  DB_FILE_PATH
+};

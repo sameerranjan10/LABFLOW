@@ -1,0 +1,23 @@
+{
+  "name": "labflow-backend",
+  "version": "1.0.0",
+  "description": "LabFlow Diagnostic Operations REST API & Chain-of-Custody Engine",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node test/api-test.js"
+  },
+  "keywords": [
+    "lims",
+    "healthcare",
+    "labflow",
+    "api",
+    "diagnostics",
+    "chain-of-custody",
+    "fhir"
+  ],
+  "author": "Apex Diagnostics / LabFlow Team",
+  "license": "MIT"
+}

@@ -1,6 +1,50 @@
 {
   "orders": [
     {
+      "id": "ORD-68502",
+      "sampleId": "SMP-20529",
+      "patient": {
+        "name": "Test Patient",
+        "age": 35,
+        "gender": "Female",
+        "mrn": "MRN-TEST-1"
+      },
+      "tests": [
+        "CBC",
+        "Lipid Profile"
+      ],
+      "priority": "STAT",
+      "currentStage": "ORDERED",
+      "createdAt": "09:52 PM",
+      "createdDate": "2026-09-10",
+      "tat": "15m",
+      "status": "In Progress",
+      "location": "Main Reference Lab (Central)",
+      "doctorName": "Dr. Priya Sharma, MD"
+    },
+    {
+      "id": "ORD-46015",
+      "sampleId": "SMP-83049",
+      "patient": {
+        "name": "Test Patient",
+        "age": 35,
+        "gender": "Female",
+        "mrn": "MRN-TEST-1"
+      },
+      "tests": [
+        "CBC",
+        "Lipid Profile"
+      ],
+      "priority": "STAT",
+      "currentStage": "ORDERED",
+      "createdAt": "09:52 PM",
+      "createdDate": "2026-09-10",
+      "tat": "15m",
+      "status": "In Progress",
+      "location": "Main Reference Lab (Central)",
+      "doctorName": "Dr. Priya Sharma, MD"
+    },
+    {
       "id": "ORD-46492",
       "sampleId": "SMP-94790",
       "patient": {
@@ -168,6 +212,68 @@
     }
   ],
   "samples": [
+    {
+      "id": "SMP-20529",
+      "orderId": "ORD-68502",
+      "patient": {
+        "name": "Test Patient",
+        "age": 35,
+        "gender": "Female",
+        "mrn": "MRN-TEST-1"
+      },
+      "sampleType": "Whole Blood (EDTA)",
+      "test": "CBC, Lipid Profile",
+      "currentLocation": "Phlebotomy Intake - Reception",
+      "stage": "ORDERED",
+      "collectedAt": "09:52 PM",
+      "tat": "15m",
+      "status": "Collected",
+      "barcode": "LBF-undefined",
+      "volume": "3.0 mL",
+      "timeline": [
+        {
+          "id": "tl-evt-1789057373677",
+          "timestamp": "09:52 PM",
+          "date": "2026-09-10",
+          "event": "Specimen Requisition & Barcode Label Printed",
+          "location": "Main Reference Lab (Central)",
+          "operator": "Accessioning Clerk",
+          "details": "Requisition entered into LabFlow LIMS backend. Vacuum tube prepared.",
+          "status": "active"
+        }
+      ]
+    },
+    {
+      "id": "SMP-83049",
+      "orderId": "ORD-46015",
+      "patient": {
+        "name": "Test Patient",
+        "age": 35,
+        "gender": "Female",
+        "mrn": "MRN-TEST-1"
+      },
+      "sampleType": "Whole Blood (EDTA)",
+      "test": "CBC, Lipid Profile",
+      "currentLocation": "Phlebotomy Intake - Reception",
+      "stage": "ORDERED",
+      "collectedAt": "09:52 PM",
+      "tat": "15m",
+      "status": "Collected",
+      "barcode": "LBF-undefined",
+      "volume": "3.0 mL",
+      "timeline": [
+        {
+          "id": "tl-evt-1789057326228",
+          "timestamp": "09:52 PM",
+          "date": "2026-09-10",
+          "event": "Specimen Requisition & Barcode Label Printed",
+          "location": "Main Reference Lab (Central)",
+          "operator": "Accessioning Clerk",
+          "details": "Requisition entered into LabFlow LIMS backend. Vacuum tube prepared.",
+          "status": "active"
+        }
+      ]
+    },
     {
       "id": "SMP-94790",
       "orderId": "ORD-46492",
@@ -629,7 +735,7 @@
     {
       "key": "ORDERED",
       "label": "ORDERED",
-      "count": 25,
+      "count": 27,
       "avgTime": "12m"
     },
     {
@@ -825,52 +931,28 @@
   ],
   "sentEmails": [
     {
-      "id": "eml-1789057819556",
-      "reportId": "RPT-4029",
+      "id": "EML-1789057373695",
+      "reportId": "REP-4892",
       "recipientEmail": "niteshnemalpuri17@gmail.com",
       "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:30:19.556Z",
+      "patientName": "Aditi Rao",
+      "subject": "Official Lab Report: Complete Blood Count (18 Attributes) - Patient: Aditi Rao (REP-4892)",
+      "timestamp": "2026-09-10T16:22:53.695Z",
       "status": "Delivered",
-      "messageId": "MSG-EML-1789057819556-1509",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
+      "messageId": "msg-1789057373695-rmjhf",
+      "notes": "Sent via LabFlow Automated Parent Notification Dispatch"
     },
     {
-      "id": "eml-1789057816393",
-      "reportId": "RPT-4029",
+      "id": "EML-1789057326250",
+      "reportId": "REP-4892",
       "recipientEmail": "niteshnemalpuri17@gmail.com",
       "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:30:16.393Z",
+      "patientName": "Aditi Rao",
+      "subject": "Official Lab Report: Complete Blood Count (18 Attributes) - Patient: Aditi Rao (REP-4892)",
+      "timestamp": "2026-09-10T16:22:06.250Z",
       "status": "Delivered",
-      "messageId": "MSG-EML-1789057816393-6301",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789057808561",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:30:08.561Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789057808561-8005",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789057805871",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:30:05.871Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789057805871-8708",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
+      "messageId": "msg-1789057326250-bpmh3",
+      "notes": "Sent via LabFlow Automated Parent Notification Dispatch"
     },
     {
       "id": "eml-1789056831529",
@@ -894,7 +976,7 @@
     },
     "billing": {
       "plan": "professional",
-      "usedQuota": 3842,
+      "usedQuota": 3844,
       "maxQuota": 5000,
       "renewsAt": "2026-10-01"
     },
@@ -1009,40 +1091,40 @@
   },
   "auditLogs": [
     {
-      "id": "AUD-1789057819558",
-      "timestamp": "2026-09-10T16:30:19.558Z",
+      "id": "AUD-1789057373699",
+      "timestamp": "2026-09-10T16:22:53.699Z",
       "action": "REPORT_EMAILED_TO_PARENT",
       "user": "Laboratory Notification Engine",
       "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
+      "details": "Diagnostic Report REP-4892 for patient Aditi Rao dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
       "location": "Automated Dispatch Gateway"
     },
     {
-      "id": "AUD-1789057816397",
-      "timestamp": "2026-09-10T16:30:16.397Z",
+      "id": "AUD-1789057373677",
+      "timestamp": "2026-09-10T16:22:53.677Z",
+      "action": "ORDER_CREATED",
+      "user": "Dr. Priya Sharma, MD",
+      "role": "Doctor",
+      "details": "Order ORD-68502 created for patient Test Patient with sample SMP-20529.",
+      "location": "Main Reference Lab (Central)"
+    },
+    {
+      "id": "AUD-1789057326257",
+      "timestamp": "2026-09-10T16:22:06.257Z",
       "action": "REPORT_EMAILED_TO_PARENT",
       "user": "Laboratory Notification Engine",
       "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
+      "details": "Diagnostic Report REP-4892 for patient Aditi Rao dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
       "location": "Automated Dispatch Gateway"
     },
     {
-      "id": "AUD-1789057808564",
-      "timestamp": "2026-09-10T16:30:08.564Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789057805873",
-      "timestamp": "2026-09-10T16:30:05.873Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
+      "id": "AUD-1789057326228",
+      "timestamp": "2026-09-10T16:22:06.228Z",
+      "action": "ORDER_CREATED",
+      "user": "Dr. Priya Sharma, MD",
+      "role": "Doctor",
+      "details": "Order ORD-46015 created for patient Test Patient with sample SMP-83049.",
+      "location": "Main Reference Lab (Central)"
     },
     {
       "id": "AUD-1789056831530",
@@ -1151,5 +1233,5 @@
     }
   ],
   "version": "3.0.0-integrated",
-  "lastUpdated": "2026-09-10T16:30:19.558Z"
+  "lastUpdated": "2026-09-10T16:22:53.699Z"
 }
