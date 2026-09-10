@@ -31,6 +31,9 @@ export interface LabOrder {
   status: "In Progress" | "Pending Review" | "Completed" | "Delayed" | "Action Required";
   location: string;
   doctorName?: string;
+  sampleType?: string;
+  collector?: string;
+  scheduledTime?: string;
 }
 
 export interface TimelineEvent {
@@ -113,6 +116,13 @@ export interface LabReport {
   reviewer: string;
   createdAt: string;
   releasedAt?: string;
+  priority?: OrderPriority;
+  doctorName?: string;
+  sampleType?: string;
+  location?: string;
+  sampleId?: string;
+  collector?: string;
+  scheduledTime?: string;
 }
 
 export interface AlertItem {
@@ -410,6 +420,12 @@ export const INITIAL_REPORTS: LabReport[] = [
     reviewer: "Dr. S. Kulkarni",
     createdAt: "09:50 AM",
     releasedAt: "10:15 AM",
+    priority: "STAT",
+    doctorName: "Dr. S. Kulkarni",
+    sampleType: "Serum (SST Tube)",
+    location: "Emergency Lab",
+    sampleId: "SMP-20489",
+    collector: "Sunita V.",
   },
   {
     id: "RPT-4028",
@@ -419,6 +435,12 @@ export const INITIAL_REPORTS: LabReport[] = [
     status: "Pending Review",
     reviewer: "Dr. A. Mehta",
     createdAt: "10:30 AM",
+    priority: "Urgent",
+    doctorName: "Dr. A. Mehta",
+    sampleType: "Serum (SST Tube)",
+    location: "Main Laboratory - Biochemistry",
+    sampleId: "SMP-20490",
+    collector: "Pooja N.",
   },
   {
     id: "RPT-4027",
@@ -428,6 +450,12 @@ export const INITIAL_REPORTS: LabReport[] = [
     status: "Approved",
     reviewer: "Dr. V. Sharma",
     createdAt: "08:45 AM",
+    priority: "Normal",
+    doctorName: "Dr. V. Sharma",
+    sampleType: "Serum (SST Tube)",
+    location: "Main Laboratory - Biochemistry",
+    sampleId: "SMP-20475",
+    collector: "Sunita V.",
   },
   {
     id: "RPT-4026",
@@ -437,6 +465,12 @@ export const INITIAL_REPORTS: LabReport[] = [
     status: "Draft",
     reviewer: "Dr. A. Mehta",
     createdAt: "11:00 AM",
+    priority: "Normal",
+    doctorName: "Dr. A. Mehta",
+    sampleType: "Serum (SST Tube)",
+    location: "Main Reference Lab",
+    sampleId: "SMP-20470",
+    collector: "Pooja N.",
   },
 ];
 

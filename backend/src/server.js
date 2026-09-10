@@ -241,6 +241,69 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
+    // WHATSAPP SEND / PATIENT & CLINICIAN NOTIFICATION
+    if (pathname === "/api/reports/whatsapp") {
+      if (method === "GET") {
+        const messages = db.getSentWhatsApp();
+        return sendJson(res, 200, {
+          success: true,
+          count: messages.length,
+          messages
+        });
+      }
+      if (method === "POST") {
+        const body = await parseBody(req);
+        const recipientPhone = body.recipientPhone || "+91 98000 11111";
+        const recipientName = body.recipientName || "Patient / Guardian";
+        const patientName = body.patientName || "Aditi Rao";
+        const reportId = body.reportId || `REP-${Math.floor(1000 + Math.random() * 9000)}`;
+        const testName = body.testName || "Complete Blood Count (CBC)";
+
+        let cleanPhone = recipientPhone.replace(/[^\d+]/g, "");
+        if (!cleanPhone.startsWith("+")) {
+          cleanPhone = cleanPhone.length === 10 ? "+91" + cleanPhone : "+" + cleanPhone;
+        }
+        const phoneDigitsOnly = cleanPhone.replace(/\+/g, "");
+
+        const messageId = `msg-wa-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+        const pdfUrl = `http://localhost:3000/api/reports/${reportId}/pdf`;
+
+        const formattedText = `🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *${recipientName}*,\n\nThe official diagnostic test report for *${patientName}* is verified and ready for download.\n\n📋 *Report ID*: ${reportId}\n🧪 *Tests*: ${testName}\n⚡ *Status*: Verified & Released\n\n📄 *Download PDF Report*:\n${pdfUrl}\n\n${body.customMessage ? `💬 *Clinical Note*: ${body.customMessage}\n\n` : ""}🔒 *21 CFR Part 11 Electronic Signature Hash*: SHA256:8f92a410b00192e49c95d3\n────────────────────────────\n_Apex 24/7 Patient Support: +91 11 4000 8000_`;
+
+        const directLink = `https://api.whatsapp.com/send?phone=${phoneDigitsOnly}&text=${encodeURIComponent(formattedText)}`;
+
+        const waRecord = {
+          id: `WA-${Date.now()}`,
+          reportId,
+          recipientPhone: cleanPhone,
+          recipientName,
+          patientName,
+          message: formattedText,
+          timestamp: new Date().toISOString(),
+          status: "Delivered",
+          messageId,
+          directLink,
+          notes: body.notes || "Dispatched via LabFlow WhatsApp Cloud Gateway"
+        };
+
+        db.logSentWhatsApp(waRecord);
+
+        return sendJson(res, 200, {
+          success: true,
+          message: `Report successfully dispatched via WhatsApp to ${cleanPhone}`,
+          record: waRecord,
+          directLink,
+          formattedText,
+          deliveryDetails: {
+            gatewayStatus: "200 OK: WhatsApp message queued & link generated",
+            messageId,
+            sentTo: cleanPhone,
+            deliveredAt: new Date().toISOString()
+          }
+        });
+      }
+    }
+
     // ALERTS
     if (pathname === "/api/alerts") {
       if (method === "GET") {

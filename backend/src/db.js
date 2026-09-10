@@ -90,11 +90,14 @@ function createOrder(orderData) {
     doctorName: orderData.doctorName || "Dr. Priya Sharma, MD"
   };
 
+  const sampleType = orderData.sampleType || "Whole Blood (EDTA)";
+  const collector = orderData.collector || "Sunita Verma";
+
   const newSample = {
     id: sampleId,
     orderId: orderId,
     patient: newOrder.patient,
-    sampleType: "Whole Blood (EDTA)",
+    sampleType: sampleType,
     test: newOrder.tests.join(", "),
     currentLocation: "Phlebotomy Intake - Reception",
     stage: "ORDERED",
@@ -110,18 +113,37 @@ function createOrder(orderData) {
         date: newOrder.createdDate,
         event: "Specimen Requisition & Barcode Label Printed",
         location: newOrder.location,
-        operator: "Accessioning Clerk",
-        details: "Requisition entered into LabFlow LIMS backend. Vacuum tube prepared.",
+        operator: collector,
+        details: `Requisition entered into LabFlow LIMS backend by ${newOrder.doctorName}. Vacuum tube prepared.`,
         status: "active"
       }
     ]
   };
 
+  const reportId = `RPT-${orderId.replace("ORD-", "")}`;
+  const newReport = {
+    id: reportId,
+    orderId: orderId,
+    sampleId: sampleId,
+    patient: newOrder.patient,
+    tests: newOrder.tests,
+    status: "Pending Review",
+    reviewer: newOrder.doctorName || "Dr. Priya Sharma, MD",
+    createdAt: `${newOrder.createdDate} ${newOrder.createdAt}`,
+    priority: newOrder.priority,
+    doctorName: newOrder.doctorName,
+    sampleType: sampleType,
+    location: newOrder.location,
+    collector: collector
+  };
+
   if (!db.orders) db.orders = [];
   if (!db.samples) db.samples = [];
+  if (!db.reports) db.reports = [];
 
   db.orders.unshift(newOrder);
   db.samples.unshift(newSample);
+  db.reports.unshift(newReport);
 
   if (db.workflowStages) {
     const st = db.workflowStages.find(s => s.key === "ORDERED");
@@ -138,12 +160,12 @@ function createOrder(orderData) {
     action: "ORDER_CREATED",
     user: newOrder.doctorName || "Physician",
     role: "Doctor",
-    details: `Order ${orderId} created for patient ${newOrder.patient.name} with sample ${sampleId}.`,
+    details: `Order ${orderId} created for patient ${newOrder.patient.name} with sample ${sampleId} & report ${reportId}.`,
     location: newOrder.location
   });
 
   writeDatabase(db);
-  return { order: newOrder, sample: newSample };
+  return { order: newOrder, sample: newSample, report: newReport };
 }
 
 // SAMPLES
@@ -296,7 +318,68 @@ function verifyTestResult(resultId, reviewer = "Dr. Arvind Swaminathan, MD", com
 // REPORTS
 function getReports() {
   const db = readDatabase();
-  return db.reports || [];
+  let updated = false;
+  if (!db.reports) {
+    db.reports = [];
+    updated = true;
+  }
+
+  if (db.orders && Array.isArray(db.orders)) {
+    for (const order of db.orders) {
+      const existingReport = db.reports.find((r) => r.orderId === order.id);
+      const matchingSample = (db.samples || []).find((s) => s.orderId === order.id);
+      if (!existingReport) {
+        const reportId = `RPT-${order.id.replace("ORD-", "")}`;
+        const synthesizedReport = {
+          id: reportId,
+          orderId: order.id,
+          sampleId: order.sampleId || (matchingSample ? matchingSample.id : undefined),
+          patient: order.patient,
+          tests: order.tests,
+          status: order.currentStage === "RELEASED" ? "Released" : order.currentStage === "REVIEW" ? "Pending Review" : "Draft",
+          reviewer: order.doctorName || "Dr. Priya Sharma, MD",
+          createdAt: `${order.createdDate || "2026-09-10"} ${order.createdAt || "09:00"}`,
+          releasedAt: order.currentStage === "RELEASED" ? order.createdAt : undefined,
+          priority: order.priority,
+          doctorName: order.doctorName,
+          sampleType: matchingSample ? matchingSample.sampleType : "Whole Blood (EDTA)",
+          location: order.location,
+          collector: "Sunita Verma"
+        };
+        db.reports.unshift(synthesizedReport);
+        updated = true;
+      } else {
+        let reportModified = false;
+        if (!existingReport.doctorName && order.doctorName) {
+          existingReport.doctorName = order.doctorName;
+          reportModified = true;
+        }
+        if (!existingReport.priority && order.priority) {
+          existingReport.priority = order.priority;
+          reportModified = true;
+        }
+        if (!existingReport.location && order.location) {
+          existingReport.location = order.location;
+          reportModified = true;
+        }
+        if (!existingReport.sampleId && (order.sampleId || (matchingSample ? matchingSample.id : null))) {
+          existingReport.sampleId = order.sampleId || matchingSample.id;
+          reportModified = true;
+        }
+        if (!existingReport.sampleType && matchingSample && matchingSample.sampleType) {
+          existingReport.sampleType = matchingSample.sampleType;
+          reportModified = true;
+        }
+        if (reportModified) updated = true;
+      }
+    }
+  }
+
+  if (updated) {
+    writeDatabase(db);
+  }
+
+  return db.reports;
 }
 
 function releaseReport(reportId, signedBy = "Dr. Arvind Swaminathan, MD") {
@@ -458,6 +541,52 @@ function getAuditLogs() {
   return db.auditLogs || [];
 }
 
+// EMAIL DISPATCH OPERATIONS
+function logSentEmail(record) {
+  const db = readDatabase();
+  if (!db.sentEmails) db.sentEmails = [];
+  db.sentEmails.unshift(record);
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "REPORT_EMAILED_TO_PARENT",
+    user: "Laboratory Notification Engine",
+    role: "System",
+    details: `Diagnostic Report ${record.reportId} for patient ${record.patientName} dispatched to parent/guardian at ${record.recipientEmail}.`,
+    location: "Automated Dispatch Gateway",
+  });
+  writeDatabase(db);
+  return record;
+}
+
+function getSentEmails() {
+  const db = readDatabase();
+  return db.sentEmails || [];
+}
+
+// WHATSAPP DISPATCH OPERATIONS
+function logSentWhatsApp(record) {
+  const db = readDatabase();
+  if (!db.sentWhatsApp) db.sentWhatsApp = [];
+  db.sentWhatsApp.unshift(record);
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "REPORT_WHATSAPP_DISPATCHED",
+    user: "Laboratory Notification Engine",
+    role: "System",
+    details: `Diagnostic Report ${record.reportId} for patient ${record.patientName} dispatched via WhatsApp to ${record.recipientPhone}.`,
+    location: "WhatsApp Cloud Gateway",
+  });
+  writeDatabase(db);
+  return record;
+}
+
+function getSentWhatsApp() {
+  const db = readDatabase();
+  return db.sentWhatsApp || [];
+}
+
 module.exports = {
   readDatabase,
   writeDatabase,
@@ -472,6 +601,8 @@ module.exports = {
   releaseReport,
   logSentEmail,
   getSentEmails,
+  logSentWhatsApp,
+  getSentWhatsApp,
   getAlerts,
   dismissAlert,
   getTeam,

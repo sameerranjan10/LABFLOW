@@ -1,0 +1,13 @@
+{
+  "name": "labflow-project",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LabFlow - Autonomous Diagnostic LIMS Platform",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix frontend start",
+    "backend": "node backend/src/server.js",
+    "test:api": "node backend/test/api-test.js"
+  }
+}

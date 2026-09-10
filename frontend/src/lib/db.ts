@@ -65,6 +65,20 @@ export interface SentEmailRecord {
   notes?: string;
 }
 
+export interface SentWhatsAppRecord {
+  id: string;
+  reportId: string;
+  recipientPhone: string;
+  recipientName: string;
+  patientName: string;
+  message: string;
+  timestamp: string;
+  status: "Delivered" | "Sent" | "Pending";
+  messageId: string;
+  directLink?: string;
+  notes?: string;
+}
+
 export interface LabDatabase {
   orders: LabOrder[];
   samples: LabSample[];
@@ -75,6 +89,7 @@ export interface LabDatabase {
   results: TestResult[];
   team: TeamMember[];
   sentEmails: SentEmailRecord[];
+  sentWhatsApp?: SentWhatsAppRecord[];
   settings: LabSettings;
   auditLogs: Array<{
     id: string;
@@ -102,6 +117,7 @@ function getInitialDatabase(): LabDatabase {
     results: [DEMO_TEST_RESULT],
     team: [...INITIAL_TEAM],
     sentEmails: [],
+    sentWhatsApp: [],
     settings: {
       organization: {
         name: "Apex Diagnostics & Reference Laboratories",
@@ -164,6 +180,7 @@ export function readDatabase(): LabDatabase {
       ...parsed,
       team: parsed.team || initialDb.team,
       sentEmails: parsed.sentEmails || initialDb.sentEmails || [],
+      sentWhatsApp: parsed.sentWhatsApp || initialDb.sentWhatsApp || [],
       settings: parsed.settings || initialDb.settings,
       results: parsed.results || initialDb.results,
     };
@@ -197,11 +214,17 @@ export function getOrders(filter?: { stage?: string; priority?: string }): LabOr
   return result;
 }
 
-export function createOrder(order: Partial<LabOrder>): { order: LabOrder; sample: LabSample } {
+export function createOrder(order: Partial<LabOrder> & { sampleType?: string; collector?: string }): {
+  order: LabOrder;
+  sample: LabSample;
+  report: LabReport;
+} {
   const db = readDatabase();
 
   const orderId = order.id || `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
   const sampleId = order.sampleId || `SMP-${Math.floor(20000 + Math.random() * 80000)}`;
+  const sampleType = order.sampleType || "Whole Blood (EDTA)";
+  const collector = order.collector || "Sunita Verma";
 
   const newOrder: LabOrder = {
     id: orderId,
@@ -229,7 +252,7 @@ export function createOrder(order: Partial<LabOrder>): { order: LabOrder; sample
     id: sampleId,
     orderId: orderId,
     patient: newOrder.patient,
-    sampleType: "Whole Blood (EDTA)",
+    sampleType: sampleType,
     test: newOrder.tests.join(", "),
     currentLocation: "Phlebotomy Intake - Reception",
     stage: "ORDERED",
@@ -245,15 +268,37 @@ export function createOrder(order: Partial<LabOrder>): { order: LabOrder; sample
         date: newOrder.createdDate,
         event: "Specimen Requisition & Barcode Label Printed",
         location: newOrder.location,
-        operator: "Accessioning Clerk",
-        details: "Requisition entered into LabFlow LIMS database. Vacuum tube prepared.",
+        operator: collector,
+        details: `Requisition entered into LabFlow LIMS database by ${newOrder.doctorName}. Vacuum tube prepared.`,
         status: "active",
       },
     ],
   };
 
+  const reportId = `RPT-${orderId.replace("ORD-", "")}`;
+  const newReport: LabReport = {
+    id: reportId,
+    orderId: orderId,
+    sampleId: sampleId,
+    patient: newOrder.patient,
+    tests: newOrder.tests,
+    status: "Pending Review",
+    reviewer: newOrder.doctorName || "Dr. Priya Sharma, MD",
+    createdAt: `${newOrder.createdDate} ${newOrder.createdAt}`,
+    priority: newOrder.priority,
+    doctorName: newOrder.doctorName,
+    sampleType: sampleType,
+    location: newOrder.location,
+    collector: collector,
+  };
+
+  if (!db.orders) db.orders = [];
+  if (!db.samples) db.samples = [];
+  if (!db.reports) db.reports = [];
+
   db.orders.unshift(newOrder);
   db.samples.unshift(newSample);
+  db.reports.unshift(newReport);
 
   // Update workflow stage count
   const orderedStage = db.workflowStages.find((st) => st.key === "ORDERED");
@@ -273,13 +318,13 @@ export function createOrder(order: Partial<LabOrder>): { order: LabOrder; sample
     action: "ORDER_CREATED",
     user: newOrder.doctorName || "Physician",
     role: "Doctor",
-    details: `Order ${orderId} created for patient ${newOrder.patient.name} (${newOrder.patient.mrn}) with sample ${sampleId}.`,
+    details: `Order ${orderId} created for patient ${newOrder.patient.name} (${newOrder.patient.mrn}) with sample ${sampleId} & report ${reportId}.`,
     location: newOrder.location,
   });
 
   writeDatabase(db);
 
-  return { order: newOrder, sample: newSample };
+  return { order: newOrder, sample: newSample, report: newReport };
 }
 
 // SAMPLE OPERATIONS
@@ -460,6 +505,73 @@ export function verifyTestResult(
 // REPORT OPERATIONS
 export function getReports(): LabReport[] {
   const db = readDatabase();
+  let updated = false;
+  if (!db.reports) {
+    db.reports = [];
+    updated = true;
+  }
+
+  // Ensure every order in db.orders has a corresponding diagnostic report in db.reports
+  if (db.orders && Array.isArray(db.orders)) {
+    for (const order of db.orders) {
+      const existingReport = db.reports.find((r) => r.orderId === order.id);
+      const matchingSample = db.samples?.find((s) => s.orderId === order.id);
+      if (!existingReport) {
+        const reportId = `RPT-${order.id.replace("ORD-", "")}`;
+        const synthesizedReport: LabReport = {
+          id: reportId,
+          orderId: order.id,
+          sampleId: order.sampleId || matchingSample?.id,
+          patient: order.patient,
+          tests: order.tests,
+          status: order.currentStage === "RELEASED" ? "Released" : order.currentStage === "REVIEW" ? "Pending Review" : "Draft",
+          reviewer: order.doctorName || "Dr. Priya Sharma, MD",
+          createdAt: `${order.createdDate || "2026-09-10"} ${order.createdAt || "09:00"}`,
+          releasedAt: order.currentStage === "RELEASED" ? order.createdAt : undefined,
+          priority: order.priority,
+          doctorName: order.doctorName,
+          sampleType: matchingSample?.sampleType || "Whole Blood (EDTA)",
+          location: order.location,
+          collector: "Sunita Verma",
+        };
+        db.reports.unshift(synthesizedReport);
+        updated = true;
+      } else {
+        // Backfill any missing fields from order to report
+        let reportModified = false;
+        if (!existingReport.doctorName && order.doctorName) {
+          existingReport.doctorName = order.doctorName;
+          reportModified = true;
+        }
+        if (!existingReport.priority && order.priority) {
+          existingReport.priority = order.priority;
+          reportModified = true;
+        }
+        if (!existingReport.location && order.location) {
+          existingReport.location = order.location;
+          reportModified = true;
+        }
+        if (!existingReport.sampleId && (order.sampleId || matchingSample?.id)) {
+          existingReport.sampleId = order.sampleId || matchingSample?.id;
+          reportModified = true;
+        }
+        if (!existingReport.sampleType && matchingSample?.sampleType) {
+          existingReport.sampleType = matchingSample.sampleType;
+          reportModified = true;
+        }
+        if ((!existingReport.patient.phone || existingReport.patient.phone === "+91 98000 11111") && order.patient?.phone) {
+          existingReport.patient.phone = order.patient.phone;
+          reportModified = true;
+        }
+        if (reportModified) updated = true;
+      }
+    }
+  }
+
+  if (updated) {
+    writeDatabase(db);
+  }
+
   return db.reports;
 }
 
@@ -673,5 +785,29 @@ export function getSentEmails(): SentEmailRecord[] {
   const db = readDatabase();
   return db.sentEmails || [];
 }
+
+// WHATSAPP DISPATCH OPERATIONS
+export function logSentWhatsApp(record: SentWhatsAppRecord): SentWhatsAppRecord {
+  const db = readDatabase();
+  if (!db.sentWhatsApp) db.sentWhatsApp = [];
+  db.sentWhatsApp.unshift(record);
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "REPORT_WHATSAPP_DISPATCHED",
+    user: "Laboratory Notification Engine",
+    role: "System",
+    details: `Diagnostic Report ${record.reportId} for patient ${record.patientName} dispatched via WhatsApp to ${record.recipientPhone}.`,
+    location: "WhatsApp Cloud Gateway",
+  });
+  writeDatabase(db);
+  return record;
+}
+
+export function getSentWhatsApp(): SentWhatsAppRecord[] {
+  const db = readDatabase();
+  return db.sentWhatsApp || [];
+}
+
 
 
