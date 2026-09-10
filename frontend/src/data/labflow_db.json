@@ -16,11 +16,11 @@
         "Random Glucose"
       ],
       "priority": "Urgent",
-      "currentStage": "RELEASED",
+      "currentStage": "REVIEW",
       "createdAt": "09:42",
       "createdDate": "2026-09-10",
       "tat": "1h 12m",
-      "status": "Completed",
+      "status": "Pending Review",
       "location": "Main Laboratory - Hematology",
       "doctorName": "Dr. V. Sharma"
     },
@@ -134,11 +134,11 @@
         "Serum Electrolytes"
       ],
       "priority": "STAT",
-      "currentStage": "RECEIVED",
+      "currentStage": "REVIEW",
       "createdAt": "10:30",
       "createdDate": "2026-09-10",
       "tat": "15m",
-      "status": "In Progress",
+      "status": "Pending Review",
       "location": "Main Laboratory - Reception",
       "doctorName": "Dr. V. Sharma"
     }
@@ -158,13 +158,23 @@
       "sampleType": "Whole Blood (EDTA)",
       "test": "CBC (Complete Blood Count)",
       "currentLocation": "Hematology Lab - Sysmex XN-1000",
-      "stage": "RELEASED",
+      "stage": "REVIEW",
       "collectedAt": "09:42",
       "tat": "1h 18m",
-      "status": "Completed",
+      "status": "Processing",
       "barcode": "LBF-84920-A",
       "volume": "3.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789077329527",
+          "timestamp": "03:25 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: PROCESSING → REVIEW",
+          "location": "Hematology Lab - Sysmex XN-1000",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to REVIEW via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
         {
           "id": "tl-adv-1789075334401",
           "timestamp": "02:52 am",
@@ -240,8 +250,8 @@
       },
       "sampleType": "Serum (SST Tube)",
       "test": "Lipid Profile & HbA1c",
-      "currentLocation": "Pathology Review Bench",
-      "stage": "REVIEW",
+      "currentLocation": "Biochemistry Lab - Cobas c501",
+      "stage": "PROCESSING",
       "collectedAt": "09:28",
       "tat": "2h 04m",
       "status": "Processing",
@@ -336,11 +346,11 @@
       },
       "sampleType": "Serum (SST Tube)",
       "test": "Thyroid Profile (T3, T4, TSH)",
-      "currentLocation": "Collection Station B",
-      "stage": "COLLECTED",
+      "currentLocation": "Immunology Lab - Abbott Architect i2000",
+      "stage": "PROCESSING",
       "collectedAt": "10:05",
       "tat": "42m",
-      "status": "Collected",
+      "status": "Processing",
       "barcode": "LBF-44102-D",
       "volume": "4.0 mL",
       "timeline": [
@@ -402,14 +412,24 @@
       },
       "sampleType": "Citrate Plasma",
       "test": "D-Dimer & Serum Electrolytes",
-      "currentLocation": "Central Intake Desk",
+      "currentLocation": "Main Lab - Accessioning & Centrifugation Desk",
       "stage": "RECEIVED",
       "collectedAt": "10:30",
       "tat": "15m",
-      "status": "In Progress",
+      "status": "Received",
       "barcode": "LBF-22819-F",
       "volume": "2.7 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789076761617",
+          "timestamp": "03:16 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: RECEIVED → REVIEW",
+          "location": "Central Intake Desk",
+          "operator": "Sysmex Automation Line",
+          "details": "Automated hematology run finished. Results transmitted to Pathologist review queue.",
+          "status": "completed"
+        },
         {
           "id": "tl-1",
           "timestamp": "10:30",
@@ -418,6 +438,39 @@
           "location": "Main Lab Reception",
           "operator": "Dr. V. Sharma",
           "details": "Citrate blue top tube verified",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "id": "SMP-20485",
+      "orderId": "ORD-10288",
+      "patient": {
+        "id": "P-19402",
+        "name": "Meena Sharma",
+        "age": 55,
+        "gender": "Female",
+        "phone": "+91 98450 11223",
+        "mrn": "MRN-19402"
+      },
+      "sampleType": "Whole Blood (EDTA)",
+      "test": "HbA1c Glycated Hemoglobin",
+      "currentLocation": "HPLC Workstation - Bio-Rad Variant II",
+      "stage": "PROCESSING",
+      "collectedAt": "10:45",
+      "tat": "20m",
+      "status": "Processing",
+      "barcode": "LBF-19402-G",
+      "volume": "2.0 mL",
+      "timeline": [
+        {
+          "id": "tl-hplc-1",
+          "timestamp": "10:45",
+          "date": "2026-09-10",
+          "event": "Sample Accessioned & Loaded",
+          "location": "HPLC Workstation - Bio-Rad Variant II",
+          "operator": "Riya Sharma",
+          "details": "Loaded onto HPLC autoloader rack. Calibrator lots verified.",
           "status": "completed"
         }
       ]
@@ -883,6 +936,24 @@
   },
   "auditLogs": [
     {
+      "id": "AUD-1789077329548",
+      "timestamp": "2026-09-10T21:55:29.548Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-20491 transitioned from PROCESSING to REVIEW.",
+      "location": "Hematology Lab - Sysmex XN-1000"
+    },
+    {
+      "id": "AUD-1789076761636",
+      "timestamp": "2026-09-10T21:46:01.636Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Sysmex Automation Line",
+      "role": "Technologist",
+      "details": "Sample SMP-20476 transitioned from RECEIVED to REVIEW.",
+      "location": "Central Intake Desk"
+    },
+    {
       "id": "AUD-1789075334401",
       "timestamp": "2026-09-10T21:22:14.401Z",
       "action": "SAMPLE_STAGE_UPDATED",
@@ -911,5 +982,5 @@
     }
   ],
   "version": "3.0.0-synchronized",
-  "lastUpdated": "2026-09-10T21:22:14.401Z"
+  "lastUpdated": "2026-09-10T21:55:29.548Z"
 }

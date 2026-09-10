@@ -265,6 +265,34 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
     addToast("Report Released & Persisted", `Diagnostic report ${reportId} digitally signed and saved in database.`, "success");
   };
 
+  const handleSampleUpdated = (updatedSample: LabSample) => {
+    setSamples((prev) => prev.map((s) => (s.id === updatedSample.id ? updatedSample : s)));
+    setWorkflowStages((prev) =>
+      prev.map((st) => {
+        if (st.key === "PROCESSING" || st.key === "RECEIVED") return { ...st, count: Math.max(0, st.count - 1) };
+        if (st.key === "REVIEW") return { ...st, count: st.count + 1 };
+        return st;
+      })
+    );
+  };
+
+  const handleSamplesBatchUpdated = (updatedSamples: LabSample[]) => {
+    const map = new Map(updatedSamples.map((s) => [s.id, s]));
+    setSamples((prev) => {
+      const existingIds = new Set(prev.map((s) => s.id));
+      const updated = prev.map((s) => map.get(s.id) || s);
+      const brandNew = updatedSamples.filter((s) => !existingIds.has(s.id));
+      return [...brandNew, ...updated];
+    });
+    setWorkflowStages((prev) =>
+      prev.map((st) => {
+        if (st.key === "PROCESSING") return { ...st, count: Math.max(0, st.count - updatedSamples.length) };
+        if (st.key === "REVIEW") return { ...st, count: st.count + updatedSamples.length };
+        return st;
+      })
+    );
+  };
+
   const handleDismissAlert = async (id: string) => {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
     try {
@@ -389,6 +417,9 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
                 samples={samples}
                 onSelectSample={(sample) => setSelectedSampleDetail(sample)}
                 onNavigateToResults={() => navigateTo("results")}
+                onSampleUpdated={handleSampleUpdated}
+                onSamplesBatchUpdated={handleSamplesBatchUpdated}
+                onNotify={addToast}
               />
             )}
 

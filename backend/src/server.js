@@ -167,8 +167,12 @@ const server = http.createServer(async (req, res) => {
         const results = db.getTestResults(query.orderId);
         return sendJson(res, 200, { success: true, count: results.length, results });
       }
-      if (method === "POST") {
+      if (method === "POST" || method === "PUT") {
         const body = await parseBody(req);
+        if (body.result) {
+          const saved = db.createOrUpdateTestResult(body.result);
+          return sendJson(res, 200, { success: true, message: "Analyzer test result ingested", result: saved });
+        }
         const { resultId, reviewer, comments } = body;
         const verified = db.verifyTestResult(resultId, reviewer, comments);
         if (!verified) return sendJson(res, 404, { success: false, error: "Test result record not found" });
