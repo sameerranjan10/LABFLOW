@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { FlaskConical, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
 
@@ -5,17 +7,17 @@ interface LoginPageProps {
   onLoginSuccess: () => void;
   onGoToSignUp?: () => void;
   onGoToLanding?: () => void;
+  onRequestDemo?: () => void;
 }
 
 export const LoginPage: React.FC<LoginPageProps> = ({
   onLoginSuccess,
   onGoToSignUp,
   onGoToLanding,
+  onRequestDemo,
 }) => {
   const [email, setEmail] = useState("admin@apexdiagnostics.com");
   const [password, setPassword] = useState("••••••••••••");
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -55,6 +57,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
         {/* LOGIN FORM CARD */}
         <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-xl space-y-5">
+          {errorMessage && (
+            <div className="p-3 bg-red-50 text-red-700 text-xs rounded-lg border border-red-200">
+              {errorMessage}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
@@ -75,7 +83,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 <label className="block text-xs font-semibold text-slate-700">
                   Password
                 </label>
-                <a href="#" onClick={(e) => { e.preventDefault(); alert("Password reset link sent to work email."); }} className="text-[11px] font-medium text-indigo-600 hover:underline">
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    alert("Password reset link sent to work email.");
+                  }}
+                  className="text-[11px] font-medium text-indigo-600 hover:underline"
+                >
                   Forgot password?
                 </a>
               </div>
@@ -91,9 +106,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             {/* SUBMIT BUTTON */}
             <button
               type="submit"
-              className="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
+              className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
             >
-              Sign In
+              Sign In to LabFlow
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
@@ -106,9 +121,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             </span>
           </div>
 
-          {/* GOOGLE SSO */}
+          {/* DEMO / WORKSPACE REQUEST */}
           <button
-            onClick={handleGoogleSignIn}
+            onClick={() => {
+              if (onRequestDemo) onRequestDemo();
+              else alert("Demo request submitted! Our enterprise team will contact you.");
+            }}
             className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             Don't have an enterprise workspace? <span className="text-indigo-600 underline">Request a Demo</span>
@@ -118,20 +136,19 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           <div className="pt-2 text-center text-xs text-slate-500">
             Don't have an account?{" "}
             <button
-              onClick={onGoToSignUp}
-              className="text-sky-700 hover:text-sky-800 font-bold hover:underline cursor-pointer"
+              onClick={onGoToSignUp || onLoginSuccess}
+              className="text-indigo-600 hover:text-indigo-800 font-bold hover:underline cursor-pointer"
             >
               Sign up
             </button>
           </div>
         </div>
-      </div>
-    </main>
 
-      {/* FOOTER */ }
-  <footer className="py-4 px-6 border-t border-slate-200 text-center text-xs text-slate-500 bg-white">
-    © 2026 LabFlow Inc. All rights reserved. Professional Healthcare SaaS Platform.
-  </footer>
-    </div >
+        {/* FOOTER */}
+        <footer className="text-center text-xs text-slate-400">
+          © 2026 LabFlow Inc. ISO 15189 & 21 CFR Part 11 Compliant Laboratory Platform.
+        </footer>
+      </div>
+    </div>
   );
 };

@@ -297,6 +297,12 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
             onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
             currentUser={currentUser}
             onSelectUser={handleSelectUser}
+            orders={orders}
+            samples={samples}
+            reports={reports}
+            onNavigate={(view) => navigateTo(view)}
+            onSelectSample={(sample) => setSelectedSampleDetail(sample)}
+            onSelectReport={(report) => setSelectedReportPreview(report)}
           />
 
           {/* VIEW SWITCHER */}

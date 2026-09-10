@@ -52,6 +52,19 @@ export interface LabSettings {
   }>;
 }
 
+export interface SentEmailRecord {
+  id: string;
+  reportId: string;
+  recipientEmail: string;
+  recipientName: string;
+  patientName: string;
+  subject: string;
+  timestamp: string;
+  status: "Delivered" | "Pending" | "Failed";
+  messageId: string;
+  notes?: string;
+}
+
 export interface LabDatabase {
   orders: LabOrder[];
   samples: LabSample[];
@@ -61,6 +74,7 @@ export interface LabDatabase {
   workflowStages: WorkflowStageMetric[];
   results: TestResult[];
   team: TeamMember[];
+  sentEmails: SentEmailRecord[];
   settings: LabSettings;
   auditLogs: Array<{
     id: string;
@@ -87,6 +101,7 @@ function getInitialDatabase(): LabDatabase {
     workflowStages: [...INITIAL_WORKFLOW_STAGES],
     results: [DEMO_TEST_RESULT],
     team: [...INITIAL_TEAM],
+    sentEmails: [],
     settings: {
       organization: {
         name: "Apex Diagnostics & Reference Laboratories",
@@ -148,6 +163,7 @@ export function readDatabase(): LabDatabase {
       ...initialDb,
       ...parsed,
       team: parsed.team || initialDb.team,
+      sentEmails: parsed.sentEmails || initialDb.sentEmails || [],
       settings: parsed.settings || initialDb.settings,
       results: parsed.results || initialDb.results,
     };
@@ -634,4 +650,28 @@ export function addCollectionCenter(center: {
   writeDatabase(db);
   return db.settings.collectionCenters;
 }
+
+// EMAIL DISPATCH OPERATIONS
+export function logSentEmail(record: SentEmailRecord): SentEmailRecord {
+  const db = readDatabase();
+  if (!db.sentEmails) db.sentEmails = [];
+  db.sentEmails.unshift(record);
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "REPORT_EMAILED_TO_PARENT",
+    user: "Laboratory Notification Engine",
+    role: "System",
+    details: `Diagnostic Report ${record.reportId} for patient ${record.patientName} dispatched to parent/guardian at ${record.recipientEmail}.`,
+    location: "Automated Dispatch Gateway",
+  });
+  writeDatabase(db);
+  return record;
+}
+
+export function getSentEmails(): SentEmailRecord[] {
+  const db = readDatabase();
+  return db.sentEmails || [];
+}
+
 

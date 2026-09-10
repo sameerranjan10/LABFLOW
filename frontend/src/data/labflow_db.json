@@ -823,6 +823,20 @@
       "email": "pooja.n@labflow.io"
     }
   ],
+  "sentEmails": [
+    {
+      "id": "eml-1789056831529",
+      "reportId": "RPT-4029",
+      "recipientEmail": "niteshnemalpuri17@gmail.com",
+      "recipientName": "Parent / Guardian",
+      "patientName": "Ramesh Gupta",
+      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
+      "timestamp": "2026-09-10T16:13:51.529Z",
+      "status": "Delivered",
+      "messageId": "MSG-EML-1789056831529-4586",
+      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
+    }
+  ],
   "settings": {
     "organization": {
       "name": "Apex Diagnostics & Reference Laboratories",
@@ -947,6 +961,15 @@
   },
   "auditLogs": [
     {
+      "id": "AUD-1789056831530",
+      "timestamp": "2026-09-10T16:13:51.530Z",
+      "action": "REPORT_EMAILED_TO_PARENT",
+      "user": "Laboratory Notification Engine",
+      "role": "System",
+      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
+      "location": "Automated Dispatch Gateway"
+    },
+    {
       "id": "AUD-1789047840815",
       "timestamp": "2026-09-10T13:44:00.815Z",
       "action": "SAMPLE_STAGE_UPDATED",
@@ -1044,5 +1067,5 @@
     }
   ],
   "version": "3.0.0-integrated",
-  "lastUpdated": "2026-09-10T13:44:00.815Z"
+  "lastUpdated": "2026-09-10T16:13:51.530Z"
 }

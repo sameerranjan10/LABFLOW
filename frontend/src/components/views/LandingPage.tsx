@@ -33,9 +33,10 @@ import {
 } from "lucide-react";
 
 interface LandingPageProps {
-  onGoToSignIn: () => void;
-  onGoToSignUp: () => void;
+  onGoToSignIn?: () => void;
+  onGoToSignUp?: () => void;
   onExplorePlatform?: () => void;
+  onRequestDemo?: () => void;
 }
 
 // ----------------------------------------------------------------------

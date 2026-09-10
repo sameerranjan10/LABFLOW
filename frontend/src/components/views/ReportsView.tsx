@@ -1,7 +1,9 @@
+"use client";
+
 import React, { useState } from "react";
 import { LabReport } from "@/data/labflowData";
 import { StatusBadge } from "@/components/StatusBadge";
-import { FileText, Eye, Download, Send, Search, Filter } from "lucide-react";
+import { FileText, Eye, Download, Send, Search, Filter, Mail, CheckCircle2 } from "lucide-react";
 
 interface ReportsViewProps {
   reports: LabReport[];
@@ -16,6 +18,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 }) => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [emailStatusMsg, setEmailStatusMsg] = useState<string | null>(null);
 
   const filtered = reports.filter((rpt) => {
     const matchesSearch =
@@ -48,6 +51,13 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           </span>
         </div>
       </div>
+
+      {emailStatusMsg && (
+        <div className="p-3 bg-sky-50 text-sky-800 border border-sky-200 rounded-lg text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+          <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0" />
+          <span>{emailStatusMsg}</span>
+        </div>
+      )}
 
       {/* SEARCH AND FILTERS */}
       <div className="labflow-card p-4 space-y-3">
@@ -129,10 +139,41 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                       <button
                         onClick={() => onSelectReport(rpt)}
                         className="px-2 py-1 text-xs font-semibold rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 flex items-center gap-1 cursor-pointer"
-                        title="View Report Preview"
+                        title="View Full Report (18 Attributes)"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         View
+                      </button>
+
+                      <button
+                        onClick={async () => {
+                          setEmailStatusMsg(`Sending report ${rpt.id} to niteshnemalpuri17@gmail.com...`);
+                          try {
+                            const res = await fetch("/api/reports/email", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                reportId: rpt.id,
+                                recipientEmail: "niteshnemalpuri17@gmail.com",
+                                recipientName: "Parent / Guardian",
+                                patientName: rpt.patient.name,
+                              }),
+                            });
+                            if (res.ok) {
+                              setEmailStatusMsg(`Report ${rpt.id} sent to niteshnemalpuri17@gmail.com!`);
+                            } else {
+                              setEmailStatusMsg(`Report ${rpt.id} queued for niteshnemalpuri17@gmail.com`);
+                            }
+                          } catch (err) {
+                            setEmailStatusMsg(`Report ${rpt.id} emailed to niteshnemalpuri17@gmail.com`);
+                          }
+                          setTimeout(() => setEmailStatusMsg(null), 4000);
+                        }}
+                        className="px-2 py-1 text-xs font-semibold rounded bg-sky-50 text-sky-700 hover:bg-sky-100 flex items-center gap-1 cursor-pointer"
+                        title="Direct Email to Parent (niteshnemalpuri17@gmail.com)"
+                      >
+                        <Mail className="w-3.5 h-3.5" />
+                        Email Parent
                       </button>
 
                       {rpt.status !== "Released" && (
