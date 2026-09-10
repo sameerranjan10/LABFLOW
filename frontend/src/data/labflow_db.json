@@ -16,7 +16,7 @@
         "CBC"
       ],
       "priority": "STAT",
-      "currentStage": "ORDERED",
+      "currentStage": "COLLECTED",
       "createdAt": "06:17 PM",
       "createdDate": "2026-09-10",
       "tat": "15m",
@@ -182,13 +182,23 @@
       "sampleType": "Whole Blood (EDTA)",
       "test": "Lipid Profile Standard, CBC",
       "currentLocation": "Phlebotomy Intake - Reception",
-      "stage": "ORDERED",
+      "stage": "COLLECTED",
       "collectedAt": "06:17 PM",
       "tat": "15m",
       "status": "Collected",
       "barcode": "LBF-PAT-9587",
       "volume": "3.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789060020780",
+          "timestamp": "10:37 pm",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: ORDERED → COLLECTED",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to COLLECTED via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
         {
           "id": "tl-evt-1789044439628",
           "timestamp": "06:17 PM",
@@ -222,6 +232,36 @@
       "barcode": "LBF-84920-A",
       "volume": "3.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789067112415",
+          "timestamp": "12:35 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: REVIEW → PROCESSING",
+          "location": "Hematology Lab - Sysmex XN-1000",
+          "operator": "Pathologist",
+          "details": "Analyzer rerun requested by pathologist.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789067107818",
+          "timestamp": "12:35 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: PROCESSING → REVIEW",
+          "location": "Hematology Lab - Sysmex XN-1000",
+          "operator": "Sysmex Automation Line",
+          "details": "Automated hematology run finished. Results transmitted to Pathologist review queue.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789067021603",
+          "timestamp": "12:33 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: PROCESSING → PROCESSING",
+          "location": "Hematology Lab - Sysmex XN-1000",
+          "operator": "Pathologist",
+          "details": "Analyzer rerun requested by pathologist.",
+          "status": "completed"
+        },
         {
           "id": "tl-adv-1789047840814",
           "timestamp": "07:14 PM",
@@ -447,51 +487,6 @@
       "timestamp": "Just now",
       "entityId": "SMP-20491",
       "actionable": true
-    },
-    {
-      "id": "alt-1",
-      "category": "Critical",
-      "title": "Processing TAT Exceeded",
-      "description": "Sample SMP-20491 exceeded maximum processing TAT by 18 minutes due to Line #2 calibration.",
-      "timestamp": "11:05 AM",
-      "entityId": "SMP-20491",
-      "actionable": true
-    },
-    {
-      "id": "alt-2",
-      "category": "Delayed",
-      "title": "Transport Courier Delayed",
-      "description": "Transport Van #4 for SMP-20482 delayed in traffic. Specimen cold chain maintained at 4.2°C.",
-      "timestamp": "10:45 AM",
-      "entityId": "SMP-20482",
-      "actionable": true
-    },
-    {
-      "id": "alt-3",
-      "category": "Rejected",
-      "title": "Sample Rejection - Insufficient Volume",
-      "description": "Sample SMP-20476 (Microbiology Culture) rejected due to insufficient specimen volume (<0.5 mL).",
-      "timestamp": "10:15 AM",
-      "entityId": "SMP-20476",
-      "actionable": true
-    },
-    {
-      "id": "alt-4",
-      "category": "Pending Review",
-      "title": "17 Results Awaiting Review",
-      "description": "17 test results (including 3 STAT urgent orders) are currently queued for Pathologist verification.",
-      "timestamp": "11:20 AM",
-      "entityId": "RES-QUEUE",
-      "actionable": true
-    },
-    {
-      "id": "alt-5",
-      "category": "Information",
-      "title": "Daily Calibration Completed",
-      "description": "Sysmex XN-1000 and Roche Cobas c501 daily QC calibration passed successfully.",
-      "timestamp": "07:30 AM",
-      "entityId": "SYS-QC",
-      "actionable": false
     }
   ],
   "reports": [
@@ -1009,6 +1004,82 @@
   },
   "auditLogs": [
     {
+      "id": "AUD-1789067112415",
+      "timestamp": "2026-09-10T19:05:12.415Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Pathologist",
+      "role": "Technologist",
+      "details": "Sample SMP-20491 transitioned from REVIEW to PROCESSING.",
+      "location": "Hematology Lab - Sysmex XN-1000"
+    },
+    {
+      "id": "AUD-1789067107818",
+      "timestamp": "2026-09-10T19:05:07.818Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Sysmex Automation Line",
+      "role": "Technologist",
+      "details": "Sample SMP-20491 transitioned from PROCESSING to REVIEW.",
+      "location": "Hematology Lab - Sysmex XN-1000"
+    },
+    {
+      "id": "AUD-1789067099919",
+      "timestamp": "2026-09-10T19:04:59.919Z",
+      "action": "ALERT_ACKNOWLEDGED",
+      "user": "Operations Admin",
+      "role": "Admin",
+      "details": "Operational alert alt-5 acknowledged and dismissed from queue."
+    },
+    {
+      "id": "AUD-1789067099666",
+      "timestamp": "2026-09-10T19:04:59.666Z",
+      "action": "ALERT_ACKNOWLEDGED",
+      "user": "Operations Admin",
+      "role": "Admin",
+      "details": "Operational alert alt-4 acknowledged and dismissed from queue."
+    },
+    {
+      "id": "AUD-1789067099580",
+      "timestamp": "2026-09-10T19:04:59.580Z",
+      "action": "ALERT_ACKNOWLEDGED",
+      "user": "Operations Admin",
+      "role": "Admin",
+      "details": "Operational alert alt-3 acknowledged and dismissed from queue."
+    },
+    {
+      "id": "AUD-1789067099217",
+      "timestamp": "2026-09-10T19:04:59.217Z",
+      "action": "ALERT_ACKNOWLEDGED",
+      "user": "Operations Admin",
+      "role": "Admin",
+      "details": "Operational alert alt-2 acknowledged and dismissed from queue."
+    },
+    {
+      "id": "AUD-1789067099204",
+      "timestamp": "2026-09-10T19:04:59.204Z",
+      "action": "ALERT_ACKNOWLEDGED",
+      "user": "Operations Admin",
+      "role": "Admin",
+      "details": "Operational alert alt-1 acknowledged and dismissed from queue."
+    },
+    {
+      "id": "AUD-1789067021607",
+      "timestamp": "2026-09-10T19:03:41.607Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Pathologist",
+      "role": "Technologist",
+      "details": "Sample SMP-20491 transitioned from PROCESSING to PROCESSING.",
+      "location": "Hematology Lab - Sysmex XN-1000"
+    },
+    {
+      "id": "AUD-1789060020839",
+      "timestamp": "2026-09-10T17:07:00.839Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-94790 transitioned from ORDERED to COLLECTED.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
       "id": "AUD-1789057819558",
       "timestamp": "2026-09-10T16:30:19.558Z",
       "action": "REPORT_EMAILED_TO_PARENT",
@@ -1151,5 +1222,5 @@
     }
   ],
   "version": "3.0.0-integrated",
-  "lastUpdated": "2026-09-10T16:30:19.558Z"
+  "lastUpdated": "2026-09-10T19:05:12.415Z"
 }
