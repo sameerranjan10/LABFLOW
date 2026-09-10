@@ -415,6 +415,19 @@ export const Topbar: React.FC<TopbarProps> = ({
                   );
                 })}
               </div>
+
+              <div className="border-t border-slate-100 mt-1 pt-1">
+                <button
+                  onClick={() => {
+                    setRoleDropdownOpen(false);
+                    if (onNavigate) onNavigate("login");
+                  }}
+                  className="w-full px-3 py-2 text-left flex items-center gap-2.5 text-xs text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer font-semibold"
+                >
+                  <LogIn className="w-4 h-4 text-indigo-600" />
+                  Sign Out / Sign In
+                </button>
+              </div>
             </div>
           )}
         </div>

@@ -5,6 +5,7 @@ export const metadata = {
   description: "Enterprise laboratory workstation authentication and single sign-on",
 };
 
-export default function LoginPage() {
+export default function LoginRoutePage() {
   return <SplitScreenDashboard initialView="login" />;
 }
+

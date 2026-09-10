@@ -51,6 +51,31 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("Main Reference Lab (Central)");
 
+  // URL Pathname Synchronization
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const rawPath = window.location.pathname.replace(/^\//, "");
+      const validViews: NavView[] = [
+        "dashboard", "orders", "samples", "processing", "results",
+        "reports", "alerts", "audit", "team", "settings", "login", "signup", "landing"
+      ];
+      if (rawPath && validViews.includes(rawPath as NavView)) {
+        setCurrentView(rawPath as NavView);
+      }
+
+      const handlePopState = () => {
+        const path = window.location.pathname.replace(/^\//, "") as NavView;
+        if (path && validViews.includes(path)) {
+          setCurrentView(path);
+        } else if (!path) {
+          setCurrentView(initialView || "dashboard");
+        }
+      };
+      window.addEventListener("popstate", handlePopState);
+      return () => window.removeEventListener("popstate", handlePopState);
+    }
+  }, [initialView]);
+
   const navigateTo = (view: NavView) => {
     setCurrentView(view);
     if (typeof window !== "undefined") {
@@ -231,9 +256,10 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
   if (currentView === "login") {
     return (
       <LoginPage
-        onLoginSuccess={() => {
+        onLoginSuccess={(user?: LabUser) => {
+          if (user) setCurrentUser(user);
           setCurrentView("dashboard");
-          addToast("Authenticated Successfully", "Welcome back, Admin User.", "success");
+          addToast("Authenticated Successfully", `Welcome back, ${user?.name || "User"}.`, "success");
         }}
         onGoToSignUp={() => setCurrentView("signup")}
         onGoToLanding={() => setCurrentView("landing")}
@@ -244,9 +270,10 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
   if (currentView === "signup") {
     return (
       <SignupPage
-        onSignUpSuccess={() => {
+        onSignUpSuccess={(user?: LabUser) => {
+          if (user) setCurrentUser(user);
           setCurrentView("dashboard");
-          addToast("Account Created", "Welcome to LabFlow! Your laboratory workspace is ready.", "success");
+          addToast("Account Created", `Welcome to LabFlow, ${user?.name || "User"}! Workspace ready.`, "success");
         }}
         onGoToLogin={() => setCurrentView("login")}
         onGoToLanding={() => setCurrentView("landing")}
@@ -257,10 +284,10 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
   if (currentView === "landing") {
     return (
       <LandingPage
-        onExplorePlatform={() => setCurrentView("dashboard")}
-        onRequestDemo={() => {
-          alert("Demo request submitted! Our enterprise team will contact you.");
-        }}
+        onGoToSignIn={() => navigateTo("login")}
+        onGoToSignUp={() => navigateTo("signup")}
+        onExplorePlatform={() => navigateTo("dashboard")}
+        onRequestDemo={() => navigateTo("signup")}
       />
     );
   }
