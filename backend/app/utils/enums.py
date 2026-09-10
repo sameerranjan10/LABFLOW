@@ -1,0 +1,70 @@
+from enum import Enum
+
+
+class UserRole(str, Enum):
+    ADMIN = "ADMIN"
+    LAB_MANAGER = "LAB_MANAGER"
+    LAB_TECHNICIAN = "LAB_TECHNICIAN"
+    RECEPTIONIST = "RECEPTIONIST"
+    PATHOLOGIST = "PATHOLOGIST"
+
+
+class OrderPriority(str, Enum):
+    ROUTINE = "ROUTINE"
+    URGENT = "URGENT"
+    STAT = "STAT"
+
+
+class OrderStatus(str, Enum):
+    CREATED = "CREATED"
+    SAMPLE_PENDING = "SAMPLE_PENDING"
+    SAMPLE_COLLECTED = "SAMPLE_COLLECTED"
+    PROCESSING = "PROCESSING"
+    RESULT_PENDING = "RESULT_PENDING"
+    VERIFICATION_PENDING = "VERIFICATION_PENDING"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
+
+
+class OrderTestStatus(str, Enum):
+    PENDING = "PENDING"
+    PROCESSING = "PROCESSING"
+    ENTERED = "ENTERED"
+    VERIFIED = "VERIFIED"
+    CANCELLED = "CANCELLED"
+
+
+class SampleStatus(str, Enum):
+    PENDING = "PENDING"
+    COLLECTED = "COLLECTED"
+    RECEIVED = "RECEIVED"
+    REJECTED = "REJECTED"
+    PROCESSING = "PROCESSING"
+    COMPLETED = "COMPLETED"
+
+
+class ResultStatus(str, Enum):
+    DRAFT = "DRAFT"
+    ENTERED = "ENTERED"
+    VERIFIED = "VERIFIED"
+    REJECTED = "REJECTED"
+
+
+class ResultFlag(str, Enum):
+    NORMAL = "NORMAL"
+    LOW = "LOW"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+
+class ReportStatus(str, Enum):
+    DRAFT = "DRAFT"
+    GENERATED = "GENERATED"
+    VERIFIED = "VERIFIED"
+    PUBLISHED = "PUBLISHED"
+
+
+class Gender(str, Enum):
+    MALE = "MALE"
+    FEMALE = "FEMALE"
+    OTHER = "OTHER"
