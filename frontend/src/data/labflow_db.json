@@ -1,100 +1,6 @@
 {
   "orders": [
     {
-      "id": "ORD-5169",
-      "sampleId": "SMP-15169",
-      "patient": {
-        "id": "P-123456",
-        "name": "vivek",
-        "age": 45,
-        "gender": "Male",
-        "phone": "9348546674",
-        "mrn": "123456"
-      },
-      "tests": [
-        "CBC (Complete Blood Count)"
-      ],
-      "priority": "Normal",
-      "currentStage": "REVIEW",
-      "createdAt": "01:13 am",
-      "createdDate": "2026-09-10",
-      "tat": "15m",
-      "status": "Pending Review",
-      "location": "Main Laboratory - Accessioning",
-      "doctorName": "Dr. V. Sharma"
-    },
-    {
-      "id": "ORD-33918",
-      "sampleId": "SMP-42373",
-      "patient": {
-        "id": "PAT-7788",
-        "name": "Rohan Deshmukh",
-        "age": 52,
-        "gender": "Male",
-        "phone": "+91 99112 23344",
-        "mrn": "MRN-778899"
-      },
-      "tests": [
-        "Lipid Profile",
-        "Kidney Function Test (KFT)"
-      ],
-      "priority": "STAT",
-      "currentStage": "ORDERED",
-      "createdAt": "01:09 am",
-      "createdDate": "2026-09-10",
-      "tat": "15m",
-      "status": "In Progress",
-      "location": "Emergency Room Phlebotomy",
-      "doctorName": "Dr. Rajesh Khanna, MD"
-    },
-    {
-      "id": "ORD-2284",
-      "sampleId": "SMP-12284",
-      "patient": {
-        "id": "P-123456",
-        "name": "ankita",
-        "age": 45,
-        "gender": "Female",
-        "phone": "9348085529",
-        "mrn": "123456"
-      },
-      "tests": [
-        "CBC (Complete Blood Count)"
-      ],
-      "priority": "Normal",
-      "currentStage": "REVIEW",
-      "createdAt": "12:30 am",
-      "createdDate": "2026-09-10",
-      "tat": "15m",
-      "status": "Pending Review",
-      "location": "Main Laboratory - Accessioning",
-      "doctorName": "Dr. V. Sharma"
-    },
-    {
-      "id": "ORD-46492",
-      "sampleId": "SMP-94790",
-      "patient": {
-        "id": "PAT-9587",
-        "name": "Anonymous Patient",
-        "age": 40,
-        "gender": "Male",
-        "phone": "+91 98765 43210",
-        "mrn": "MRN-994863"
-      },
-      "tests": [
-        "Lipid Profile Standard",
-        "CBC"
-      ],
-      "priority": "STAT",
-      "currentStage": "COLLECTED",
-      "createdAt": "06:17 PM",
-      "createdDate": "2026-09-10",
-      "tat": "15m",
-      "status": "In Progress",
-      "location": "Main Reference Lab (Central)",
-      "doctorName": "Dr. Priya Sharma, MD"
-    },
-    {
       "id": "ORD-10294",
       "sampleId": "SMP-20491",
       "patient": {
@@ -110,11 +16,11 @@
         "Random Glucose"
       ],
       "priority": "Urgent",
-      "currentStage": "REVIEW",
+      "currentStage": "PROCESSING",
       "createdAt": "09:42",
       "createdDate": "2026-09-10",
       "tat": "1h 12m",
-      "status": "Pending Review",
+      "status": "In Progress",
       "location": "Main Laboratory - Hematology",
       "doctorName": "Dr. V. Sharma"
     },
@@ -239,238 +145,6 @@
   ],
   "samples": [
     {
-      "id": "SMP-15169",
-      "orderId": "ORD-5169",
-      "patient": {
-        "id": "P-123456",
-        "name": "vivek",
-        "age": 45,
-        "gender": "Male",
-        "phone": "9348546674",
-        "mrn": "123456"
-      },
-      "sampleType": "Whole Blood (EDTA)",
-      "test": "CBC (Complete Blood Count)",
-      "currentLocation": "Phlebotomy Intake - Reception",
-      "stage": "REVIEW",
-      "collectedAt": "01:13 am",
-      "tat": "15m",
-      "status": "Processing",
-      "barcode": "LBF-P-123456",
-      "volume": "3.0 mL",
-      "timeline": [
-        {
-          "id": "tl-adv-1789069564180",
-          "timestamp": "01:16 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: PROCESSING → REVIEW",
-          "location": "Phlebotomy Intake - Reception",
-          "operator": "Laboratory Technologist",
-          "details": "Advanced to REVIEW via Chain-of-Custody Modal.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789069562147",
-          "timestamp": "01:16 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: RECEIVED → PROCESSING",
-          "location": "Phlebotomy Intake - Reception",
-          "operator": "Laboratory Technologist",
-          "details": "Advanced to PROCESSING via Chain-of-Custody Modal.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789069448745",
-          "timestamp": "01:14 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: IN_TRANSIT → RECEIVED",
-          "location": "Phlebotomy Intake - Reception",
-          "operator": "Laboratory Technologist",
-          "details": "Advanced to RECEIVED via Chain-of-Custody Modal.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789069437713",
-          "timestamp": "01:13 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: COLLECTED → IN_TRANSIT",
-          "location": "Phlebotomy Intake - Reception",
-          "operator": "Laboratory Technologist",
-          "details": "Advanced to IN_TRANSIT via Chain-of-Custody Modal.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789069436081",
-          "timestamp": "01:13 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: ORDERED → COLLECTED",
-          "location": "Phlebotomy Intake - Reception",
-          "operator": "Laboratory Technologist",
-          "details": "Advanced to COLLECTED via Chain-of-Custody Modal.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-evt-1789069412142",
-          "timestamp": "01:13 am",
-          "date": "2026-09-10",
-          "event": "Specimen Requisition & Barcode Label Printed",
-          "location": "Main Laboratory - Accessioning",
-          "operator": "Sunita Verma",
-          "details": "Requisition entered into LabFlow LIMS database by Dr. V. Sharma. Vacuum tube prepared.",
-          "status": "active"
-        }
-      ]
-    },
-    {
-      "id": "SMP-42373",
-      "orderId": "ORD-33918",
-      "patient": {
-        "id": "PAT-7788",
-        "name": "Rohan Deshmukh",
-        "age": 52,
-        "gender": "Male",
-        "phone": "+91 99112 23344",
-        "mrn": "MRN-778899"
-      },
-      "sampleType": "Serum (SST Gel)",
-      "test": "Lipid Profile, Kidney Function Test (KFT)",
-      "currentLocation": "Phlebotomy Intake - Reception",
-      "stage": "ORDERED",
-      "collectedAt": "01:09 am",
-      "tat": "15m",
-      "status": "Collected",
-      "barcode": "LBF-PAT-7788",
-      "volume": "3.0 mL",
-      "timeline": [
-        {
-          "id": "tl-evt-1789069144128",
-          "timestamp": "01:09 am",
-          "date": "2026-09-10",
-          "event": "Specimen Requisition & Barcode Label Printed",
-          "location": "Emergency Room Phlebotomy",
-          "operator": "Sunita Verma",
-          "details": "Requisition entered into LabFlow LIMS database by Dr. Rajesh Khanna, MD. Vacuum tube prepared.",
-          "status": "active"
-        }
-      ]
-    },
-    {
-      "id": "SMP-12284",
-      "orderId": "ORD-2284",
-      "patient": {
-        "id": "P-123456",
-        "name": "ankita",
-        "age": 45,
-        "gender": "Female",
-        "phone": "9348085529",
-        "mrn": "123456"
-      },
-      "sampleType": "Whole Blood (EDTA)",
-      "test": "CBC (Complete Blood Count)",
-      "currentLocation": "Blood Draw Station #2",
-      "stage": "REVIEW",
-      "collectedAt": "12:30 am",
-      "tat": "15m",
-      "status": "Processing",
-      "barcode": "LBF-P-123456",
-      "volume": "3.0 mL",
-      "timeline": [
-        {
-          "id": "tl-adv-1789068487363",
-          "timestamp": "12:58 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: RECEIVED → REVIEW",
-          "location": "Blood Draw Station #2",
-          "operator": "Sysmex Automation Line",
-          "details": "Automated hematology run finished. Results transmitted to Pathologist review queue.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789068476770",
-          "timestamp": "12:57 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: IN_TRANSIT → RECEIVED",
-          "location": "Blood Draw Station #2",
-          "operator": "Laboratory Technologist",
-          "details": "Advanced to RECEIVED via Chain-of-Custody Modal.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789068472168",
-          "timestamp": "12:57 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: COLLECTED → IN_TRANSIT",
-          "location": "Blood Draw Station #2",
-          "operator": "Laboratory Technologist",
-          "details": "Advanced to IN_TRANSIT via Chain-of-Custody Modal.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789068332381",
-          "timestamp": "12:55 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: ORDERED → COLLECTED",
-          "location": "Blood Draw Station #2",
-          "operator": "Sunita V. (Phlebotomist)",
-          "details": "Specimen collected in 3.0 mL EDTA tube without hemolysis.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-evt-1789066820028",
-          "timestamp": "12:30 am",
-          "date": "2026-09-10",
-          "event": "Specimen Requisition & Barcode Label Printed",
-          "location": "Main Laboratory - Accessioning",
-          "operator": "Accessioning Clerk",
-          "details": "Requisition entered into LabFlow LIMS database. Vacuum tube prepared.",
-          "status": "active"
-        }
-      ]
-    },
-    {
-      "id": "SMP-94790",
-      "orderId": "ORD-46492",
-      "patient": {
-        "id": "PAT-9587",
-        "name": "Anonymous Patient",
-        "age": 40,
-        "gender": "Male",
-        "phone": "+91 98765 43210",
-        "mrn": "MRN-994863"
-      },
-      "sampleType": "Whole Blood (EDTA)",
-      "test": "Lipid Profile Standard, CBC",
-      "currentLocation": "Phlebotomy Intake - Reception",
-      "stage": "COLLECTED",
-      "collectedAt": "06:17 PM",
-      "tat": "15m",
-      "status": "Collected",
-      "barcode": "LBF-PAT-9587",
-      "volume": "3.0 mL",
-      "timeline": [
-        {
-          "id": "tl-adv-1789060020780",
-          "timestamp": "10:37 pm",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: ORDERED → COLLECTED",
-          "location": "Phlebotomy Intake - Reception",
-          "operator": "Laboratory Technologist",
-          "details": "Advanced to COLLECTED via Chain-of-Custody Modal.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-evt-1789044439628",
-          "timestamp": "06:17 PM",
-          "date": "2026-09-10",
-          "event": "Specimen Requisition & Barcode Label Printed",
-          "location": "Main Reference Lab (Central)",
-          "operator": "Accessioning Clerk",
-          "details": "Requisition entered into LabFlow LIMS database. Vacuum tube prepared.",
-          "status": "active"
-        }
-      ]
-    },
-    {
       "id": "SMP-20491",
       "orderId": "ORD-10294",
       "patient": {
@@ -484,7 +158,7 @@
       "sampleType": "Whole Blood (EDTA)",
       "test": "CBC (Complete Blood Count)",
       "currentLocation": "Hematology Lab - Sysmex XN-1000",
-      "stage": "REVIEW",
+      "stage": "PROCESSING",
       "collectedAt": "09:42",
       "tat": "1h 18m",
       "status": "Processing",
@@ -492,74 +166,12 @@
       "volume": "3.0 mL",
       "timeline": [
         {
-          "id": "tl-adv-1789067112415",
-          "timestamp": "12:35 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: REVIEW → PROCESSING",
-          "location": "Hematology Lab - Sysmex XN-1000",
-          "operator": "Pathologist",
-          "details": "Analyzer rerun requested by pathologist.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789067107818",
-          "timestamp": "12:35 am",
-          "id": "tl-adv-1789068508912",
-          "timestamp": "12:58 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: PROCESSING → REVIEW",
-          "location": "Hematology Lab - Sysmex XN-1000",
-          "operator": "Sysmex Automation Line",
-          "details": "Automated hematology run finished. Results transmitted to Pathologist review queue.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789067021603",
-          "timestamp": "12:33 am",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: PROCESSING → PROCESSING",
-          "location": "Hematology Lab - Sysmex XN-1000",
-          "operator": "Pathologist",
-          "details": "Analyzer rerun requested by pathologist.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789047840814",
-          "timestamp": "07:14 PM",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: REVIEW → PROCESSING",
-          "location": "Hematology Lab - Sysmex XN-1000",
-          "operator": "Pathologist",
-          "details": "Analyzer rerun requested by pathologist.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-adv-1789047836910",
-          "timestamp": "07:13 PM",
-          "date": "2026-09-10",
-          "event": "Custody Advancement: PROCESSING → REVIEW",
-          "location": "Hematology Lab - Sysmex XN-1000",
-          "operator": "Sysmex Automation Line",
-          "details": "Automated hematology run finished. Results transmitted to Pathologist review queue.",
-          "status": "completed"
-        },
-        {
-          "id": "tl-rej-1789047069960",
-          "timestamp": "07:01 PM",
-          "date": "2026-09-10",
-          "event": "Sample Pre-Analytical Rejection",
-          "location": "Hematology Lab - Sysmex XN-1000",
-          "operator": "Accessioning Supervisor",
-          "details": "REJECTED: Gross Hemolysis 4+ (Redraw Required). Automated redraw order initiated.",
-          "status": "completed"
-        },
-        {
           "id": "tl-1",
           "timestamp": "09:42",
           "date": "2026-09-10",
           "event": "Sample Collected",
           "location": "Reception Desk",
-          "operator": "Sunita V. (Sample Collector)",
+          "operator": "Sunita V.",
           "details": "Vacutainer EDTA 3mL filled",
           "status": "completed"
         },
@@ -579,7 +191,7 @@
           "date": "2026-09-10",
           "event": "Sample Dispatched",
           "location": "Transport Logistics",
-          "operator": "Rajesh K. (Transport)",
+          "operator": "Rajesh K.",
           "details": "Pneumatic Tube / Cooler Temp 4.2°C",
           "status": "completed"
         },
@@ -587,21 +199,11 @@
           "id": "tl-4",
           "timestamp": "10:46",
           "date": "2026-09-10",
-          "event": "Received at Laboratory",
-          "location": "Main Lab Accessioning",
-          "operator": "Riya Sharma (Lab Tech)",
-          "details": "Sample integrity verified, logged into LIMS",
+          "event": "Accessioned at Main Lab",
+          "location": "Intake Bench",
+          "operator": "Amit M.",
+          "details": "Volume verified, zero hemolysis",
           "status": "completed"
-        },
-        {
-          "id": "tl-5",
-          "timestamp": "11:02",
-          "date": "2026-09-10",
-          "event": "Processing Started",
-          "location": "Hematology Workstation #2",
-          "operator": "Amit Kumar (Technician)",
-          "details": "Loaded onto Sysmex XN-1000 Auto-analyzer",
-          "status": "active"
         }
       ]
     },
@@ -618,7 +220,7 @@
       },
       "sampleType": "Serum (SST Tube)",
       "test": "Lipid Profile & HbA1c",
-      "currentLocation": "Biochemistry Review Bench",
+      "currentLocation": "Pathology Review Bench",
       "stage": "REVIEW",
       "collectedAt": "09:28",
       "tat": "2h 04m",
@@ -627,41 +229,77 @@
       "volume": "5.0 mL",
       "timeline": [
         {
-          "id": "tl-10",
+          "id": "tl-1",
           "timestamp": "09:28",
           "date": "2026-09-10",
           "event": "Sample Collected",
-          "location": "Fasting Phlebotomy Room 3",
-          "operator": "Pooja N.",
+          "location": "Outpatient Clinic",
+          "operator": "Sunita V.",
+          "details": "Serum Separator Tube filled",
           "status": "completed"
         },
         {
-          "id": "tl-11",
-          "timestamp": "09:35",
+          "id": "tl-2",
+          "timestamp": "10:15",
           "date": "2026-09-10",
           "event": "Centrifuged",
-          "location": "Pre-analytical Station",
-          "operator": "Riya Sharma",
-          "details": "3500 RPM for 10 mins",
+          "location": "Centrifuge Station #2",
+          "operator": "Amit M.",
+          "details": "10 mins @ 3000 RPM",
           "status": "completed"
         },
         {
-          "id": "tl-12",
-          "timestamp": "10:00",
+          "id": "tl-3",
+          "timestamp": "11:02",
           "date": "2026-09-10",
-          "event": "Analysis Completed",
-          "location": "Roche Cobas c501",
-          "operator": "Sysmex Automator",
-          "status": "completed"
-        },
-        {
-          "id": "tl-13",
-          "timestamp": "10:30",
-          "date": "2026-09-10",
-          "event": "Results Pending Medical Review",
+          "event": "Assay Complete",
           "location": "Biochemistry Bench",
           "operator": "Dr. A. Mehta",
-          "status": "active"
+          "details": "Cobas 6000 Auto-analyzer output verified",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "id": "SMP-20489",
+      "orderId": "ORD-10292",
+      "patient": {
+        "id": "P-55219",
+        "name": "Ramesh Gupta",
+        "age": 63,
+        "gender": "Male",
+        "phone": "+91 99887 76655",
+        "mrn": "MRN-55219"
+      },
+      "sampleType": "Heparin Plasma",
+      "test": "Liver & Kidney Function Tests",
+      "currentLocation": "Released & Archived",
+      "stage": "RELEASED",
+      "collectedAt": "08:15",
+      "tat": "1h 45m",
+      "status": "Completed",
+      "barcode": "LBF-55219-C",
+      "volume": "4.5 mL",
+      "timeline": [
+        {
+          "id": "tl-1",
+          "timestamp": "08:15",
+          "date": "2026-09-10",
+          "event": "STAT Intake",
+          "location": "Emergency Department",
+          "operator": "Dr. S. Kulkarni",
+          "details": "High priority blood specimen drawn",
+          "status": "completed"
+        },
+        {
+          "id": "tl-2",
+          "timestamp": "09:30",
+          "date": "2026-09-10",
+          "event": "Report Released",
+          "location": "Pathologist Terminal",
+          "operator": "Dr. Arvind Swaminathan",
+          "details": "Digitally signed and released to EHR",
+          "status": "completed"
         }
       ]
     },
@@ -676,24 +314,25 @@
         "phone": "+91 97654 32109",
         "mrn": "MRN-44102"
       },
-      "sampleType": "Serum",
+      "sampleType": "Serum (SST Tube)",
       "test": "Thyroid Profile (T3, T4, TSH)",
-      "currentLocation": "Collection Center B",
+      "currentLocation": "Collection Station B",
       "stage": "COLLECTED",
       "collectedAt": "10:05",
       "tat": "42m",
       "status": "Collected",
-      "barcode": "LBF-44102-C",
+      "barcode": "LBF-44102-D",
       "volume": "4.0 mL",
       "timeline": [
         {
-          "id": "tl-20",
+          "id": "tl-1",
           "timestamp": "10:05",
           "date": "2026-09-10",
-          "event": "Sample Collected",
-          "location": "Collection Center B",
-          "operator": "Sunita V.",
-          "status": "active"
+          "event": "Specimen Drawn",
+          "location": "Collection Station B",
+          "operator": "Nurse Priya",
+          "details": "SST Gold top tube filled",
+          "status": "completed"
         }
       ]
     },
@@ -708,98 +347,186 @@
         "phone": "+91 98989 12345",
         "mrn": "MRN-33912"
       },
-      "sampleType": "Sterile Urine",
+      "sampleType": "Sterile Urine Container",
       "test": "Urine Routine & Microscopy",
-      "currentLocation": "Transit Van #4",
+      "currentLocation": "Courier Transport Van #4",
       "stage": "IN_TRANSIT",
       "collectedAt": "10:18",
       "tat": "25m",
       "status": "In Transit",
-      "barcode": "LBF-33912-D",
-      "volume": "20.0 mL",
+      "barcode": "LBF-33912-E",
+      "volume": "30.0 mL",
       "timeline": [
         {
-          "id": "tl-30",
+          "id": "tl-1",
           "timestamp": "10:18",
           "date": "2026-09-10",
-          "event": "Sample Collected",
+          "event": "Sample Received",
           "location": "North Satellite Clinic",
-          "operator": "Anil K.",
+          "operator": "Dr. M. Patel",
+          "details": "Sterile cup container barcoded",
           "status": "completed"
-        },
+        }
+      ]
+    },
+    {
+      "id": "SMP-20476",
+      "orderId": "ORD-10289",
+      "patient": {
+        "id": "P-22819",
+        "name": "Kavita Shah",
+        "age": 29,
+        "gender": "Female",
+        "phone": "+91 91234 56789",
+        "mrn": "MRN-22819"
+      },
+      "sampleType": "Citrate Plasma",
+      "test": "D-Dimer & Serum Electrolytes",
+      "currentLocation": "Central Intake Desk",
+      "stage": "RECEIVED",
+      "collectedAt": "10:30",
+      "tat": "15m",
+      "status": "In Progress",
+      "barcode": "LBF-22819-F",
+      "volume": "2.7 mL",
+      "timeline": [
         {
-          "id": "tl-31",
-          "timestamp": "10:25",
+          "id": "tl-1",
+          "timestamp": "10:30",
           "date": "2026-09-10",
-          "event": "In Transit to Main Lab",
-          "location": "Logistics Route #4",
-          "operator": "Courier Driver",
-          "status": "active"
+          "event": "Accessioned at Reception",
+          "location": "Main Lab Reception",
+          "operator": "Dr. V. Sharma",
+          "details": "Citrate blue top tube verified",
+          "status": "completed"
         }
       ]
     }
   ],
-  "alerts": [
-    {
-      "id": "ALT-REJ-1789047069962",
-      "category": "Rejected",
-      "title": "Sample SMP-20491 Rejected: Gross Hemolysis 4+ (Redraw Required)",
-      "description": "Specimen rejected due to Gross Hemolysis 4+ (Redraw Required). Redraw required for patient Aditi Rao.",
-      "timestamp": "Just now",
-      "entityId": "SMP-20491",
-      "actionable": true
-    }
-  ],
   "reports": [
     {
-      "id": "RPT-5169",
-      "orderId": "ORD-5169",
-      "sampleId": "SMP-15169",
+      "id": "RPT-10294",
+      "orderId": "ORD-10294",
+      "sampleId": "SMP-20491",
       "patient": {
-        "id": "P-123456",
-        "name": "vivek",
-        "age": 45,
-        "gender": "Male",
-        "phone": "9348546674",
-        "mrn": "123456"
+        "id": "P-84920",
+        "name": "Aditi Rao",
+        "age": 47,
+        "gender": "Female",
+        "phone": "+91 98765 43210",
+        "mrn": "MRN-84920"
       },
       "tests": [
-        "CBC (Complete Blood Count)"
+        "CBC (Complete Blood Count)",
+        "Random Glucose"
       ],
-      "status": "Released",
-      "reviewer": "Dr. Vikram Malhotra",
-      "createdAt": "2026-09-10 01:13 am",
-      "priority": "Normal",
+      "status": "Draft",
+      "reviewer": "Dr. V. Sharma",
+      "createdAt": "2026-09-10 09:42",
+      "priority": "Urgent",
       "doctorName": "Dr. V. Sharma",
       "sampleType": "Whole Blood (EDTA)",
-      "location": "Main Laboratory - Accessioning",
-      "collector": "Sunita Verma",
-      "releasedAt": "01:17 am"
+      "location": "Main Laboratory - Hematology",
+      "collector": "Sunita Verma"
     },
     {
-      "id": "RPT-33918",
-      "orderId": "ORD-33918",
-      "sampleId": "SMP-42373",
+      "id": "RPT-10293",
+      "orderId": "ORD-10293",
+      "sampleId": "SMP-20490",
       "patient": {
-        "id": "PAT-7788",
-        "name": "Rohan Deshmukh",
-        "age": 52,
+        "id": "P-67104",
+        "name": "Rahul Kumar",
+        "age": 68,
         "gender": "Male",
-        "phone": "+91 99112 23344",
-        "mrn": "MRN-778899"
+        "phone": "+91 98123 45678",
+        "mrn": "MRN-67104"
       },
       "tests": [
         "Lipid Profile",
-        "Kidney Function Test (KFT)"
+        "HbA1c"
       ],
       "status": "Pending Review",
-      "reviewer": "Dr. Rajesh Khanna, MD",
-      "createdAt": "2026-09-10 01:09 am",
-      "priority": "STAT",
-      "doctorName": "Dr. Rajesh Khanna, MD",
-      "sampleType": "Serum (SST Gel)",
-      "location": "Emergency Room Phlebotomy",
+      "reviewer": "Dr. A. Mehta",
+      "createdAt": "2026-09-10 09:28",
+      "priority": "Normal",
+      "doctorName": "Dr. A. Mehta",
+      "sampleType": "Serum (SST Tube)",
+      "location": "Main Laboratory - Biochemistry",
       "collector": "Sunita Verma"
+    },
+    {
+      "id": "RPT-10292",
+      "orderId": "ORD-10292",
+      "sampleId": "SMP-20489",
+      "patient": {
+        "id": "P-55219",
+        "name": "Ramesh Gupta",
+        "age": 63,
+        "gender": "Male",
+        "phone": "+91 99887 76655",
+        "mrn": "MRN-55219"
+      },
+      "tests": [
+        "Liver Function Test (LFT)",
+        "Kidney Function Test (KFT)"
+      ],
+      "status": "Released",
+      "reviewer": "Dr. Arvind Swaminathan",
+      "createdAt": "2026-09-10 08:15",
+      "releasedAt": "09:30",
+      "priority": "STAT",
+      "doctorName": "Dr. S. Kulkarni",
+      "sampleType": "Heparin Plasma",
+      "location": "Emergency Lab",
+      "collector": "Dr. S. Kulkarni"
+    },
+    {
+      "id": "RPT-10291",
+      "orderId": "ORD-10291",
+      "sampleId": "SMP-20482",
+      "patient": {
+        "id": "P-44102",
+        "name": "Priya Nair",
+        "age": 34,
+        "gender": "Female",
+        "phone": "+91 97654 32109",
+        "mrn": "MRN-44102"
+      },
+      "tests": [
+        "Thyroid Profile (T3, T4, TSH)"
+      ],
+      "status": "Draft",
+      "reviewer": "Dr. R. Joshi",
+      "createdAt": "2026-09-10 10:05",
+      "priority": "Normal",
+      "doctorName": "Dr. R. Joshi",
+      "sampleType": "Serum (SST Tube)",
+      "location": "Collection Center B",
+      "collector": "Nurse Priya"
+    },
+    {
+      "id": "RPT-10290",
+      "orderId": "ORD-10290",
+      "sampleId": "SMP-20480",
+      "patient": {
+        "id": "P-33912",
+        "name": "Suresh Menon",
+        "age": 52,
+        "gender": "Male",
+        "phone": "+91 98989 12345",
+        "mrn": "MRN-33912"
+      },
+      "tests": [
+        "Urine Routine & Microscopy"
+      ],
+      "status": "Draft",
+      "reviewer": "Dr. M. Patel",
+      "createdAt": "2026-09-10 10:18",
+      "priority": "Urgent",
+      "doctorName": "Dr. M. Patel",
+      "sampleType": "Sterile Urine Container",
+      "location": "North Satellite Clinic",
+      "collector": "Dr. M. Patel"
     },
     {
       "id": "RPT-10289",
@@ -822,831 +549,196 @@
       "createdAt": "2026-09-10 10:30",
       "priority": "STAT",
       "doctorName": "Dr. V. Sharma",
-      "sampleType": "Whole Blood (EDTA)",
+      "sampleType": "Citrate Plasma",
       "location": "Main Laboratory - Reception",
-      "collector": "Sunita Verma"
+      "collector": "Dr. V. Sharma"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "ALT-101",
+      "category": "Panic Value",
+      "title": "Hemoglobin Critical Low (<7.0 g/dL)",
+      "description": "Patient Aditi Rao (MRN-84920) Hb 6.4 g/dL verified on Sysmex XN-1000. Immediate clinician notification required.",
+      "timestamp": "10 mins ago",
+      "entityId": "SMP-20491",
+      "actionable": true
     },
     {
-      "id": "RPT-10290",
-      "orderId": "ORD-10290",
-      "sampleId": "SMP-20480",
-      "patient": {
-        "id": "P-33912",
-        "name": "Suresh Menon",
-        "age": 52,
-        "gender": "Male",
-        "phone": "+91 98989 12345",
-        "mrn": "MRN-33912"
-      },
-      "tests": [
-        "Urine Routine & Microscopy"
-      ],
-      "status": "Draft",
-      "reviewer": "Dr. M. Patel",
-      "createdAt": "2026-09-10 10:18",
-      "priority": "Urgent",
-      "doctorName": "Dr. M. Patel",
-      "sampleType": "Sterile Urine",
-      "location": "North Satellite Clinic",
-      "collector": "Sunita Verma"
+      "id": "ALT-102",
+      "category": "STAT Priority",
+      "title": "STAT D-Dimer Accessioned",
+      "description": "Emergency requisition ORD-10289 for Kavita Shah. Target TAT < 30 mins.",
+      "timestamp": "25 mins ago",
+      "entityId": "ORD-10289",
+      "actionable": true
     },
     {
-      "id": "RPT-10291",
-      "orderId": "ORD-10291",
-      "sampleId": "SMP-20482",
-      "patient": {
-        "id": "P-44102",
-        "name": "Priya Nair",
-        "age": 34,
-        "gender": "Female",
-        "phone": "+91 97654 32109",
-        "mrn": "MRN-44102"
-      },
-      "tests": [
-        "Thyroid Profile (T3, T4, TSH)"
-      ],
-      "status": "Draft",
-      "reviewer": "Dr. R. Joshi",
-      "createdAt": "2026-09-10 10:05",
-      "priority": "Normal",
-      "doctorName": "Dr. R. Joshi",
-      "sampleType": "Serum",
-      "location": "Collection Center B",
-      "collector": "Sunita Verma"
-    },
-    {
-      "id": "RPT-10294",
-      "orderId": "ORD-10294",
-      "sampleId": "SMP-20491",
-      "patient": {
-        "id": "P-84920",
-        "name": "Aditi Rao",
-        "age": 47,
-        "gender": "Female",
-        "phone": "+91 98765 43210",
-        "mrn": "MRN-84920"
-      },
-      "tests": [
-        "CBC (Complete Blood Count)",
-        "Random Glucose"
-      ],
-      "status": "Pending Review",
-      "reviewer": "Dr. V. Sharma",
-      "createdAt": "2026-09-10 09:42",
-      "priority": "Urgent",
-      "doctorName": "Dr. V. Sharma",
-      "sampleType": "Whole Blood (EDTA)",
-      "location": "Main Laboratory - Hematology",
-      "collector": "Sunita Verma"
-    },
-    {
-      "id": "RPT-46492",
-      "orderId": "ORD-46492",
-      "sampleId": "SMP-94790",
-      "patient": {
-        "id": "PAT-9587",
-        "name": "Anonymous Patient",
-        "age": 40,
-        "gender": "Male",
-        "phone": "+91 98765 43210",
-        "mrn": "MRN-994863"
-      },
-      "tests": [
-        "Lipid Profile Standard",
-        "CBC"
-      ],
-      "status": "Draft",
-      "reviewer": "Dr. Priya Sharma, MD",
-      "createdAt": "2026-09-10 06:17 PM",
-      "priority": "STAT",
-      "doctorName": "Dr. Priya Sharma, MD",
-      "sampleType": "Whole Blood (EDTA)",
-      "location": "Main Reference Lab (Central)",
-      "collector": "Sunita Verma"
-    },
-    {
-      "id": "RPT-2284",
-      "orderId": "ORD-2284",
-      "sampleId": "SMP-12284",
-      "patient": {
-        "id": "P-123456",
-        "name": "ankita",
-        "age": 45,
-        "gender": "Female",
-        "phone": "9348085529",
-        "mrn": "123456"
-      },
-      "tests": [
-        "CBC (Complete Blood Count)"
-      ],
-      "status": "Pending Review",
-      "reviewer": "Dr. V. Sharma",
-      "createdAt": "2026-09-10 12:30 am",
-      "priority": "Normal",
-      "doctorName": "Dr. V. Sharma",
-      "sampleType": "Whole Blood (EDTA)",
-      "location": "Main Laboratory - Accessioning",
-      "collector": "Sunita Verma"
-    },
-    {
-      "id": "RPT-4029",
-      "orderId": "ORD-10292",
-      "patient": {
-        "id": "P-55219",
-        "name": "Ramesh Gupta",
-        "age": 63,
-        "gender": "Male",
-        "phone": "+91 99887 76655",
-        "mrn": "MRN-55219"
-      },
-      "tests": [
-        "Liver Function Test (LFT)",
-        "Kidney Function Test (KFT)"
-      ],
-      "status": "Released",
-      "reviewer": "Dr. S. Kulkarni",
-      "createdAt": "09:50 AM",
-      "releasedAt": "10:15 AM",
-      "doctorName": "Dr. S. Kulkarni",
-      "priority": "STAT",
-      "location": "Emergency Lab",
-      "sampleId": "SMP-20489"
-    },
-    {
-      "id": "RPT-4028",
-      "orderId": "ORD-10293",
-      "patient": {
-        "id": "P-67104",
-        "name": "Rahul Kumar",
-        "age": 68,
-        "gender": "Male",
-        "phone": "+91 98123 45678",
-        "mrn": "MRN-67104"
-      },
-      "tests": [
-        "Lipid Profile",
-        "HbA1c"
-      ],
-      "status": "Released",
-      "reviewer": "Dr. Vikram Malhotra",
-      "createdAt": "10:30 AM",
-      "releasedAt": "12:50 am",
-      "doctorName": "Dr. A. Mehta",
-      "priority": "Normal",
-      "location": "Main Laboratory - Biochemistry",
-      "sampleId": "SMP-20490",
-      "sampleType": "Serum (SST Tube)"
-    },
-    {
-      "id": "RPT-4027",
-      "orderId": "ORD-10288",
-      "patient": {
-        "id": "P-11204",
-        "name": "Meera Sen",
-        "age": 41,
-        "gender": "Female",
-        "phone": "+91 94455 66778",
-        "mrn": "MRN-11204"
-      },
-      "tests": [
-        "Thyroid Panel"
-      ],
-      "status": "Released",
-      "reviewer": "Dr. Vikram Malhotra",
-      "createdAt": "08:45 AM",
-      "releasedAt": "12:53 am"
-    },
-    {
-      "id": "RPT-4026",
-      "orderId": "ORD-10287",
-      "patient": {
-        "id": "P-77612",
-        "name": "Vikram Das",
-        "age": 55,
-        "gender": "Male",
-        "phone": "+91 93322 11009",
-        "mrn": "MRN-77612"
-      },
-      "tests": [
-        "Vitamin D3",
-        "Vitamin B12"
-      ],
-      "status": "Released",
-      "reviewer": "Dr. Vikram Malhotra",
-      "createdAt": "11:00 AM",
-      "releasedAt": "12:53 am"
+      "id": "ALT-103",
+      "category": "QC Exception",
+      "title": "Biochemistry Level 2 Control Out of 2SD",
+      "description": "Cobas 6000 Glucose reagent lot #4920 failed daily QC interval check.",
+      "timestamp": "1 hour ago",
+      "entityId": "EQUIP-COBAS-6000",
+      "actionable": false
     }
   ],
   "exceptions": [
     {
-      "id": "exc-1",
-      "severity": "Critical",
-      "entity": "Sample",
-      "entityId": "SMP-20491",
-      "test": "CBC",
-      "stage": "PROCESSING",
-      "issue": "Analyzer failure on Line #2 (Sysmex XN-1000 rerun required)",
-      "age": "18m",
-      "assignedTo": "Riya Sharma",
-      "actionText": "Review"
-    },
-    {
-      "id": "exc-2",
-      "severity": "Warning",
-      "entity": "Sample",
-      "entityId": "SMP-20482",
-      "test": "HbA1c",
-      "stage": "IN_TRANSIT",
-      "issue": "Courier pickup delayed by 15 mins (Temperature stable 5.1°C)",
-      "age": "42m",
-      "assignedTo": "Amit Kumar",
-      "actionText": "Track"
-    },
-    {
-      "id": "exc-3",
-      "severity": "Warning",
-      "entity": "Order",
-      "entityId": "ORD-10291",
-      "test": "Lipid Profile",
-      "stage": "COLLECTED",
-      "issue": "Collection pending - 12h fasting verification required",
-      "age": "1h",
-      "assignedTo": "Reception Desk",
-      "actionText": "View"
-    },
-    {
-      "id": "exc-4",
-      "severity": "Critical",
-      "entity": "Result",
-      "entityId": "RES-9942",
-      "test": "Troponin I",
-      "stage": "REVIEW",
-      "issue": "Critical value 2.4 ng/mL exceeds panic threshold (>0.04 ng/mL)",
-      "age": "8m",
-      "assignedTo": "Dr. A. Mehta",
-      "actionText": "Verify"
+      "id": "EX-01",
+      "sampleId": "SMP-20491",
+      "patientName": "Aditi Rao",
+      "type": "Hemolyzed Specimen",
+      "severity": "Medium",
+      "reportedAt": "09:55",
+      "status": "Open",
+      "actionNeeded": "Request specimen redraw or pathologist waiver"
     }
   ],
   "workflowStages": [
     {
       "key": "ORDERED",
-      "label": "ORDERED",
-      "count": 28,
-      "avgTime": "12m"
+      "name": "Order Placed",
+      "count": 1,
+      "color": "bg-sky-500"
     },
     {
       "key": "COLLECTED",
-      "label": "COLLECTED",
-      "count": 18,
-      "avgTime": "18m"
+      "name": "Sample Collected",
+      "count": 1,
+      "color": "bg-teal-500"
     },
     {
       "key": "IN_TRANSIT",
-      "label": "IN TRANSIT",
-      "count": 9,
-      "avgTime": "32m",
-      "delayedCount": 1
+      "name": "In Transit",
+      "count": 1,
+      "color": "bg-amber-500"
     },
     {
       "key": "RECEIVED",
-      "label": "RECEIVED",
-      "count": 31,
-      "avgTime": "10m"
+      "name": "Received at Lab",
+      "count": 1,
+      "color": "bg-indigo-500"
     },
     {
       "key": "PROCESSING",
-      "label": "PROCESSING",
-      "count": 42,
-      "avgTime": "45m",
-      "delayedCount": 2
+      "name": "Processing",
+      "count": 1,
+      "color": "bg-purple-500"
     },
     {
       "key": "REVIEW",
-      "label": "REVIEW",
-      "count": 17,
-      "avgTime": "16m",
-      "delayedCount": 1
+      "name": "Under Review",
+      "count": 1,
+      "color": "bg-rose-500"
     },
     {
       "key": "RELEASED",
-      "label": "RELEASED",
-      "count": 84,
-      "avgTime": "2h 18m"
+      "name": "Report Released",
+      "count": 1,
+      "color": "bg-emerald-500"
     }
   ],
   "results": [
     {
-      "id": "RES-10294",
-      "orderId": "ORD-10294",
-      "sampleId": "SMP-20491",
-      "patient": {
-        "id": "P-84920",
-        "name": "Aditi Rao",
-        "age": 47,
-        "gender": "Female",
-        "phone": "+91 98765 43210",
-        "mrn": "MRN-84920"
-      },
-      "testName": "CBC (Complete Blood Count)",
-      "instrument": "Sysmex XN-1000 (Serial #SX-9941)",
-      "completedAt": "11:15 AM",
-      "reviewer": "Dr. Arvind Swaminathan, MD",
-      "status": "Approved",
-      "comments": "WBC slightly elevated. Platelet and RBC counts within reference limits.",
+      "id": "RES-10292",
+      "orderId": "ORD-10292",
+      "sampleId": "SMP-20489",
+      "patientName": "Ramesh Gupta",
+      "mrn": "MRN-55219",
+      "testName": "Comprehensive Clinical Hemogram",
       "parameters": [
         {
-          "name": "Hemoglobin",
-          "result": 12.4,
+          "name": "Hemoglobin (Hb)",
+          "value": "13.2",
+          "referenceRange": "12.0 - 16.0",
           "unit": "g/dL",
-          "referenceRange": "12.0 – 16.0",
-          "flag": "Normal",
-          "status": "Verified"
+          "status": "Normal"
         },
         {
-          "name": "WBC (White Blood Cells)",
-          "result": 12.8,
-          "unit": "10³/µL",
-          "referenceRange": "4.0 – 11.0",
-          "flag": "High",
-          "status": "Verified"
+          "name": "Total Leukocyte Count (TLC)",
+          "value": "11,800",
+          "referenceRange": "4,000 - 11,000",
+          "unit": "/uL",
+          "status": "High"
         },
         {
-          "name": "Platelets",
-          "result": 210,
-          "unit": "10³/µL",
-          "referenceRange": "150 – 450",
-          "flag": "Normal",
-          "status": "Verified"
-        },
-        {
-          "name": "RBC (Red Blood Cells)",
-          "result": 4.25,
-          "unit": "10⁶/µL",
-          "referenceRange": "4.0 – 5.2",
-          "flag": "Normal",
-          "status": "Verified"
-        },
-        {
-          "name": "Hematocrit (PCV)",
-          "result": 38.2,
-          "unit": "%",
-          "referenceRange": "36.0 – 46.0",
-          "flag": "Normal",
-          "status": "Verified"
-        },
-        {
-          "name": "Neutrophils",
-          "result": 74,
-          "unit": "%",
-          "referenceRange": "40 – 70",
-          "flag": "High",
-          "status": "Verified"
-        },
-        {
-          "name": "Lymphocytes",
-          "result": 20,
-          "unit": "%",
-          "referenceRange": "20 – 45",
-          "flag": "Normal",
-          "status": "Verified"
+          "name": "Platelet Count",
+          "value": "245,000",
+          "referenceRange": "150,000 - 450,000",
+          "unit": "/uL",
+          "status": "Normal"
         }
-      ]
+      ],
+      "reviewer": "Dr. Arvind Swaminathan, MD",
+      "status": "Approved",
+      "comments": "Biological reference intervals verified against NABL standards. Mild leukocytosis noted."
     }
   ],
   "team": [
     {
-      "id": "tm-1789046752591",
-      "name": "Dr. Neha Kapoor",
-      "role": "Reviewer",
-      "department": "Pathology",
-      "location": "Main Laboratory",
-      "status": "On Break",
-      "lastActive": "Just now",
-      "email": "staff-1789046752591@labflow.io"
-    },
-    {
       "id": "tm-1",
-      "name": "Riya Sharma",
-      "role": "Lab Manager",
-      "department": "Operations",
-      "location": "Main Laboratory",
+      "name": "Dr. Arvind Swaminathan",
+      "role": "Lead Pathologist",
+      "department": "Pathology",
+      "location": "Main Reference Lab",
       "status": "Active",
       "lastActive": "Just now",
-      "email": "riya.sharma@labflow.io"
+      "email": "arvind@labflow.io"
     },
     {
       "id": "tm-2",
-      "name": "Amit Kumar",
-      "role": "Lab Technician",
+      "name": "Sunita Verma",
+      "role": "Chief Lab Technologist",
       "department": "Hematology",
-      "location": "Main Laboratory",
+      "location": "Main Reference Lab",
       "status": "Active",
-      "lastActive": "5m ago",
-      "email": "amit.k@labflow.io"
+      "lastActive": "2m ago",
+      "email": "sunita@labflow.io"
     },
     {
       "id": "tm-3",
-      "name": "Sunita Verma",
-      "role": "Sample Collector",
-      "department": "Phlebotomy",
-      "location": "Collection Center A",
+      "name": "Amit Mishra",
+      "role": "Senior Accessioning Tech",
+      "department": "Intake & Barcoding",
+      "location": "Main Reference Lab",
       "status": "Active",
-      "lastActive": "2m ago",
-      "email": "sunita.v@labflow.io"
+      "lastActive": "5m ago",
+      "email": "amit@labflow.io"
     },
     {
       "id": "tm-4",
-      "name": "Dr. Abhinav Mehta",
-      "role": "Reviewer",
-      "department": "Pathology",
-      "location": "Main Laboratory",
-      "status": "Active",
-      "lastActive": "12m ago",
-      "email": "dr.mehta@labflow.io"
+      "name": "Dr. Priya Sharma",
+      "role": "Consultant Microbiologist",
+      "department": "Microbiology",
+      "location": "Westside Branch",
+      "status": "On Break",
+      "lastActive": "20m ago",
+      "email": "priya@labflow.io"
     },
     {
       "id": "tm-5",
-      "name": "Rajesh K.",
-      "role": "Sample Collector",
-      "department": "Transport Logistics",
-      "location": "Route #4",
-      "status": "On Break",
-      "lastActive": "25m ago",
-      "email": "rajesh.logistics@labflow.io"
+      "name": "Rajesh Kumar",
+      "role": "Specimen Logistics Officer",
+      "department": "Transport",
+      "location": "Satellite Hub",
+      "status": "Active",
+      "lastActive": "1m ago",
+      "email": "rajesh@labflow.io"
     },
     {
       "id": "tm-6",
-      "name": "Pooja Nambiar",
-      "role": "Reception",
-      "department": "Accessioning",
-      "location": "Front Desk",
+      "name": "Dr. V. Sharma",
+      "role": "Emergency Physician",
+      "department": "Clinical Care",
+      "location": "Emergency Dept",
       "status": "Active",
-      "lastActive": "Just now",
-      "email": "pooja.n@labflow.io"
+      "lastActive": "10m ago",
+      "email": "vsharma@labflow.io"
     }
   ],
-  "sentEmails": [
-    {
-      "id": "eml-1789069625661",
-      "reportId": "RPT-5169",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "vivek",
-      "subject": "Diagnostic Laboratory Report Released: vivek (RPT-5169)",
-      "timestamp": "2026-09-10T19:47:05.661Z",
-      "status": "Pending",
-      "messageId": "MSG-EML-1789069625613-3059",
-      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Official 18-attribute PDF report attached."
-    },
-    {
-      "id": "eml-1789068220866",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T19:23:40.866Z",
-      "status": "Pending",
-      "messageId": "MSG-EML-1789068220849-4279",
-      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Official 18-attribute PDF report attached."
-    },
-    {
-      "id": "eml-1789067993362",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T19:19:53.362Z",
-      "status": "Pending",
-      "messageId": "MSG-EML-1789067993311-9867",
-      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Official 18-attribute PDF report attached."
-    },
-    {
-      "id": "eml-1789067894213",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Sameer Ranjan (Parent)",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Aditi Rao (RPT-4029)",
-      "timestamp": "2026-09-10T19:18:14.213Z",
-      "status": "Pending",
-      "messageId": "MSG-EML-1789067894205-5406",
-      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Official 18-attribute PDF report attached."
-    },
-    {
-      "id": "eml-1789067369397",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T19:09:29.397Z",
-      "status": "Pending",
-      "messageId": "MSG-EML-1789067369397-2407",
-      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789067326565",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Sameer Ranjan (Parent)",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Aditi Rao (RPT-4029)",
-      "timestamp": "2026-09-10T19:08:46.565Z",
-      "status": "Pending",
-      "messageId": "MSG-EML-1789067326565-1193",
-      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789067320679",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Sameer Ranjan (Parent)",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Aarav Sharma (RPT-4029)",
-      "timestamp": "2026-09-10T19:08:40.679Z",
-      "status": "Pending",
-      "messageId": "MSG-EML-1789067320679-9191",
-      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789066964516",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T19:02:44.516Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789066964516-7032",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789066533713",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Sameer Ranjan (Parent)",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Aarav Sharma (RPT-4029)",
-      "timestamp": "2026-09-10T18:55:33.713Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789066533713-8921",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789059726910",
-      "reportId": "RPT-4029",
-      "recipientEmail": "vivekgudla17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T17:02:06.910Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789059726910-1646",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789059528279",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:58:48.279Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789059528279-8771",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789059436196",
-      "reportId": "RPT-4028",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Rahul Kumar",
-      "subject": "Diagnostic Laboratory Report Released: Rahul Kumar (RPT-4028)",
-      "timestamp": "2026-09-10T16:57:16.196Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789059436196-8097",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789059429323",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:57:09.323Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789059429323-5403",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789059428486",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:57:08.486Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789059428486-9917",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789057819556",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:30:19.556Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789057819556-1509",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789057816393",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:30:16.393Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789057816393-6301",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789057808561",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:30:08.561Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789057808561-8005",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789057805871",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:30:05.871Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789057805871-8708",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    },
-    {
-      "id": "eml-1789056831529",
-      "reportId": "RPT-4029",
-      "recipientEmail": "niteshnemalpuri17@gmail.com",
-      "recipientName": "Parent / Guardian",
-      "patientName": "Ramesh Gupta",
-      "subject": "Diagnostic Laboratory Report Released: Ramesh Gupta (RPT-4029)",
-      "timestamp": "2026-09-10T16:13:51.529Z",
-      "status": "Delivered",
-      "messageId": "MSG-EML-1789056831529-4586",
-      "notes": "Dispatched via LabFlow Internal SMTP Dispatch Gateway. Full multi-attribute clinical report transmitted."
-    }
-  ],
-  "sentWhatsApp": [
-    {
-      "id": "wa-1789069625507",
-      "reportId": "RPT-5169",
-      "recipientPhone": "+919876543210",
-      "recipientName": "Patient",
-      "patientName": "vivek",
-      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *Patient*,\n\nThe official diagnostic test report for *vivek* (MRN: *123456*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-5169\n🔬 *Order Ref*: ORD-5169\n🧪 *Tests Included*: CBC (Complete Blood Count)\n👨‍⚕️ *Consultant Pathologist*: Dr. Vikram Malhotra\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 01:17 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-5169/pdf\n\n💬 *Clinical Note*: Your verified laboratory test report is now available.\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
-      "timestamp": "2026-09-10T19:47:05.507Z",
-      "status": "Delivered",
-      "messageId": "MSG-WA-1789069625506-9798",
-      "directLink": "https://api.whatsapp.com/send?phone=919876543210&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*Patient*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*vivek*%20(MRN%3A%20*123456*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-5169%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-5169%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20CBC%20(Complete%20Blood%20Count)%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20Vikram%20Malhotra%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2001%3A17%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-5169%2Fpdf%0A%0A%F0%9F%92%AC%20*Clinical%20Note*%3A%20Your%20verified%20laboratory%20test%20report%20is%20now%20available.%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
-      "notes": "Dispatched via WhatsApp Cloud Gateway to +919876543210. Real-time patient notification confirmed."
-    },
-    {
-      "id": "wa-1789068152129",
-      "reportId": "RPT-4029",
-      "recipientPhone": "+919988776655",
-      "recipientName": "Ramesh Gupta",
-      "patientName": "Ramesh Gupta",
-      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *Ramesh Gupta*,\n\nThe official diagnostic test report for *Ramesh Gupta* (MRN: *MRN-55219*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-4029\n🔬 *Order Ref*: ORD-10292\n🧪 *Tests Included*: Liver Function Test (LFT), Kidney Function Test (KFT)\n👨‍⚕️ *Consultant Pathologist*: Dr. S. Kulkarni\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 12:52 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-4029/pdf\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
-      "timestamp": "2026-09-10T19:22:32.129Z",
-      "status": "Delivered",
-      "messageId": "MSG-WA-1789068152129-8908",
-      "directLink": "https://api.whatsapp.com/send?phone=919988776655&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*Ramesh%20Gupta*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*Ramesh%20Gupta*%20(MRN%3A%20*MRN-55219*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-4029%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-10292%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20Liver%20Function%20Test%20(LFT)%2C%20Kidney%20Function%20Test%20(KFT)%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20S.%20Kulkarni%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2012%3A52%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-4029%2Fpdf%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
-      "notes": "Dispatched via WhatsApp Cloud Gateway to +919988776655. Real-time patient notification confirmed."
-    },
-    {
-      "id": "wa-1789068115034",
-      "reportId": "RPT-4029",
-      "recipientPhone": "+919348085529",
-      "recipientName": "Patient",
-      "patientName": "Ramesh Gupta",
-      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *Patient*,\n\nThe official diagnostic test report for *Ramesh Gupta* (MRN: *MRN-55219*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-4029\n🔬 *Order Ref*: ORD-10292\n🧪 *Tests Included*: Liver Function Test (LFT), Kidney Function Test (KFT)\n👨‍⚕️ *Consultant Pathologist*: Dr. S. Kulkarni\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 12:51 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-4029/pdf\n\n💬 *Clinical Note*: Your verified laboratory test report is now available.\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
-      "timestamp": "2026-09-10T19:21:55.034Z",
-      "status": "Delivered",
-      "messageId": "MSG-WA-1789068115033-2010",
-      "directLink": "https://api.whatsapp.com/send?phone=919348085529&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*Patient*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*Ramesh%20Gupta*%20(MRN%3A%20*MRN-55219*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-4029%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-10292%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20Liver%20Function%20Test%20(LFT)%2C%20Kidney%20Function%20Test%20(KFT)%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20S.%20Kulkarni%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2012%3A51%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-4029%2Fpdf%0A%0A%F0%9F%92%AC%20*Clinical%20Note*%3A%20Your%20verified%20laboratory%20test%20report%20is%20now%20available.%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
-      "notes": "Dispatched via WhatsApp Cloud Gateway to +919348085529. Real-time patient notification confirmed."
-    },
-    {
-      "id": "wa-1789068048533",
-      "reportId": "RPT-4029",
-      "recipientPhone": "+919988776655",
-      "recipientName": "Ramesh Gupta",
-      "patientName": "Ramesh Gupta",
-      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *Ramesh Gupta*,\n\nThe official diagnostic test report for *Ramesh Gupta* (MRN: *MRN-55219*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-4029\n🔬 *Order Ref*: ORD-10292\n🧪 *Tests Included*: Liver Function Test (LFT), Kidney Function Test (KFT)\n👨‍⚕️ *Consultant Pathologist*: Dr. S. Kulkarni\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 12:50 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-4029/pdf\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
-      "timestamp": "2026-09-10T19:20:48.533Z",
-      "status": "Delivered",
-      "messageId": "MSG-WA-1789068048533-1339",
-      "directLink": "https://api.whatsapp.com/send?phone=919988776655&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*Ramesh%20Gupta*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*Ramesh%20Gupta*%20(MRN%3A%20*MRN-55219*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-4029%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-10292%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20Liver%20Function%20Test%20(LFT)%2C%20Kidney%20Function%20Test%20(KFT)%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20S.%20Kulkarni%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2012%3A50%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-4029%2Fpdf%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
-      "notes": "Dispatched via WhatsApp Cloud Gateway to +919988776655. Real-time patient notification confirmed."
-    },
-    {
-      "id": "wa-1789068012820",
-      "reportId": "RPT-4028",
-      "recipientPhone": "+919812345678",
-      "recipientName": "Rahul Kumar",
-      "patientName": "Rahul Kumar",
-      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *Rahul Kumar*,\n\nThe official diagnostic test report for *Rahul Kumar* (MRN: *MRN-67104*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-4028\n🔬 *Order Ref*: ORD-10293\n🧪 *Tests Included*: Lipid Profile, HbA1c\n👨‍⚕️ *Consultant Pathologist*: Dr. Vikram Malhotra\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 12:50 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-4028/pdf\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
-      "timestamp": "2026-09-10T19:20:12.820Z",
-      "status": "Delivered",
-      "messageId": "MSG-WA-1789068012819-8399",
-      "directLink": "https://api.whatsapp.com/send?phone=919812345678&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*Rahul%20Kumar*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*Rahul%20Kumar*%20(MRN%3A%20*MRN-67104*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-4028%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-10293%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20Lipid%20Profile%2C%20HbA1c%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20Vikram%20Malhotra%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2012%3A50%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-4028%2Fpdf%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
-      "notes": "Dispatched via WhatsApp Cloud Gateway to +919812345678. Real-time patient notification confirmed."
-    },
-    {
-      "id": "wa-1789067895122",
-      "reportId": "RPT-4029",
-      "recipientPhone": "+919800011111",
-      "recipientName": "Sameer Ranjan",
-      "patientName": "Aditi Rao",
-      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *Sameer Ranjan*,\n\nThe official diagnostic test report for *Aditi Rao* (MRN: *MRN-55219*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-4029\n🔬 *Order Ref*: ORD-10292\n🧪 *Tests Included*: Liver Function Test (LFT), Kidney Function Test (KFT)\n👨‍⚕️ *Consultant Pathologist*: Dr. S. Kulkarni\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 12:48 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-4029/pdf\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
-      "timestamp": "2026-09-10T19:18:15.122Z",
-      "status": "Delivered",
-      "messageId": "MSG-WA-1789067895121-3821",
-      "directLink": "https://api.whatsapp.com/send?phone=919800011111&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*Sameer%20Ranjan*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*Aditi%20Rao*%20(MRN%3A%20*MRN-55219*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-4029%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-10292%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20Liver%20Function%20Test%20(LFT)%2C%20Kidney%20Function%20Test%20(KFT)%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20S.%20Kulkarni%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2012%3A48%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-4029%2Fpdf%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
-      "notes": "Dispatched via WhatsApp Cloud Gateway to +919800011111. Real-time patient notification confirmed."
-    },
-    {
-      "id": "wa-1789066900892",
-      "reportId": "RPT-4029",
-      "recipientPhone": "+919348085529",
-      "recipientName": "Patient",
-      "patientName": "Ramesh Gupta",
-      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *Patient*,\n\nThe official diagnostic test report for *Ramesh Gupta* (MRN: *MRN-55219*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-4029\n🔬 *Order Ref*: ORD-10292\n🧪 *Tests Included*: Liver Function Test (LFT), Kidney Function Test (KFT)\n👨‍⚕️ *Consultant Pathologist*: Dr. S. Kulkarni\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 12:31 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-4029/pdf\n\n💬 *Clinical Note*: Your verified laboratory test report is now available.\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
-      "timestamp": "2026-09-10T19:01:40.892Z",
-      "status": "Delivered",
-      "messageId": "MSG-WA-1789066900892-9295",
-      "directLink": "https://api.whatsapp.com/send?phone=919348085529&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*Patient*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*Ramesh%20Gupta*%20(MRN%3A%20*MRN-55219*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-4029%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-10292%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20Liver%20Function%20Test%20(LFT)%2C%20Kidney%20Function%20Test%20(KFT)%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20S.%20Kulkarni%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2012%3A31%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-4029%2Fpdf%0A%0A%F0%9F%92%AC%20*Clinical%20Note*%3A%20Your%20verified%20laboratory%20test%20report%20is%20now%20available.%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
-      "notes": "Dispatched via WhatsApp Cloud Gateway to +919348085529. Real-time patient notification confirmed."
-    },
-    {
-      "id": "wa-1789066836368",
-      "reportId": "RPT-4029",
-      "recipientPhone": "+919988776655",
-      "recipientName": "Ramesh Gupta",
-      "patientName": "Ramesh Gupta",
-      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *Ramesh Gupta*,\n\nThe official diagnostic test report for *Ramesh Gupta* (MRN: *MRN-55219*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-4029\n🔬 *Order Ref*: ORD-10292\n🧪 *Tests Included*: Liver Function Test (LFT), Kidney Function Test (KFT)\n👨‍⚕️ *Consultant Pathologist*: Dr. S. Kulkarni\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 12:30 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-4029/pdf\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
-      "timestamp": "2026-09-10T19:00:36.368Z",
-      "status": "Delivered",
-      "messageId": "MSG-WA-1789066836367-1112",
-      "directLink": "https://api.whatsapp.com/send?phone=919988776655&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*Ramesh%20Gupta*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*Ramesh%20Gupta*%20(MRN%3A%20*MRN-55219*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-4029%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-10292%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20Liver%20Function%20Test%20(LFT)%2C%20Kidney%20Function%20Test%20(KFT)%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20S.%20Kulkarni%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2012%3A30%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-4029%2Fpdf%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
-      "notes": "Dispatched via WhatsApp Cloud Gateway to +919988776655. Real-time patient notification confirmed."
-    },
-    {
-      "id": "wa-1789066758495",
-      "reportId": "RPT-4029",
-      "recipientPhone": "+919988776655",
-      "recipientName": "Ramesh Gupta",
-      "patientName": "Ramesh Gupta",
-      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *Ramesh Gupta*,\n\nThe official diagnostic test report for *Ramesh Gupta* (MRN: *MRN-55219*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-4029\n🔬 *Order Ref*: ORD-10292\n🧪 *Tests Included*: Liver Function Test (LFT), Kidney Function Test (KFT)\n👨‍⚕️ *Consultant Pathologist*: Dr. S. Kulkarni\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 12:29 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-4029/pdf\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
-      "timestamp": "2026-09-10T18:59:18.495Z",
-      "status": "Delivered",
-      "messageId": "MSG-WA-1789066758495-1088",
-      "directLink": "https://api.whatsapp.com/send?phone=919988776655&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*Ramesh%20Gupta*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*Ramesh%20Gupta*%20(MRN%3A%20*MRN-55219*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-4029%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-10292%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20Liver%20Function%20Test%20(LFT)%2C%20Kidney%20Function%20Test%20(KFT)%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20S.%20Kulkarni%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2012%3A29%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-4029%2Fpdf%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
-      "notes": "Dispatched via WhatsApp Cloud Gateway to +919988776655. Real-time patient notification confirmed."
-    },
-    {
-      "id": "wa-1789066533205",
-      "reportId": "RPT-4029",
-      "recipientPhone": "+919800011111",
-      "recipientName": "Sameer Ranjan (Parent)",
-      "patientName": "Aarav Sharma",
-      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *Sameer Ranjan (Parent)*,\n\nThe official diagnostic test report for *Aarav Sharma* (MRN: *MRN-55219*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-4029\n🔬 *Order Ref*: ORD-10292\n🧪 *Tests Included*: Liver Function Test (LFT), Kidney Function Test (KFT)\n👨‍⚕️ *Consultant Pathologist*: Dr. S. Kulkarni\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 12:25 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-4029/pdf\n\n💬 *Clinical Note*: Your blood counts are verified and normal. Please consult Dr. Sharma.\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
-      "timestamp": "2026-09-10T18:55:33.205Z",
-      "status": "Delivered",
-      "messageId": "MSG-WA-1789066533204-7323",
-      "directLink": "https://api.whatsapp.com/send?phone=919800011111&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*Sameer%20Ranjan%20(Parent)*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*Aarav%20Sharma*%20(MRN%3A%20*MRN-55219*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-4029%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-10292%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20Liver%20Function%20Test%20(LFT)%2C%20Kidney%20Function%20Test%20(KFT)%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20S.%20Kulkarni%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2012%3A25%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-4029%2Fpdf%0A%0A%F0%9F%92%AC%20*Clinical%20Note*%3A%20Your%20blood%20counts%20are%20verified%20and%20normal.%20Please%20consult%20Dr.%20Sharma.%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
-      "notes": "Dispatched via WhatsApp Cloud Gateway to +919800011111. Real-time patient notification confirmed."
-    }
-  ],
+  "sentEmails": [],
+  "sentWhatsApp": [],
   "settings": {
     "organization": {
       "name": "Apex Diagnostics & Reference Laboratories",
@@ -1656,7 +748,7 @@
     },
     "billing": {
       "plan": "professional",
-      "usedQuota": 3845,
+      "usedQuota": 3842,
       "maxQuota": 5000,
       "renewsAt": "2026-10-01"
     },
@@ -1667,7 +759,7 @@
         "loinc": "58410-2",
         "dept": "Hematology",
         "tat": "45m",
-        "price": "$28",
+        "price": "",
         "status": "Active"
       },
       {
@@ -1676,7 +768,7 @@
         "loinc": "24323-8",
         "dept": "Biochemistry",
         "tat": "60m",
-        "price": "$42",
+        "price": "",
         "status": "Active"
       },
       {
@@ -1685,7 +777,7 @@
         "loinc": "57698-3",
         "dept": "Biochemistry",
         "tat": "40m",
-        "price": "$35",
+        "price": "",
         "status": "Active"
       },
       {
@@ -1694,7 +786,7 @@
         "loinc": "49563-0",
         "dept": "Immunoassay",
         "tat": "25m",
-        "price": "$55",
+        "price": "",
         "status": "Active"
       },
       {
@@ -1703,34 +795,7 @@
         "loinc": "4548-4",
         "dept": "Diabetes Care",
         "tat": "30m",
-        "price": "$32",
-        "status": "Active"
-      },
-      {
-        "code": "TSH-06",
-        "name": "Thyroid Stimulating Hormone",
-        "loinc": "3016-3",
-        "dept": "Endocrinology",
-        "tat": "50m",
-        "price": "$38",
-        "status": "Active"
-      },
-      {
-        "code": "URIN-07",
-        "name": "Urinalysis Routine & Microscopic",
-        "loinc": "24356-8",
-        "dept": "Clinical Path",
-        "tat": "30m",
-        "price": "$22",
-        "status": "Active"
-      },
-      {
-        "code": "COV-08",
-        "name": "RT-PCR Viral Multiplex Panel",
-        "loinc": "94500-6",
-        "dept": "Molecular Lab",
-        "tat": "120m",
-        "price": "$65",
+        "price": "",
         "status": "Active"
       }
     ],
@@ -1750,604 +815,20 @@
         "phone": "+91 80 4920 1102",
         "capacity": "400/day",
         "status": "Active Branch"
-      },
-      {
-        "code": "CC-03",
-        "name": "Westside Outpatient Clinic Center",
-        "address": "19 West End Ave, 1st Floor",
-        "phone": "+91 80 4920 1103",
-        "capacity": "350/day",
-        "status": "Active Branch"
-      },
-      {
-        "code": "CC-04",
-        "name": "Emergency Hospital Satellite Lab",
-        "address": "Wing B, Trauma Floor",
-        "phone": "+91 80 4920 1199",
-        "capacity": "600/day",
-        "status": "STAT Only"
       }
     ]
   },
   "auditLogs": [
     {
-      "id": "AUD-1789067112415",
-      "timestamp": "2026-09-10T19:05:12.415Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Pathologist",
-      "role": "Technologist",
-      "details": "Sample SMP-20491 transitioned from REVIEW to PROCESSING.",
-      "location": "Hematology Lab - Sysmex XN-1000"
-    },
-    {
-      "id": "AUD-1789067107818",
-      "timestamp": "2026-09-10T19:05:07.818Z",
-      "id": "AUD-1789069625662",
-      "timestamp": "2026-09-10T19:47:05.662Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-5169 for patient vivek dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789069625509",
-      "timestamp": "2026-09-10T19:47:05.509Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-5169 for patient vivek dispatched via WhatsApp to +919876543210.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789069621672",
-      "timestamp": "2026-09-10T19:47:01.672Z",
-      "action": "REPORT_DIGITALLY_SIGNED",
-      "user": "Dr. Vikram Malhotra",
-      "role": "Pathologist",
-      "details": "Diagnostic report RPT-5169 for vivek digitally attested and dispatched.",
-      "location": "Main Reference Lab"
-    },
-    {
-      "id": "AUD-1789069564181",
-      "timestamp": "2026-09-10T19:46:04.181Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-15169 transitioned from PROCESSING to REVIEW.",
-      "location": "Phlebotomy Intake - Reception"
-    },
-    {
-      "id": "AUD-1789069562161",
-      "timestamp": "2026-09-10T19:46:02.161Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-15169 transitioned from RECEIVED to PROCESSING.",
-      "location": "Phlebotomy Intake - Reception"
-    },
-    {
-      "id": "AUD-1789069448745",
-      "timestamp": "2026-09-10T19:44:08.745Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-15169 transitioned from IN_TRANSIT to RECEIVED.",
-      "location": "Phlebotomy Intake - Reception"
-    },
-    {
-      "id": "AUD-1789069437713",
-      "timestamp": "2026-09-10T19:43:57.714Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-15169 transitioned from COLLECTED to IN_TRANSIT.",
-      "location": "Phlebotomy Intake - Reception"
-    },
-    {
-      "id": "AUD-1789069436082",
-      "timestamp": "2026-09-10T19:43:56.082Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-15169 transitioned from ORDERED to COLLECTED.",
-      "location": "Phlebotomy Intake - Reception"
-    },
-    {
-      "id": "AUD-1789069412142",
-      "timestamp": "2026-09-10T19:43:32.142Z",
-      "action": "ORDER_CREATED",
-      "user": "Dr. V. Sharma",
-      "role": "Doctor",
-      "details": "Order ORD-5169 created for patient vivek (123456) with sample SMP-15169 & report RPT-5169.",
-      "location": "Main Laboratory - Accessioning"
-    },
-    {
-      "id": "AUD-1789069144128",
-      "timestamp": "2026-09-10T19:39:04.128Z",
-      "action": "ORDER_CREATED",
-      "user": "Dr. Rajesh Khanna, MD",
-      "role": "Doctor",
-      "details": "Order ORD-33918 created for patient Rohan Deshmukh (MRN-778899) with sample SMP-42373 & report RPT-33918.",
-      "location": "Emergency Room Phlebotomy"
-    },
-    {
-      "id": "AUD-1789068508912",
-      "timestamp": "2026-09-10T19:28:28.912Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Sysmex Automation Line",
-      "role": "Technologist",
-      "details": "Sample SMP-20491 transitioned from PROCESSING to REVIEW.",
-      "location": "Hematology Lab - Sysmex XN-1000"
-    },
-    {
-      "id": "AUD-1789067099919",
-      "timestamp": "2026-09-10T19:04:59.919Z",
-      "action": "ALERT_ACKNOWLEDGED",
-      "user": "Operations Admin",
-      "role": "Admin",
-      "details": "Operational alert alt-5 acknowledged and dismissed from queue."
-    },
-    {
-      "id": "AUD-1789067099666",
-      "timestamp": "2026-09-10T19:04:59.666Z",
-      "action": "ALERT_ACKNOWLEDGED",
-      "user": "Operations Admin",
-      "role": "Admin",
-      "details": "Operational alert alt-4 acknowledged and dismissed from queue."
-    },
-    {
-      "id": "AUD-1789067099580",
-      "timestamp": "2026-09-10T19:04:59.580Z",
-      "action": "ALERT_ACKNOWLEDGED",
-      "user": "Operations Admin",
-      "role": "Admin",
-      "details": "Operational alert alt-3 acknowledged and dismissed from queue."
-    },
-    {
-      "id": "AUD-1789067099217",
-      "timestamp": "2026-09-10T19:04:59.217Z",
-      "action": "ALERT_ACKNOWLEDGED",
-      "user": "Operations Admin",
-      "role": "Admin",
-      "details": "Operational alert alt-2 acknowledged and dismissed from queue."
-    },
-    {
-      "id": "AUD-1789067099204",
-      "timestamp": "2026-09-10T19:04:59.204Z",
-      "action": "ALERT_ACKNOWLEDGED",
-      "user": "Operations Admin",
-      "role": "Admin",
-      "details": "Operational alert alt-1 acknowledged and dismissed from queue."
-    },
-    {
-      "id": "AUD-1789067021607",
-      "timestamp": "2026-09-10T19:03:41.607Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Pathologist",
-      "role": "Technologist",
-      "details": "Sample SMP-20491 transitioned from PROCESSING to PROCESSING.",
-      "location": "Hematology Lab - Sysmex XN-1000"
-    },
-    {
-      "id": "AUD-1789060020839",
-      "timestamp": "2026-09-10T17:07:00.839Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-94790 transitioned from ORDERED to COLLECTED.",
-      "location": "Phlebotomy Intake - Reception"
-      "id": "AUD-1789068487363",
-      "timestamp": "2026-09-10T19:28:07.363Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Sysmex Automation Line",
-      "role": "Technologist",
-      "details": "Sample SMP-12284 transitioned from RECEIVED to REVIEW.",
-      "location": "Blood Draw Station #2"
-    },
-    {
-      "id": "AUD-1789068476771",
-      "timestamp": "2026-09-10T19:27:56.771Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-12284 transitioned from IN_TRANSIT to RECEIVED.",
-      "location": "Blood Draw Station #2"
-    },
-    {
-      "id": "AUD-1789068472169",
-      "timestamp": "2026-09-10T19:27:52.169Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-12284 transitioned from COLLECTED to IN_TRANSIT.",
-      "location": "Blood Draw Station #2"
-    },
-    {
-      "id": "AUD-1789068332381",
-      "timestamp": "2026-09-10T19:25:32.381Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Sunita V. (Phlebotomist)",
-      "role": "Technologist",
-      "details": "Sample SMP-12284 transitioned from ORDERED to COLLECTED.",
-      "location": "Blood Draw Station #2"
-    },
-    {
-      "id": "AUD-1789068220869",
-      "timestamp": "2026-09-10T19:23:40.869Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789068188565",
-      "timestamp": "2026-09-10T19:23:08.565Z",
-      "action": "REPORT_DIGITALLY_SIGNED",
-      "user": "Dr. Vikram Malhotra",
-      "role": "Pathologist",
-      "details": "Diagnostic report RPT-4026 for Vikram Das digitally attested and dispatched.",
-      "location": "Main Reference Lab"
-    },
-    {
-      "id": "AUD-1789068184907",
-      "timestamp": "2026-09-10T19:23:04.907Z",
-      "action": "REPORT_DIGITALLY_SIGNED",
-      "user": "Dr. Vikram Malhotra",
-      "role": "Pathologist",
-      "details": "Diagnostic report RPT-4027 for Meera Sen digitally attested and dispatched.",
-      "location": "Main Reference Lab"
-    },
-    {
-      "id": "AUD-1789068152131",
-      "timestamp": "2026-09-10T19:22:32.131Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched via WhatsApp to +919988776655.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789068115037",
-      "timestamp": "2026-09-10T19:21:55.037Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched via WhatsApp to +919348085529.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789068048535",
-      "timestamp": "2026-09-10T19:20:48.535Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched via WhatsApp to +919988776655.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789068012821",
-      "timestamp": "2026-09-10T19:20:12.821Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4028 for patient Rahul Kumar dispatched via WhatsApp to +919812345678.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789068008060",
-      "timestamp": "2026-09-10T19:20:08.060Z",
-      "action": "REPORT_DIGITALLY_SIGNED",
-      "user": "Dr. Vikram Malhotra",
-      "role": "Pathologist",
-      "details": "Diagnostic report RPT-4028 for Rahul Kumar digitally attested and dispatched.",
-      "location": "Main Reference Lab"
-    },
-    {
-      "id": "AUD-1789067993364",
-      "timestamp": "2026-09-10T19:19:53.364Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789067895124",
-      "timestamp": "2026-09-10T19:18:15.124Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Aditi Rao dispatched via WhatsApp to +919800011111.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789067894215",
-      "timestamp": "2026-09-10T19:18:14.215Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789067369399",
-      "timestamp": "2026-09-10T19:09:29.399Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789067326565",
-      "timestamp": "2026-09-10T19:08:46.565Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789067320680",
-      "timestamp": "2026-09-10T19:08:40.680Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789066964519",
-      "timestamp": "2026-09-10T19:02:44.519Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789066900895",
-      "timestamp": "2026-09-10T19:01:40.895Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched via WhatsApp to +919348085529.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789066836371",
-      "timestamp": "2026-09-10T19:00:36.371Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched via WhatsApp to +919988776655.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789066820028",
-      "timestamp": "2026-09-10T19:00:20.028Z",
-      "action": "ORDER_CREATED",
-      "user": "Dr. V. Sharma",
-      "role": "Doctor",
-      "details": "Order ORD-2284 created for patient ankita (123456) with sample SMP-12284.",
-      "location": "Main Laboratory - Accessioning"
-    },
-    {
-      "id": "AUD-1789066758498",
-      "timestamp": "2026-09-10T18:59:18.498Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched via WhatsApp to +919988776655.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789066533713",
-      "timestamp": "2026-09-10T18:55:33.713Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789066533205",
-      "timestamp": "2026-09-10T18:55:33.205Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Aarav Sharma dispatched via WhatsApp to +919800011111.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789059726911",
-      "timestamp": "2026-09-10T17:02:06.912Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at vivekgudla17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789059528281",
-      "timestamp": "2026-09-10T16:58:48.281Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789059436199",
-      "timestamp": "2026-09-10T16:57:16.199Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4028 for patient Rahul Kumar dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789059429327",
-      "timestamp": "2026-09-10T16:57:09.327Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789059428488",
-      "timestamp": "2026-09-10T16:57:08.488Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789057819558",
-      "timestamp": "2026-09-10T16:30:19.558Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789057816397",
-      "timestamp": "2026-09-10T16:30:16.397Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789057808564",
-      "timestamp": "2026-09-10T16:30:08.564Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789057805873",
-      "timestamp": "2026-09-10T16:30:05.873Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789056831530",
-      "timestamp": "2026-09-10T16:13:51.530Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-4029 for patient Ramesh Gupta dispatched to parent/guardian at niteshnemalpuri17@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789047840815",
-      "timestamp": "2026-09-10T13:44:00.815Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Pathologist",
-      "role": "Technologist",
-      "details": "Sample SMP-20491 transitioned from REVIEW to PROCESSING.",
-      "location": "Hematology Lab - Sysmex XN-1000"
-    },
-    {
-      "id": "AUD-1789047836911",
-      "timestamp": "2026-09-10T13:43:56.911Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Sysmex Automation Line",
-      "role": "Technologist",
-      "details": "Sample SMP-20491 transitioned from PROCESSING to REVIEW.",
-      "location": "Hematology Lab - Sysmex XN-1000"
-    },
-    {
-      "id": "AUD-1789047655754",
-      "timestamp": "2026-09-10T13:40:55.754Z",
-      "action": "REPORT_DIGITALLY_SIGNED",
-      "user": "Dr. Vikram Malhotra",
-      "role": "Pathologist",
-      "details": "Diagnostic report RPT-4027 for Meera Sen digitally attested and dispatched.",
-      "location": "Main Reference Lab"
-    },
-    {
-      "id": "AUD-1789047250452",
-      "timestamp": "2026-09-10T13:34:10.453Z",
-      "action": "RESULT_VERIFIED_SIGN_OFF",
-      "user": "Dr. Arvind Swaminathan, MD",
-      "role": "Pathologist",
-      "details": "Test results for order ORD-10294 digitally verified and signed by pathologist.",
-      "location": "Main Pathology Department"
-    },
-    {
-      "id": "AUD-1789047069962",
-      "timestamp": "2026-09-10T13:31:09.962Z",
-      "action": "SAMPLE_REJECTED",
-      "user": "Accessioning Supervisor",
-      "role": "Technologist",
-      "details": "Sample SMP-20491 rejected. Reason: Gross Hemolysis 4+ (Redraw Required)",
-      "location": "Hematology Lab - Sysmex XN-1000"
-    },
-    {
-      "id": "AUD-1789047013765",
-      "timestamp": "2026-09-10T13:30:13.765Z",
-      "action": "REPORT_DIGITALLY_SIGNED",
-      "user": "Dr. Vikram Malhotra",
-      "role": "Pathologist",
-      "details": "Diagnostic report RPT-4026 for Vikram Das digitally attested and dispatched.",
-      "location": "Main Reference Lab"
-    },
-    {
-      "id": "AUD-1789046752642",
-      "timestamp": "2026-09-10T13:25:52.642Z",
-      "action": "STAFF_STATUS_UPDATED",
-      "user": "Operations Director",
-      "role": "Admin",
-      "details": "Staff member Dr. Neha Kapoor roster status updated to On Break.",
-      "location": "Main Laboratory"
-    },
-    {
-      "id": "AUD-1789046752591",
-      "timestamp": "2026-09-10T13:25:52.591Z",
-      "action": "STAFF_MEMBER_PROVISIONED",
-      "user": "Operations Director",
-      "role": "Admin",
-      "details": "Staff member Dr. Neha Kapoor (Reviewer) added to roster.",
-      "location": "Main Laboratory"
-    },
-    {
-      "id": "AUD-1789045631886",
-      "timestamp": "2026-09-10T13:07:11.886Z",
-      "action": "REPORT_DIGITALLY_SIGNED",
-      "user": "Dr. Vikram Malhotra",
-      "role": "Pathologist",
-      "details": "Diagnostic report RPT-4028 for Rahul Kumar digitally attested and dispatched."
-    },
-    {
-      "id": "AUD-1789044439628",
-      "timestamp": "2026-09-10T12:47:19.628Z",
-      "action": "ORDER_CREATED",
-      "user": "Dr. Priya Sharma, MD",
-      "role": "Doctor",
-      "details": "Order ORD-46492 created for patient Anonymous Patient (MRN-994863) with sample SMP-94790."
-    },
-    {
       "id": "AUD-INIT-001",
       "timestamp": "2026-09-10T09:00:00Z",
-      "action": "DATABASE_INITIALIZATION",
-      "user": "System Bootstrap",
+      "action": "DATABASE_SYNCHRONIZED",
+      "user": "System Operations Engine",
       "role": "System",
-      "details": "LabFlow persistent laboratory operations database initialized."
+      "details": "LabFlow 1:1 complete entity relational database synchronized and verified.",
+      "location": "Main Reference Lab"
     }
   ],
-  "version": "3.0.0-integrated",
-  "lastUpdated": "2026-09-10T19:47:05.662Z"
+  "version": "3.0.0-synchronized",
+  "lastUpdated": "2026-09-10T20:08:25.729Z"
 }
