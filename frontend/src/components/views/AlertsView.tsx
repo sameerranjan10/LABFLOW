@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { AlertItem } from "@/data/labflowData";
-import { StatusBadge } from "@/components/StatusBadge";
-import { Bell, AlertOctagon, Clock, XCircle, FileCheck2, Info, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { NavView } from "@/components/Sidebar";
+import { AlertOctagon, Clock, XCircle, FileCheck2, Info, ArrowUpRight } from "lucide-react";
 
 interface AlertsViewProps {
   alerts: AlertItem[];
   onDismissAlert: (id: string) => void;
-  onNavigateToView: (view: any) => void;
+  onNavigateToView: (view: NavView) => void;
 }
 
 export const AlertsView: React.FC<AlertsViewProps> = ({
@@ -91,7 +91,7 @@ export const AlertsView: React.FC<AlertsViewProps> = ({
       <div className="space-y-3">
         {filtered.length === 0 ? (
           <div className="labflow-card p-8 text-center text-slate-500 text-xs">
-            No alerts present in category "{activeCategory}".
+            No alerts present in category &quot;{activeCategory}&quot;.
           </div>
         ) : (
           filtered.map((alt) => (

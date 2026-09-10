@@ -33,6 +33,32 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
     return matchesSearch && matchesPriority && matchesStatus && matchesLocation;
   });
 
+  const handleExportCSV = () => {
+    const headers = ["Order ID", "Patient Name", "MRN", "Age", "Gender", "Tests", "Priority", "Stage", "Location", "Created", "TAT", "Status"];
+    const rows = filtered.map((ord) => [
+      ord.id,
+      `"${ord.patient.name}"`,
+      ord.patient.mrn,
+      ord.patient.age,
+      ord.patient.gender,
+      `"${ord.tests.join("; ")}"`,
+      ord.priority,
+      ord.currentStage,
+      `"${ord.location}"`,
+      ord.createdAt,
+      ord.tat,
+      ord.status,
+    ]);
+    const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `LabFlow_Orders_${new Date().toISOString().split("T")[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* HEADER */}
@@ -48,7 +74,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => alert("Exporting Orders to CSV...")}
+            onClick={handleExportCSV}
             className="px-3 py-2 text-xs font-semibold rounded-lg border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer"
           >
             <Download className="w-4 h-4 text-slate-500" />

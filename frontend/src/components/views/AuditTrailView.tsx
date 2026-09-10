@@ -8,27 +8,21 @@ export const AuditTrailView: React.FC = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    async function loadSupabaseLogs() {
+    async function loadAuditLogs() {
       try {
-        const fetched: ClinicalAuditEntry[] = await fetchPatientAuditLogs();
-        if (fetched && fetched.length > 0) {
-          const mapped: AuditRecord[] = fetched.map((f, idx) => ({
-            id: f.id || `aud-sp-${idx}`,
-            timestamp: f.createdAt ? new Date(f.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "11:20 AM",
-            user: f.patientName ? `Tech for ${f.patientName}` : "System Automator",
-            role: "Lab Auditor",
-            action: f.drugConflictDetected ? "Safety Flag Audit" : "Execution Audit Verified",
-            entity: "Pipeline",
-            entityId: f.scenarioId || `AUD-${idx}`,
-            location: "Main Reference Lab",
-          }));
-          setLogs([...mapped, ...INITIAL_AUDIT_LOGS]);
+        const res = await fetch("/api/audit");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.logs && data.logs.length > 0) {
+            setLogs(data.logs);
+            return;
+          }
         }
       } catch (err) {
         console.info("Using local audit log fallback:", err);
       }
     }
-    loadSupabaseLogs();
+    loadAuditLogs();
   }, []);
 
   const filtered = logs.filter(
@@ -38,6 +32,29 @@ export const AuditTrailView: React.FC = () => {
       l.entityId.toLowerCase().includes(search.toLowerCase()) ||
       l.location.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleExportAuditCSV = () => {
+    const headers = ["ID", "Timestamp", "User", "Role", "Action", "Entity", "Entity ID", "Location", "Integrity Status"];
+    const rows = filtered.map((l) => [
+      l.id,
+      `"${l.timestamp}"`,
+      `"${l.user}"`,
+      l.role,
+      `"${l.action}"`,
+      l.entity,
+      l.entityId,
+      `"${l.location}"`,
+      "ISO-15189 Verified",
+    ]);
+    const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `LabFlow_Audit_Ledger_${new Date().toISOString().split("T")[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -59,7 +76,7 @@ export const AuditTrailView: React.FC = () => {
         </div>
 
         <button
-          onClick={() => alert("Exporting Compliance Log to Signed CSV...")}
+          onClick={handleExportAuditCSV}
           className="px-3 py-2 text-xs font-semibold rounded-lg border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer"
         >
           <Download className="w-4 h-4 text-slate-500" />

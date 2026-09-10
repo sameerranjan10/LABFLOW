@@ -1,18 +1,93 @@
-import React from "react";
-import { LabSample } from "@/data/labflowData";
+import React, { useState } from "react";
+import { LabSample, LabStage } from "@/data/labflowData";
 import { StatusBadge } from "@/components/StatusBadge";
-import { X, CheckCircle2, Clock, MapPin, User, Barcode, ShieldCheck } from "lucide-react";
+import { X, CheckCircle2, Clock, MapPin, User, Barcode, ShieldCheck, ArrowRight, AlertOctagon } from "lucide-react";
 
 interface SampleDetailModalProps {
   sample: LabSample | null;
   onClose: () => void;
+  onSampleUpdated?: (updated: LabSample) => void;
 }
 
 export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
   sample,
   onClose,
+  onSampleUpdated,
 }) => {
-  if (!sample) return null;
+  const [activeSample, setActiveSample] = useState<LabSample | null>(sample);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  // Sync on prop change
+  React.useEffect(() => {
+    setActiveSample(sample);
+  }, [sample]);
+
+  if (!sample || !activeSample) return null;
+
+  const getNextStage = (current: LabStage): LabStage | null => {
+    const stages: LabStage[] = ["ORDERED", "COLLECTED", "IN_TRANSIT", "RECEIVED", "PROCESSING", "REVIEW", "RELEASED"];
+    const idx = stages.indexOf(current);
+    if (idx >= 0 && idx < stages.length - 1) {
+      return stages[idx + 1];
+    }
+    return null;
+  };
+
+  const nextStage = getNextStage(activeSample.stage);
+
+  const handleAdvance = async () => {
+    if (!nextStage) return;
+    setIsUpdating(true);
+    try {
+      const res = await fetch("/api/samples", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sampleId: activeSample.id,
+          nextStage,
+          operator: "Laboratory Technologist",
+          notes: `Advanced to ${nextStage} via Chain-of-Custody Modal.`,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.sample) {
+          setActiveSample(data.sample);
+          if (onSampleUpdated) onSampleUpdated(data.sample);
+        }
+      }
+    } catch (e) {
+      console.warn("Advance stage error:", e);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleReject = async () => {
+    setIsUpdating(true);
+    try {
+      const res = await fetch("/api/samples/reject", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sampleId: activeSample.id,
+          reason: "Gross Hemolysis 4+ (Redraw Required)",
+          operator: "Accessioning Supervisor",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.sample) {
+          setActiveSample(data.sample);
+          if (onSampleUpdated) onSampleUpdated(data.sample);
+        }
+      }
+    } catch (e) {
+      console.warn("Reject sample error:", e);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
@@ -155,16 +230,42 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
         </div>
 
         {/* FOOTER */}
-        <div className="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-          <span className="text-xs text-slate-500 font-medium">
-            LIMS Event Audit Hash Verified (ISO 15189 Compliant)
-          </span>
-          <button
-            onClick={onClose}
-            className="px-4 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-white hover:bg-slate-900 cursor-pointer"
-          >
-            Close Traceability View
-          </button>
+        <div className="px-6 py-3.5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            {nextStage && activeSample.status !== "Rejected" && (
+              <button
+                onClick={handleAdvance}
+                disabled={isUpdating}
+                className="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-1.5 shadow-2xs transition cursor-pointer disabled:opacity-50"
+              >
+                Advance to {nextStage}
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+
+            {activeSample.status !== "Rejected" && activeSample.stage !== "RELEASED" && (
+              <button
+                onClick={handleReject}
+                disabled={isUpdating}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 flex items-center gap-1 transition cursor-pointer disabled:opacity-50"
+              >
+                <AlertOctagon className="w-3.5 h-3.5" />
+                Flag Rejection
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-[11px] text-slate-500 font-mono hidden md:inline">
+              ISO 15189 Immutable Chain Log
+            </span>
+            <button
+              onClick={onClose}
+              className="px-4 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-white hover:bg-slate-900 cursor-pointer"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>

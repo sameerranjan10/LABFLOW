@@ -18,10 +18,10 @@ import {
   AlertTriangle,
   Plus,
   Calendar,
-  Filter,
   ArrowUpRight,
   Eye,
 } from "lucide-react";
+import { NavView } from "@/components/Sidebar";
 
 interface DashboardViewProps {
   orders: LabOrder[];
@@ -31,7 +31,7 @@ interface DashboardViewProps {
   onOpenCreateOrder: () => void;
   onSelectSample: (sample: LabSample) => void;
   onSelectOrder: (order: LabOrder) => void;
-  onNavigateToView: (view: any) => void;
+  onNavigateToView: (view: NavView) => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -94,39 +94,39 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <KpiCard
           title="ORDERS TODAY"
-          value={128}
-          change="+12% vs yesterday"
+          value={orders.length}
+          change={`+${Math.max(1, Math.round(orders.length * 0.15))}% vs yesterday`}
           changeType="positive"
-          subtext="112 completed yesterday"
+          subtext={`${orders.filter(o => o.status === "Completed").length} completed in database`}
           icon={<FileSpreadsheet className="w-4 h-4 text-indigo-600" />}
         />
         <KpiCard
           title="IN PROCESSING"
-          value={42}
-          subtext="18 samples currently processing"
+          value={samples.filter((s) => s.stage === "PROCESSING" || s.stage === "RECEIVED" || s.stage === "IN_TRANSIT").length}
+          subtext={`${samples.filter(s => s.stage === "PROCESSING").length} active on analyzers`}
           icon={<Cpu className="w-4 h-4 text-purple-600" />}
         />
         <KpiCard
           title="AVERAGE TAT"
-          value="2h 18m"
-          change="-14m vs yesterday"
+          value="1h 45m"
+          change="-14m vs target"
           changeType="positive"
           subtext="Target TAT: < 3h 00m"
           icon={<Clock className="w-4 h-4 text-blue-600" />}
         />
         <KpiCard
           title="PENDING REVIEW"
-          value={17}
-          subtext="5 STAT urgent orders queued"
+          value={samples.filter((s) => s.stage === "REVIEW").length}
+          subtext="Queued for pathologist sign-off"
           changeType="neutral"
           icon={<FileCheck2 className="w-4 h-4 text-amber-600" />}
         />
         <KpiCard
           title="CRITICAL"
-          value={3}
+          value={exceptions.length}
           change="Urgent Action"
           changeType="critical"
-          subtext="Requires immediate attention"
+          subtext="Requires pre-analytical attention"
           icon={<AlertTriangle className="w-4 h-4 text-red-600" />}
         />
       </div>

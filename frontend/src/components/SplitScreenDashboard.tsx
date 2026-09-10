@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar, NavView } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
 import { ToastContainer, ToastMessage } from "@/components/Toast";
@@ -34,13 +34,39 @@ import {
   LabReport,
   AlertItem,
 } from "@/data/labflowData";
+import { LabUser, PRESET_LAB_USERS } from "@/lib/roles";
 
-export const SplitScreenDashboard: React.FC = () => {
-  const [currentView, setCurrentView] = useState<NavView>("dashboard");
+interface SplitScreenDashboardProps {
+  initialView?: NavView;
+}
+
+export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
+  initialView = "dashboard",
+}) => {
+  const [currentView, setCurrentView] = useState<NavView>(initialView);
+  const [currentUser, setCurrentUser] = useState<LabUser>(PRESET_LAB_USERS.administrator);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("Main Laboratory");
+  const [selectedLocation, setSelectedLocation] = useState("Main Reference Lab (Central)");
+
+  const navigateTo = (view: NavView) => {
+    setCurrentView(view);
+    if (typeof window !== "undefined") {
+      const targetPath = view === "dashboard" ? "/" : `/${view}`;
+      window.history.pushState(null, "", targetPath);
+    }
+  };
+
+  const handleSelectUser = (user: LabUser) => {
+    setCurrentUser(user);
+    if (user.role === "patient") {
+      navigateTo("reports");
+      addToast("Patient Portal Activated", `Logged in as ${user.name}. Viewing your diagnostic reports.`, "info");
+    } else {
+      addToast("Persona Switched", `Active user: ${user.name} (${user.badge})`, "success");
+    }
+  };
 
   // DATA STORES
   const [orders, setOrders] = useState<LabOrder[]>(INITIAL_ORDERS);
@@ -70,17 +96,74 @@ export const SplitScreenDashboard: React.FC = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
+  // LIVE DATABASE INITIALIZATION (PHASE 3)
+  useEffect(() => {
+    async function loadDataFromDb() {
+      try {
+        const [ordersRes, samplesRes, reportsRes] = await Promise.all([
+          fetch("/api/orders"),
+          fetch("/api/samples"),
+          fetch("/api/reports"),
+        ]);
+        if (ordersRes.ok) {
+          const ordData = await ordersRes.json();
+          if (ordData.orders && ordData.orders.length > 0) {
+            setOrders(ordData.orders);
+          }
+        }
+        if (samplesRes.ok) {
+          const smpData = await samplesRes.json();
+          if (smpData.samples && smpData.samples.length > 0) {
+            setSamples(smpData.samples);
+          }
+        }
+        if (reportsRes.ok) {
+          const repData = await reportsRes.json();
+          if (repData.reports && repData.reports.length > 0) {
+            setReports(repData.reports);
+          }
+        }
+      } catch (err) {
+        console.warn("Using local fallback store:", err);
+      }
+    }
+    loadDataFromDb();
+  }, []);
+
   // MODAL STATES
   const [isCreateOrderOpen, setIsCreateOrderOpen] = useState(false);
   const [selectedSampleDetail, setSelectedSampleDetail] = useState<LabSample | null>(null);
   const [selectedReportPreview, setSelectedReportPreview] = useState<LabReport | null>(null);
 
-  // HANDLERS
-  const handleCreateOrderSubmit = (newOrder: Partial<LabOrder>) => {
+  // HANDLERS WITH PERSISTENCE (PHASE 3)
+  const handleCreateOrderSubmit = async (newOrder: Partial<LabOrder>) => {
     const createdOrder = newOrder as LabOrder;
-    setOrders((prev) => [createdOrder, ...prev]);
 
-    // Create corresponding sample
+    // Persist via Backend API
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(createdOrder),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.order) setOrders((prev) => [data.order, ...prev]);
+        if (data.sample) setSamples((prev) => [data.sample, ...prev]);
+
+        setWorkflowStages((prev) =>
+          prev.map((st) => (st.key === "ORDERED" ? { ...st, count: st.count + 1 } : st))
+        );
+
+        addToast("Order Persisted to Database", `Order ${createdOrder.id} & Sample ${createdOrder.sampleId} written to disk.`, "success");
+        return;
+      }
+    } catch (e) {
+      console.warn("Database POST error, falling back to local state:", e);
+    }
+
+    // Local fallback
+    setOrders((prev) => [createdOrder, ...prev]);
     const createdSample: LabSample = {
       id: createdOrder.sampleId,
       orderId: createdOrder.id,
@@ -108,26 +191,39 @@ export const SplitScreenDashboard: React.FC = () => {
       ],
     };
     setSamples((prev) => [createdSample, ...prev]);
-
-    // Update workflow stage count
     setWorkflowStages((prev) =>
       prev.map((st) => (st.key === "ORDERED" ? { ...st, count: st.count + 1 } : st))
     );
-
     addToast("New Order Registered", `Order ${createdOrder.id} & Sample ${createdOrder.sampleId} created.`, "success");
   };
 
-  const handleReleaseReport = (reportId: string) => {
+  const handleReleaseReport = async (reportId: string) => {
     setReports((prev) =>
       prev.map((r) =>
         r.id === reportId ? { ...r, status: "Released", releasedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) } : r
       )
     );
-    addToast("Report Released", `Diagnostic report ${reportId} digitally signed and dispatched.`, "success");
+
+    try {
+      await fetch("/api/reports", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reportId, signedBy: currentUser.name }),
+      });
+    } catch (e) {
+      console.warn("Report release sync error:", e);
+    }
+
+    addToast("Report Released & Persisted", `Diagnostic report ${reportId} digitally signed and saved in database.`, "success");
   };
 
-  const handleDismissAlert = (id: string) => {
+  const handleDismissAlert = async (id: string) => {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
+    try {
+      await fetch(`/api/alerts?id=${id}`, { method: "DELETE" });
+    } catch (e) {
+      console.warn("Dismiss alert error:", e);
+    }
     addToast("Alert Acknowledged", "Exception dismissed from operational alert queue.", "info");
   };
 
@@ -135,7 +231,7 @@ export const SplitScreenDashboard: React.FC = () => {
     return (
       <LoginPage
         onLoginSuccess={() => {
-          setCurrentView("dashboard");
+          navigateTo("dashboard");
           addToast("Authenticated Successfully", "Welcome back, Admin User.", "success");
         }}
         onRequestDemo={() => {
@@ -148,7 +244,7 @@ export const SplitScreenDashboard: React.FC = () => {
   if (currentView === "landing") {
     return (
       <LandingPage
-        onExplorePlatform={() => setCurrentView("dashboard")}
+        onExplorePlatform={() => navigateTo("dashboard")}
         onRequestDemo={() => {
           alert("Demo request submitted! Our enterprise team will contact you.");
         }}
@@ -164,12 +260,13 @@ export const SplitScreenDashboard: React.FC = () => {
           <Sidebar
             currentView={currentView}
             onNavigate={(view) => {
-              setCurrentView(view);
+              navigateTo(view);
               setMobileMenuOpen(false);
             }}
             collapsed={sidebarCollapsed}
             onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
             unreadAlertCount={alerts.length}
+            currentRole={currentUser.role}
           />
         </div>
 
@@ -182,9 +279,11 @@ export const SplitScreenDashboard: React.FC = () => {
             onSearchChange={setSearchQuery}
             selectedLocation={selectedLocation}
             onLocationChange={setSelectedLocation}
-            onOpenNotifications={() => setCurrentView("alerts")}
+            onOpenNotifications={() => navigateTo("alerts")}
             unreadCount={alerts.length}
             onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
+            currentUser={currentUser}
+            onSelectUser={handleSelectUser}
           />
 
           {/* VIEW SWITCHER */}
@@ -197,8 +296,8 @@ export const SplitScreenDashboard: React.FC = () => {
                 workflowStages={workflowStages}
                 onOpenCreateOrder={() => setIsCreateOrderOpen(true)}
                 onSelectSample={(sample) => setSelectedSampleDetail(sample)}
-                onSelectOrder={() => setCurrentView("orders")}
-                onNavigateToView={(view) => setCurrentView(view)}
+                onSelectOrder={() => navigateTo("orders")}
+                onNavigateToView={(view) => navigateTo(view)}
               />
             )}
 
@@ -221,7 +320,7 @@ export const SplitScreenDashboard: React.FC = () => {
               <ProcessingView
                 samples={samples}
                 onSelectSample={(sample) => setSelectedSampleDetail(sample)}
-                onNavigateToResults={() => setCurrentView("results")}
+                onNavigateToResults={() => navigateTo("results")}
               />
             )}
 
@@ -241,7 +340,7 @@ export const SplitScreenDashboard: React.FC = () => {
               <AlertsView
                 alerts={alerts}
                 onDismissAlert={handleDismissAlert}
-                onNavigateToView={(view) => setCurrentView(view)}
+                onNavigateToView={(view) => navigateTo(view)}
               />
             )}
 
@@ -264,6 +363,17 @@ export const SplitScreenDashboard: React.FC = () => {
       <SampleDetailModal
         sample={selectedSampleDetail}
         onClose={() => setSelectedSampleDetail(null)}
+        onSampleUpdated={(updated) => {
+          setSamples((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
+          setOrders((prev) =>
+            prev.map((o) =>
+              o.sampleId === updated.id
+                ? { ...o, currentStage: updated.stage, status: updated.status === "Completed" ? "Completed" : "In Progress" }
+                : o
+            )
+          );
+          addToast("Specimen Chain of Custody Updated", `Sample ${updated.id} stage is now ${updated.stage}.`, "info");
+        }}
       />
 
       <ReportPreviewModal

@@ -138,12 +138,34 @@ export const ProcessingView: React.FC<ProcessingViewProps> = ({
                   <td className="py-3 px-4 whitespace-nowrap">
                     <StatusBadge type="status" value={s.status} size="sm" />
                   </td>
-                  <td className="py-3 px-4 text-right whitespace-nowrap">
+                  <td className="py-3 px-4 text-right whitespace-nowrap space-x-2">
+                    <button
+                      onClick={async () => {
+                        try {
+                          await fetch("/api/samples", {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              sampleId: s.id,
+                              nextStage: "REVIEW",
+                              operator: "Sysmex Automation Line",
+                              notes: "Automated hematology run finished. Results transmitted to Pathologist review queue.",
+                            }),
+                          });
+                        } catch (e) {
+                          console.warn("Analyzer run sync error:", e);
+                        }
+                        onNavigateToResults();
+                      }}
+                      className="px-2.5 py-1 text-xs font-bold rounded bg-purple-600 text-white hover:bg-purple-700 cursor-pointer shadow-2xs transition"
+                    >
+                      Run Analyzer Ingestion
+                    </button>
                     <button
                       onClick={() => onSelectSample(s)}
-                      className="px-2.5 py-1 text-xs font-semibold rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 cursor-pointer"
+                      className="px-2.5 py-1 text-xs font-semibold rounded bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer"
                     >
-                      View Run Details
+                      Details
                     </button>
                   </td>
                 </tr>

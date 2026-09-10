@@ -12,24 +12,78 @@ export const ResultsView: React.FC<ResultsViewProps> = ({ onNotify }) => {
   const [comments, setComments] = useState(result.comments || "");
   const [isApproved, setIsApproved] = useState(result.status === "Approved");
 
-  const handleApprove = () => {
+  React.useEffect(() => {
+    async function loadResult() {
+      try {
+        const res = await fetch("/api/results");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.results && data.results.length > 0) {
+            const first = data.results[0];
+            setResult(first);
+            setComments(first.comments || "");
+            setIsApproved(first.status === "Approved");
+          }
+        }
+      } catch (e) {
+        console.warn("Results fetch fallback:", e);
+      }
+    }
+    loadResult();
+  }, []);
+
+  const handleApprove = async () => {
     setIsApproved(true);
-    setResult({
-      ...result,
+    setResult((prev) => ({
+      ...prev,
       status: "Approved",
       comments: comments,
-      parameters: result.parameters.map((p) => ({ ...p, status: "Verified" })),
-    });
-    onNotify("Result Approved Successfully", `Test result for ${result.patient.name} (${result.orderId}) approved and pushed to Report Release queue.`, "success");
+      parameters: prev.parameters.map((p) => ({ ...p, status: "Verified" })),
+    }));
+
+    try {
+      const res = await fetch("/api/results", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          resultId: result.id,
+          reviewer: "Dr. Arvind Swaminathan, MD",
+          comments: comments || "Pathologist medical review verified. All panic thresholds cleared.",
+        }),
+      });
+      if (res.ok) {
+        onNotify("Result Approved & Persisted in Database", `Test result for ${result.patient.name} (${result.orderId}) verified and pushed to Report Release queue.`, "success");
+        return;
+      }
+    } catch (err) {
+      console.warn("Backend result sync error:", err);
+    }
+    onNotify("Result Approved Successfully", `Test result for ${result.patient.name} (${result.orderId}) approved.`, "success");
   };
 
-  const handleRequestRecheck = () => {
-    setResult({
-      ...result,
+  const handleRequestRecheck = async () => {
+    setResult((prev) => ({
+      ...prev,
       status: "Recheck Requested",
       comments: comments || "Recheck requested due to parameter deviation.",
-    });
-    onNotify("Recheck Requested", `Sample ${result.sampleId} flagged for rerun on Sysmex analyzer.`, "warning");
+    }));
+
+    try {
+      await fetch("/api/samples", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sampleId: result.sampleId,
+          nextStage: "PROCESSING",
+          operator: "Pathologist",
+          notes: "Analyzer rerun requested by pathologist.",
+        }),
+      });
+    } catch (err) {
+      console.warn("Rerun sample sync error:", err);
+    }
+
+    onNotify("Recheck Requested & Sample Queued", `Sample ${result.sampleId} flagged for rerun on Sysmex analyzer.`, "warning");
   };
 
   return (

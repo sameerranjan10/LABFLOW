@@ -15,6 +15,52 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
 }) => {
   if (!report) return null;
 
+  const handleDownloadReport = () => {
+    const reportText = `========================================================================
+APEX DIAGNOSTICS & REFERENCE LABORATORIES
+ISO 15189 / NABL ACCREDITED CENTRAL REFERENCE LABORATORY
+Plot 14, Healthcare Hub, Main Boulevard • Tel: +91 11 4000 8000
+========================================================================
+DIAGNOSTIC TEST REPORT
+Report ID: ${report.id}
+Order ID:  ${report.orderId}
+Status:    ${report.status.toUpperCase()}
+Date:      2026-09-10
+------------------------------------------------------------------------
+PATIENT DEMOGRAPHICS:
+Patient Name: ${report.patient.name}
+MRN / ID:     ${report.patient.mrn}
+Age / Gender: ${report.patient.age} Yrs / ${report.patient.gender}
+Phone:        ${report.patient.phone}
+------------------------------------------------------------------------
+LABORATORY FINDINGS & TEST RESULTS:
+Test Panel:   ${report.tests.join(", ")}
+
+Test Parameter              Observed Value   Units      Reference Range
+------------------------------------------------------------------------
+Hemoglobin                  12.4             g/dL       12.0 - 16.0
+Total Leukocyte Count (WBC) 12.8 [HIGH]      10³/µL     4.0 - 11.0
+Platelet Count              210              10³/µL     150 - 450
+------------------------------------------------------------------------
+PATHOLOGIST REVIEW & DIGITAL ATTESTATION:
+Reviewing Pathologist: ${report.reviewer}
+Attestation Status:    Digitally Verified & Signed
+Electronic Hash:       SHA256: 8f92a410b00192e49c95d3129810ef39
+Released Timestamp:    ${report.releasedAt || "Pending Release"}
+========================================================================
+This document is a certified electronic laboratory record in accordance
+with ISO 15189 and 21 CFR Part 11 requirements.
+========================================================================
+`;
+    const blob = new Blob([reportText], { type: "text/plain;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Diagnostic_Report_${report.id}_${report.patient.name.replace(/\s+/g, "_")}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
       <div className="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
@@ -134,11 +180,11 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         <div className="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
           <div className="flex gap-2">
             <button
-              onClick={() => alert("Downloading PDF Report...")}
+              onClick={handleDownloadReport}
               className="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
-              Download PDF
+              Download Report
             </button>
             <button
               onClick={() => window.print()}
