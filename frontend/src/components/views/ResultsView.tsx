@@ -8,6 +8,7 @@ interface ResultsViewProps {
 }
 
 export const ResultsView: React.FC<ResultsViewProps> = ({ onNotify }) => {
+  const [allResults, setAllResults] = useState<TestResult[]>([]);
   const [result, setResult] = useState<TestResult>(DEMO_TEST_RESULT);
   const [comments, setComments] = useState(result.comments || "");
   const [isApproved, setIsApproved] = useState(result.status === "Approved");
@@ -19,6 +20,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({ onNotify }) => {
         if (res.ok) {
           const data = await res.json();
           if (data.results && data.results.length > 0) {
+            setAllResults(data.results);
             const first = data.results[0];
             setResult(first);
             setComments(first.comments || "");
@@ -111,6 +113,37 @@ export const ResultsView: React.FC<ResultsViewProps> = ({ onNotify }) => {
           </code>
         </div>
       </div>
+
+      {/* MULTI-RESULT SWITCHER */}
+      {allResults.length > 1 && (
+        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          <span className="text-xs font-semibold text-slate-500 whitespace-nowrap">Select Ingested Result:</span>
+          {allResults.map((r) => {
+            const isSelected = r.id === result.id || r.orderId === result.orderId;
+            const patientName = r.patient?.name || (r as any).patientName || "Patient";
+            return (
+              <button
+                key={r.id}
+                onClick={() => {
+                  setResult(r);
+                  setComments(r.comments || "");
+                  setIsApproved(r.status === "Approved");
+                }}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition cursor-pointer border whitespace-nowrap flex items-center gap-1.5 ${
+                  isSelected
+                    ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs"
+                    : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                }`}
+              >
+                <span>{patientName}</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${isSelected ? "bg-indigo-700 text-indigo-100" : "bg-slate-100 text-slate-500"}`}>
+                  {r.orderId}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* PATIENT & ORDER SUMMARY CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

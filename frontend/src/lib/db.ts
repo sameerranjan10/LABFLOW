@@ -478,6 +478,33 @@ export function getTestResults(orderId?: string): TestResult[] {
   return results;
 }
 
+export function createOrUpdateTestResult(result: TestResult): TestResult {
+  const db = readDatabase();
+  if (!db.results) db.results = [];
+  const existingIndex = db.results.findIndex(
+    (r) => r.id === result.id || (r.orderId === result.orderId && r.testName === result.testName)
+  );
+  if (existingIndex >= 0) {
+    db.results[existingIndex] = { ...db.results[existingIndex], ...result };
+  } else {
+    db.results.unshift(result);
+  }
+
+  // Audit trail
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "ANALYZER_RESULT_INGESTED",
+    user: result.instrument || "Auto-Analyzer LIMS Bridge",
+    role: "Analyzer",
+    details: `Automated test parameters ingested for order ${result.orderId} (${result.testName}) on ${result.instrument}.`,
+    location: "Main Automated Laboratory",
+  });
+
+  writeDatabase(db);
+  return result;
+}
+
 export function verifyTestResult(
   resultId: string,
   reviewer: string = "Dr. Arvind Swaminathan, MD",
