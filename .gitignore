@@ -1,7 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules/
+frontend/node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -14,7 +15,8 @@
 /coverage
 
 # next.js
-/.next/
+.next/
+frontend/.next/
 /out/
 
 # production
@@ -34,6 +36,7 @@ yarn-error.log*
 # env files (allow committing template, ignore real secrets)
 .env*.local
 .env
+.env.local
 .env.development
 .env.production
 !.env.example
