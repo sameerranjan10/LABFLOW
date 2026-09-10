@@ -454,10 +454,28 @@ export function rejectSample(sampleId: string, reason: string, operator: string 
 // TEST RESULTS OPERATIONS
 export function getTestResults(orderId?: string): TestResult[] {
   const db = readDatabase();
+  let results = db.results && db.results.length > 0 ? db.results : [DEMO_TEST_RESULT];
+
+  results = results.map((r: any) => {
+    if (!r.patient) {
+      r.patient = {
+        id: r.patientId || "P-84920",
+        name: r.patientName || "Aditi Rao",
+        age: r.age || 47,
+        gender: r.gender || "Female",
+        phone: r.phone || "+91 98765 43210",
+        mrn: r.mrn || "MRN-84920",
+      };
+    }
+    if (!r.instrument) r.instrument = "Sysmex XN-1000 (Serial #SX-9941)";
+    if (!r.completedAt) r.completedAt = "11:15 AM";
+    return r as TestResult;
+  });
+
   if (orderId) {
-    return db.results.filter((r) => r.orderId === orderId);
+    return results.filter((r) => r.orderId === orderId);
   }
-  return db.results;
+  return results;
 }
 
 export function verifyTestResult(

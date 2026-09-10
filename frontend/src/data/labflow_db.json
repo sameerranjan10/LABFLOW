@@ -16,11 +16,11 @@
         "Random Glucose"
       ],
       "priority": "Urgent",
-      "currentStage": "PROCESSING",
+      "currentStage": "RELEASED",
       "createdAt": "09:42",
       "createdDate": "2026-09-10",
       "tat": "1h 12m",
-      "status": "In Progress",
+      "status": "Completed",
       "location": "Main Laboratory - Hematology",
       "doctorName": "Dr. V. Sharma"
     },
@@ -158,13 +158,33 @@
       "sampleType": "Whole Blood (EDTA)",
       "test": "CBC (Complete Blood Count)",
       "currentLocation": "Hematology Lab - Sysmex XN-1000",
-      "stage": "PROCESSING",
+      "stage": "RELEASED",
       "collectedAt": "09:42",
       "tat": "1h 18m",
-      "status": "Processing",
+      "status": "Completed",
       "barcode": "LBF-84920-A",
       "volume": "3.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789075334401",
+          "timestamp": "02:52 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: REVIEW → RELEASED",
+          "location": "Hematology Lab - Sysmex XN-1000",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to RELEASED via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789075327815",
+          "timestamp": "02:52 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: PROCESSING → REVIEW",
+          "location": "Hematology Lab - Sysmex XN-1000",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to REVIEW via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
         {
           "id": "tl-1",
           "timestamp": "09:42",
@@ -403,6 +423,35 @@
       ]
     }
   ],
+  "alerts": [
+    {
+      "id": "ALT-101",
+      "category": "Panic Value",
+      "title": "Hemoglobin Critical Low (<7.0 g/dL)",
+      "description": "Patient Aditi Rao (MRN-84920) Hb 6.4 g/dL verified on Sysmex XN-1000. Immediate clinician notification required.",
+      "timestamp": "10 mins ago",
+      "entityId": "SMP-20491",
+      "actionable": true
+    },
+    {
+      "id": "ALT-102",
+      "category": "STAT Priority",
+      "title": "STAT D-Dimer Accessioned",
+      "description": "Emergency requisition ORD-10289 for Kavita Shah. Target TAT < 30 mins.",
+      "timestamp": "25 mins ago",
+      "entityId": "ORD-10289",
+      "actionable": true
+    },
+    {
+      "id": "ALT-103",
+      "category": "QC Exception",
+      "title": "Biochemistry Level 2 Control Out of 2SD",
+      "description": "Cobas 6000 Glucose reagent lot #4920 failed daily QC interval check.",
+      "timestamp": "1 hour ago",
+      "entityId": "EQUIP-COBAS-6000",
+      "actionable": false
+    }
+  ],
   "reports": [
     {
       "id": "RPT-10294",
@@ -554,35 +603,6 @@
       "collector": "Dr. V. Sharma"
     }
   ],
-  "alerts": [
-    {
-      "id": "ALT-101",
-      "category": "Panic Value",
-      "title": "Hemoglobin Critical Low (<7.0 g/dL)",
-      "description": "Patient Aditi Rao (MRN-84920) Hb 6.4 g/dL verified on Sysmex XN-1000. Immediate clinician notification required.",
-      "timestamp": "10 mins ago",
-      "entityId": "SMP-20491",
-      "actionable": true
-    },
-    {
-      "id": "ALT-102",
-      "category": "STAT Priority",
-      "title": "STAT D-Dimer Accessioned",
-      "description": "Emergency requisition ORD-10289 for Kavita Shah. Target TAT < 30 mins.",
-      "timestamp": "25 mins ago",
-      "entityId": "ORD-10289",
-      "actionable": true
-    },
-    {
-      "id": "ALT-103",
-      "category": "QC Exception",
-      "title": "Biochemistry Level 2 Control Out of 2SD",
-      "description": "Cobas 6000 Glucose reagent lot #4920 failed daily QC interval check.",
-      "timestamp": "1 hour ago",
-      "entityId": "EQUIP-COBAS-6000",
-      "actionable": false
-    }
-  ],
   "exceptions": [
     {
       "id": "EX-01",
@@ -641,38 +661,81 @@
   ],
   "results": [
     {
-      "id": "RES-10292",
-      "orderId": "ORD-10292",
-      "sampleId": "SMP-20489",
-      "patientName": "Ramesh Gupta",
-      "mrn": "MRN-55219",
-      "testName": "Comprehensive Clinical Hemogram",
+      "id": "RES-10294",
+      "orderId": "ORD-10294",
+      "sampleId": "SMP-20491",
+      "patient": {
+        "id": "P-84920",
+        "name": "Aditi Rao",
+        "age": 47,
+        "gender": "Female",
+        "phone": "+91 98765 43210",
+        "mrn": "MRN-84920"
+      },
+      "testName": "CBC (Complete Blood Count)",
+      "instrument": "Sysmex XN-1000 (Serial #SX-9941)",
+      "completedAt": "11:15 AM",
+      "reviewer": "Dr. A. Mehta (Lead Pathologist)",
+      "status": "Pending Review",
+      "comments": "WBC slightly elevated. Platelet and RBC counts within reference limits.",
       "parameters": [
         {
-          "name": "Hemoglobin (Hb)",
-          "value": "13.2",
-          "referenceRange": "12.0 - 16.0",
+          "name": "Hemoglobin",
+          "result": 12.4,
           "unit": "g/dL",
-          "status": "Normal"
+          "referenceRange": "12.0 – 16.0",
+          "flag": "Normal",
+          "status": "Verified"
         },
         {
-          "name": "Total Leukocyte Count (TLC)",
-          "value": "11,800",
-          "referenceRange": "4,000 - 11,000",
-          "unit": "/uL",
-          "status": "High"
+          "name": "WBC (White Blood Cells)",
+          "result": 12.8,
+          "unit": "10³/µL",
+          "referenceRange": "4.0 – 11.0",
+          "flag": "High",
+          "status": "Pending Review"
         },
         {
-          "name": "Platelet Count",
-          "value": "245,000",
-          "referenceRange": "150,000 - 450,000",
-          "unit": "/uL",
-          "status": "Normal"
+          "name": "Platelets",
+          "result": 210,
+          "unit": "10³/µL",
+          "referenceRange": "150 – 450",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "RBC (Red Blood Cells)",
+          "result": 4.25,
+          "unit": "10⁶/µL",
+          "referenceRange": "4.0 – 5.2",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Hematocrit (PCV)",
+          "result": 38.2,
+          "unit": "%",
+          "referenceRange": "36.0 – 46.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Neutrophils",
+          "result": 74,
+          "unit": "%",
+          "referenceRange": "40 – 70",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "Lymphocytes",
+          "result": 20,
+          "unit": "%",
+          "referenceRange": "20 – 45",
+          "flag": "Normal",
+          "status": "Verified"
         }
-      ],
-      "reviewer": "Dr. Arvind Swaminathan, MD",
-      "status": "Approved",
-      "comments": "Biological reference intervals verified against NABL standards. Mild leukocytosis noted."
+      ]
     }
   ],
   "team": [
@@ -820,6 +883,24 @@
   },
   "auditLogs": [
     {
+      "id": "AUD-1789075334401",
+      "timestamp": "2026-09-10T21:22:14.401Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-20491 transitioned from REVIEW to RELEASED.",
+      "location": "Hematology Lab - Sysmex XN-1000"
+    },
+    {
+      "id": "AUD-1789075327881",
+      "timestamp": "2026-09-10T21:22:07.881Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-20491 transitioned from PROCESSING to REVIEW.",
+      "location": "Hematology Lab - Sysmex XN-1000"
+    },
+    {
       "id": "AUD-INIT-001",
       "timestamp": "2026-09-10T09:00:00Z",
       "action": "DATABASE_SYNCHRONIZED",
@@ -830,5 +911,5 @@
     }
   ],
   "version": "3.0.0-synchronized",
-  "lastUpdated": "2026-09-10T20:08:25.729Z"
+  "lastUpdated": "2026-09-10T21:22:14.401Z"
 }
