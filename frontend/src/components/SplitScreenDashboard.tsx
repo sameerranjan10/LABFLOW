@@ -16,6 +16,7 @@ import { AuditTrailView } from "@/components/views/AuditTrailView";
 import { TeamView } from "@/components/views/TeamView";
 import { SettingsView } from "@/components/views/SettingsView";
 import { LoginPage } from "@/components/views/LoginPage";
+import { SignupPage } from "@/components/views/SignupPage";
 import { LandingPage } from "@/components/views/LandingPage";
 
 import { CreateOrderModal } from "@/components/CreateOrderModal";
@@ -231,12 +232,24 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
     return (
       <LoginPage
         onLoginSuccess={() => {
-          navigateTo("dashboard");
+          setCurrentView("dashboard");
           addToast("Authenticated Successfully", "Welcome back, Admin User.", "success");
         }}
-        onRequestDemo={() => {
-          alert("Demo request submitted! Our enterprise team will contact you.");
+        onGoToSignUp={() => setCurrentView("signup")}
+        onGoToLanding={() => setCurrentView("landing")}
+      />
+    );
+  }
+
+  if (currentView === "signup") {
+    return (
+      <SignupPage
+        onSignUpSuccess={() => {
+          setCurrentView("dashboard");
+          addToast("Account Created", "Welcome to LabFlow! Your laboratory workspace is ready.", "success");
         }}
+        onGoToLogin={() => setCurrentView("login")}
+        onGoToLanding={() => setCurrentView("landing")}
       />
     );
   }
@@ -244,7 +257,7 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
   if (currentView === "landing") {
     return (
       <LandingPage
-        onExplorePlatform={() => navigateTo("dashboard")}
+        onExplorePlatform={() => setCurrentView("dashboard")}
         onRequestDemo={() => {
           alert("Demo request submitted! Our enterprise team will contact you.");
         }}

@@ -1,111 +1,137 @@
 import React, { useState } from "react";
-import { FlaskConical, ArrowRight, ShieldCheck } from "lucide-react";
+import { FlaskConical, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
 
 interface LoginPageProps {
   onLoginSuccess: () => void;
-  onRequestDemo: () => void;
+  onGoToSignUp?: () => void;
+  onGoToLanding?: () => void;
 }
 
 export const LoginPage: React.FC<LoginPageProps> = ({
   onLoginSuccess,
-  onRequestDemo,
+  onGoToSignUp,
+  onGoToLanding,
 }) => {
   const [email, setEmail] = useState("admin@apexdiagnostics.com");
   const [password, setPassword] = useState("••••••••••••");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
+
+    if (!email.trim() || !password) {
+      setErrorMessage("Please enter both email address and password.");
+      return;
+    }
+
+    onLoginSuccess();
+  };
+
+  const handleGoogleSignIn = () => {
     onLoginSuccess();
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-6 selection:bg-indigo-500 selection:text-white">
       <div className="w-full max-w-md space-y-6">
-        {/* BRAND HEADER */}
+        {/* BRAND LOGO */}
         <div className="text-center space-y-2">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-indigo-600 text-white items-center justify-center shadow-lg shadow-indigo-500/30">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-600 text-white shadow-md mb-1">
             <FlaskConical className="w-7 h-7" />
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900">
-            LABFLOW ENTERPRISE
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+            LABFLOW
           </h1>
-          <p className="text-xs text-slate-500 font-medium">
-            Clinical Diagnostic Laboratory Operations Platform
+          <p className="text-sm font-semibold text-indigo-600">
+            Run your laboratory in flow.
+          </p>
+          <p className="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
+            Manage orders, samples, processing and results from one operational platform.
           </p>
         </div>
 
         {/* LOGIN FORM CARD */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-8 space-y-6">
+        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-xl space-y-5">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Institutional Email
+                Work Email Address
               </label>
               <input
                 type="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                placeholder="name@laboratory.com"
+                className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50"
               />
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-semibold text-slate-700">
+              <div className="flex justify-between items-center mb-1">
+                <label className="block text-xs font-semibold text-slate-700">
                   Password
                 </label>
-                <a href="#" className="text-[11px] text-indigo-600 hover:underline">
+                <a href="#" onClick={(e) => { e.preventDefault(); alert("Password reset link sent to work email."); }} className="text-[11px] font-medium text-indigo-600 hover:underline">
                   Forgot password?
                 </a>
               </div>
               <input
                 type="password"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50"
               />
             </div>
 
-            <div className="flex items-center justify-between text-xs text-slate-600">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" defaultChecked className="rounded text-indigo-600" />
-                <span>Keep me signed in</span>
-              </label>
-              <span className="text-[11px] font-mono text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                SSO Enabled
-              </span>
-            </div>
-
+            {/* SUBMIT BUTTON */}
             <button
               type="submit"
-              className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
+              className="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
             >
-              Sign In to Lab Operations
+              Sign In
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
 
-          <div className="pt-4 border-t border-slate-100 text-center">
+          {/* DIVIDER */}
+          <div className="relative flex items-center justify-center">
+            <div className="border-t border-slate-200 w-full"></div>
+            <span className="bg-white px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider absolute">
+              OR
+            </span>
+          </div>
+
+          {/* GOOGLE SSO */}
+          <button
+            onClick={handleGoogleSignIn}
+            className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            Don't have an enterprise workspace? <span className="text-indigo-600 underline">Request a Demo</span>
+          </button>
+
+          {/* SWITCH TO SIGN UP */}
+          <div className="pt-2 text-center text-xs text-slate-500">
+            Don't have an account?{" "}
             <button
-              onClick={onRequestDemo}
-              className="text-xs text-slate-600 hover:text-indigo-600 font-semibold transition-colors cursor-pointer"
+              onClick={onGoToSignUp}
+              className="text-sky-700 hover:text-sky-800 font-bold hover:underline cursor-pointer"
             >
-              Don&apos;t have an enterprise workspace? <span className="text-indigo-600 underline">Request a Demo</span>
+              Sign up
             </button>
           </div>
         </div>
-
-        {/* COMPLIANCE FOOTER */}
-        <div className="flex items-center justify-center gap-4 text-[11px] text-slate-400 font-medium">
-          <span className="flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> NABL & CAP Interoperable
-          </span>
-          <span>•</span>
-          <span>ISO 15189 Certified</span>
-        </div>
       </div>
-    </div>
+    </main>
+
+      {/* FOOTER */ }
+  <footer className="py-4 px-6 border-t border-slate-200 text-center text-xs text-slate-500 bg-white">
+    © 2026 LabFlow Inc. All rights reserved. Professional Healthcare SaaS Platform.
+  </footer>
+    </div >
   );
 };
