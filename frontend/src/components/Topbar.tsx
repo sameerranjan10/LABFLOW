@@ -198,6 +198,11 @@ export const Topbar: React.FC<TopbarProps> = ({
               onSearchChange(e.target.value);
               setSearchFocused(true);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setSearchFocused(false);
+              }
+            }}
             className="w-full pl-9 pr-14 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all shadow-2xs"
           />
           <div className="absolute inset-y-0 right-0 pr-2 flex items-center gap-1">
@@ -236,27 +241,45 @@ export const Topbar: React.FC<TopbarProps> = ({
                 {/* MATCHED ORDERS */}
                 {matchedOrders.length > 0 && (
                   <div className="p-2 space-y-1">
-                    <span className="text-[10px] font-bold text-indigo-600 uppercase px-2">Orders</span>
+                    <span className="text-[10px] font-bold text-indigo-600 uppercase px-2">Orders & Patients</span>
                     {matchedOrders.map((o) => (
                       <div
                         key={o.id}
                         onClick={() => {
                           setSearchFocused(false);
-                          if (onNavigate) onNavigate("orders");
+                          if (currentView === "results") {
+                            onSearchChange(o.patient.name);
+                          } else {
+                            if (onNavigate) onNavigate("orders");
+                          }
                         }}
-                        className="px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer flex items-center justify-between text-xs transition-colors"
+                        className="px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer flex items-center justify-between text-xs transition-colors group"
                       >
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
                           <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                          <div>
+                          <div className="truncate">
                             <span className="font-bold text-slate-900 font-mono mr-2">{o.id}</span>
                             <span className="text-slate-700">{o.patient.name}</span>
                             <span className="text-[11px] text-slate-400 ml-1.5">({o.patient.mrn})</span>
                           </div>
                         </div>
-                        <span className="text-[10px] font-semibold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">
-                          {o.currentStage}
-                        </span>
+                        <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSearchFocused(false);
+                              if (onNavigate) onNavigate("results");
+                              onSearchChange(o.patient.name);
+                            }}
+                            className="text-[10px] font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 px-2 py-0.5 rounded transition-colors"
+                          >
+                            Verify Results →
+                          </button>
+                          <span className="text-[10px] font-semibold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">
+                            {o.currentStage}
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -271,8 +294,12 @@ export const Topbar: React.FC<TopbarProps> = ({
                         key={s.id}
                         onClick={() => {
                           setSearchFocused(false);
-                          if (onSelectSample) onSelectSample(s);
-                          else if (onNavigate) onNavigate("samples");
+                          if (currentView === "results") {
+                            onSearchChange(s.patient.name);
+                          } else {
+                            if (onSelectSample) onSelectSample(s);
+                            else if (onNavigate) onNavigate("samples");
+                          }
                         }}
                         className="px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer flex items-center justify-between text-xs transition-colors"
                       >
@@ -301,8 +328,12 @@ export const Topbar: React.FC<TopbarProps> = ({
                         key={r.id}
                         onClick={() => {
                           setSearchFocused(false);
-                          if (onSelectReport) onSelectReport(r);
-                          else if (onNavigate) onNavigate("reports");
+                          if (currentView === "results") {
+                            onSearchChange(r.patient.name);
+                          } else {
+                            if (onSelectReport) onSelectReport(r);
+                            else if (onNavigate) onNavigate("reports");
+                          }
                         }}
                         className="px-2 py-1.5 rounded-lg hover:bg-slate-50 cursor-pointer flex items-center justify-between text-xs transition-colors"
                       >

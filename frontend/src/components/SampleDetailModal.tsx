@@ -131,6 +131,11 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
             <span className="text-slate-500 font-mono text-[11px]">
               {sample.patient.mrn}
             </span>
+            {sample.patient.email && (
+              <span className="text-indigo-600 font-sans text-[11px] block truncate" title={sample.patient.email}>
+                ✉ {sample.patient.email}
+              </span>
+            )}
           </div>
 
           <div>

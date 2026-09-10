@@ -16,6 +16,7 @@ import {
   ExceptionItem,
   WorkflowStageMetric,
   TestResult,
+  ResultParameter,
   TeamMember,
   LabStage,
 } from "@/data/labflowData";
@@ -218,6 +219,7 @@ export function createOrder(order: Partial<LabOrder> & { sampleType?: string; co
   order: LabOrder;
   sample: LabSample;
   report: LabReport;
+  result?: TestResult;
 } {
   const db = readDatabase();
 
@@ -229,13 +231,17 @@ export function createOrder(order: Partial<LabOrder> & { sampleType?: string; co
   const newOrder: LabOrder = {
     id: orderId,
     sampleId: sampleId,
-    patient: order.patient || {
+    patient: order.patient ? {
+      ...order.patient,
+      email: order.patient.email || "",
+    } : {
       id: `PAT-${Date.now().toString().slice(-4)}`,
       name: "Anonymous Patient",
       age: 40,
       gender: "Male",
       phone: "+91 98765 43210",
       mrn: `MRN-${Math.floor(100000 + Math.random() * 900000)}`,
+      email: "",
     },
     tests: order.tests && order.tests.length > 0 ? order.tests : ["Complete Blood Count (CBC)"],
     priority: order.priority || "Normal",
@@ -295,10 +301,14 @@ export function createOrder(order: Partial<LabOrder> & { sampleType?: string; co
   if (!db.orders) db.orders = [];
   if (!db.samples) db.samples = [];
   if (!db.reports) db.reports = [];
+  if (!db.results) db.results = [];
+
+  const newResult = generateTestResultForOrder(newOrder);
 
   db.orders.unshift(newOrder);
   db.samples.unshift(newSample);
   db.reports.unshift(newReport);
+  db.results.unshift(newResult);
 
   // Update workflow stage count
   const orderedStage = db.workflowStages.find((st) => st.key === "ORDERED");
@@ -318,13 +328,13 @@ export function createOrder(order: Partial<LabOrder> & { sampleType?: string; co
     action: "ORDER_CREATED",
     user: newOrder.doctorName || "Physician",
     role: "Doctor",
-    details: `Order ${orderId} created for patient ${newOrder.patient.name} (${newOrder.patient.mrn}) with sample ${sampleId} & report ${reportId}.`,
+    details: `Order ${orderId} created for patient ${newOrder.patient.name} (${newOrder.patient.mrn}) with sample ${sampleId}, report ${reportId} & test result ${newResult.id}.`,
     location: newOrder.location,
   });
 
   writeDatabase(db);
 
-  return { order: newOrder, sample: newSample, report: newReport };
+  return { order: newOrder, sample: newSample, report: newReport, result: newResult };
 }
 
 // SAMPLE OPERATIONS
@@ -452,25 +462,170 @@ export function rejectSample(sampleId: string, reason: string, operator: string 
 }
 
 // TEST RESULTS OPERATIONS
+export function generateTestResultForOrder(order: LabOrder): TestResult {
+  const testsStr = (order.tests || []).join(" ").toLowerCase();
+  let instrument = "Sysmex XN-1000 Hematology System";
+  let comments = "Pathologist medical review: Parameter observations correlate with clinical requisition. Biological reference ranges validated.";
+  const parameters: ResultParameter[] = [];
+
+  if (testsStr.includes("cbc") || testsStr.includes("blood count") || testsStr.includes("hemogram")) {
+    instrument = "Sysmex XN-1000 Automated Hematology";
+    comments = "Hematology review: Hemoglobin, red cell mass, and thrombocyte indices are stable. Differential leukocyte count verified.";
+    parameters.push(
+      { name: "Hemoglobin (Hb)", result: 13.4, unit: "g/dL", referenceRange: "12.0 – 16.0", flag: "Normal", status: "Verified" },
+      { name: "Total Leukocyte Count (WBC)", result: 11.2, unit: "10³/µL", referenceRange: "4.0 – 11.0", flag: "High", status: "Pending Review" },
+      { name: "Platelet Count", result: 245, unit: "10³/µL", referenceRange: "150 – 450", flag: "Normal", status: "Verified" },
+      { name: "Red Blood Cells (RBC)", result: 4.45, unit: "10⁶/µL", referenceRange: "4.0 – 5.2", flag: "Normal", status: "Verified" },
+      { name: "Hematocrit (PCV)", result: 39.5, unit: "%", referenceRange: "36.0 – 46.0", flag: "Normal", status: "Verified" },
+      { name: "Neutrophils", result: 72, unit: "%", referenceRange: "40 – 70", flag: "High", status: "Pending Review" },
+      { name: "Lymphocytes", result: 22, unit: "%", referenceRange: "20 – 45", flag: "Normal", status: "Verified" },
+      { name: "Monocytes", result: 4, unit: "%", referenceRange: "2 – 8", flag: "Normal", status: "Verified" },
+      { name: "Eosinophils", result: 2, unit: "%", referenceRange: "1 – 6", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("lipid") || testsStr.includes("cholesterol")) {
+    instrument = "Cobas 8000 c702 Clinical Chemistry";
+    comments = "Lipid panel analysis: Moderate borderline hypercholesterolemia with elevated non-HDL lipid fractions. Dietary counseling advised.";
+    parameters.push(
+      { name: "Total Cholesterol", result: 218, unit: "mg/dL", referenceRange: "< 200", flag: "High", status: "Pending Review" },
+      { name: "HDL Cholesterol (Good)", result: 44, unit: "mg/dL", referenceRange: "> 40", flag: "Normal", status: "Verified" },
+      { name: "LDL Cholesterol (Calculated)", result: 138, unit: "mg/dL", referenceRange: "< 100", flag: "High", status: "Pending Review" },
+      { name: "Serum Triglycerides", result: 175, unit: "mg/dL", referenceRange: "< 150", flag: "High", status: "Pending Review" },
+      { name: "VLDL Cholesterol", result: 35, unit: "mg/dL", referenceRange: "10 – 30", flag: "High", status: "Pending Review" },
+      { name: "Total / HDL Ratio", result: 4.95, unit: "Ratio", referenceRange: "< 4.5", flag: "High", status: "Pending Review" }
+    );
+  }
+
+  if (testsStr.includes("hba1c") || testsStr.includes("glucose") || testsStr.includes("sugar")) {
+    instrument = "Tosoh G8 Automated HPLC Analyzer";
+    comments = "Glycated hemoglobin fraction within non-diabetic target index. Fasting plasma glucose correlates with adequate glycemic control.";
+    parameters.push(
+      { name: "Fasting Blood Glucose", result: 96, unit: "mg/dL", referenceRange: "70 – 99", flag: "Normal", status: "Verified" },
+      { name: "Glycated Hemoglobin (HbA1c)", result: 5.6, unit: "%", referenceRange: "< 5.7", flag: "Normal", status: "Verified" },
+      { name: "Estimated Average Glucose (eAG)", result: 114, unit: "mg/dL", referenceRange: "90 – 120", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("liver") || testsStr.includes("lft")) {
+    instrument = "Cobas 8000 c702 Clinical Chemistry";
+    comments = "Hepatic biomarker evaluation: Transaminases, bilirubin clearance, and total synthetic protein concentrations within normal limits.";
+    parameters.push(
+      { name: "Total Bilirubin", result: 0.85, unit: "mg/dL", referenceRange: "0.2 – 1.2", flag: "Normal", status: "Verified" },
+      { name: "Direct Bilirubin", result: 0.22, unit: "mg/dL", referenceRange: "0.0 – 0.3", flag: "Normal", status: "Verified" },
+      { name: "SGOT / AST", result: 28, unit: "U/L", referenceRange: "10 – 40", flag: "Normal", status: "Verified" },
+      { name: "SGPT / ALT", result: 32, unit: "U/L", referenceRange: "7 – 56", flag: "Normal", status: "Verified" },
+      { name: "Alkaline Phosphatase (ALP)", result: 84, unit: "U/L", referenceRange: "44 – 147", flag: "Normal", status: "Verified" },
+      { name: "Total Protein", result: 7.2, unit: "g/dL", referenceRange: "6.0 – 8.3", flag: "Normal", status: "Verified" },
+      { name: "Serum Albumin", result: 4.3, unit: "g/dL", referenceRange: "3.5 – 5.0", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("kidney") || testsStr.includes("kft") || testsStr.includes("renal") || testsStr.includes("electrolyte")) {
+    instrument = "Beckman Coulter AU5800 Analyzer";
+    comments = "Renal function profiling: Glomerular filtration capacity normal. Serum electrolytes and nitrogenous clearance adequate.";
+    parameters.push(
+      { name: "Serum Creatinine", result: 0.92, unit: "mg/dL", referenceRange: "0.60 – 1.20", flag: "Normal", status: "Verified" },
+      { name: "Blood Urea Nitrogen (BUN)", result: 14.5, unit: "mg/dL", referenceRange: "7.0 – 20.0", flag: "Normal", status: "Verified" },
+      { name: "Serum Uric Acid", result: 4.6, unit: "mg/dL", referenceRange: "3.5 – 7.2", flag: "Normal", status: "Verified" },
+      { name: "Serum Sodium (Na+)", result: 140, unit: "mEq/L", referenceRange: "135 – 145", flag: "Normal", status: "Verified" },
+      { name: "Serum Potassium (K+)", result: 4.2, unit: "mEq/L", referenceRange: "3.5 – 5.1", flag: "Normal", status: "Verified" },
+      { name: "Serum Chloride (Cl-)", result: 101, unit: "mEq/L", referenceRange: "96 – 106", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("thyroid") || testsStr.includes("tsh") || testsStr.includes("t3") || testsStr.includes("t4")) {
+    instrument = "Abbott Architect i2000SR Immunoassay";
+    comments = "Thyroid function assessment: TSH level within standard therapeutic baseline. Free peripheral thyronine levels normal.";
+    parameters.push(
+      { name: "Total Triiodothyronine (T3)", result: 1.25, unit: "ng/mL", referenceRange: "0.80 – 2.00", flag: "Normal", status: "Verified" },
+      { name: "Total Thyroxine (T4)", result: 8.4, unit: "µg/dL", referenceRange: "5.1 – 14.1", flag: "Normal", status: "Verified" },
+      { name: "Thyroid Stimulating Hormone (TSH)", result: 2.15, unit: "µIU/mL", referenceRange: "0.27 – 4.20", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("d-dimer") || testsStr.includes("dimer")) {
+    instrument = "Stago Compact Max Coagulation";
+    comments = "Hemostasis profile: D-Dimer levels normal. Coagulation cascade and fibrin turnover within physiological limits.";
+    parameters.push(
+      { name: "D-Dimer Quantitative", result: 0.28, unit: "µg/mL FEU", referenceRange: "< 0.50", flag: "Normal", status: "Verified" },
+      { name: "Prothrombin Time (PT)", result: 12.2, unit: "seconds", referenceRange: "11.0 – 13.5", flag: "Normal", status: "Verified" },
+      { name: "INR Ratio", result: 1.04, unit: "Ratio", referenceRange: "0.85 – 1.15", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  if (testsStr.includes("urine")) {
+    instrument = "Sysmex UN-Series Automated Urinalysis";
+    comments = "Urinalysis examination: Physical and microscopic examination negative for active infection, cast formation, or nephrotic proteinuria.";
+    parameters.push(
+      { name: "Specific Gravity", result: "1.018", unit: "", referenceRange: "1.005 – 1.030", flag: "Normal", status: "Verified" },
+      { name: "pH", result: "6.0", unit: "", referenceRange: "4.5 – 8.0", flag: "Normal", status: "Verified" },
+      { name: "Urine Protein", result: "Negative", unit: "", referenceRange: "Negative", flag: "Normal", status: "Verified" },
+      { name: "Urine Glucose", result: "Nil", unit: "", referenceRange: "Nil", flag: "Normal", status: "Verified" },
+      { name: "Pus Cells (WBC)", result: "1–2", unit: "/ HPF", referenceRange: "0 – 5", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  // Fallback if no specific panel matched
+  if (parameters.length === 0) {
+    parameters.push(
+      { name: "Hemoglobin (Hb)", result: 12.8, unit: "g/dL", referenceRange: "12.0 – 16.0", flag: "Normal", status: "Verified" },
+      { name: "Total Leukocyte Count (WBC)", result: 8.4, unit: "10³/µL", referenceRange: "4.0 – 11.0", flag: "Normal", status: "Verified" },
+      { name: "Platelet Count", result: 220, unit: "10³/µL", referenceRange: "150 – 450", flag: "Normal", status: "Verified" },
+      { name: "Fasting Blood Glucose", result: 92, unit: "mg/dL", referenceRange: "70 – 99", flag: "Normal", status: "Verified" },
+      { name: "Serum Creatinine", result: 0.88, unit: "mg/dL", referenceRange: "0.60 – 1.20", flag: "Normal", status: "Verified" }
+    );
+  }
+
+  return {
+    id: `RES-${order.id.replace("ORD-", "")}`,
+    orderId: order.id,
+    sampleId: order.sampleId,
+    patient: order.patient,
+    testName: order.tests && order.tests.length > 0 ? order.tests.join(", ") : "Complete Blood Count (CBC)",
+    instrument,
+    completedAt: order.createdAt || new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    reviewer: order.doctorName || "Dr. Arvind Swaminathan, MD",
+    status: order.currentStage === "RELEASED" ? "Approved" : "Pending Review",
+    comments,
+    parameters,
+  };
+}
+
 export function getTestResults(orderId?: string): TestResult[] {
   const db = readDatabase();
-  let results = db.results && db.results.length > 0 ? db.results : [DEMO_TEST_RESULT];
+  let updated = false;
 
-  results = results.map((r: any) => {
-    if (!r.patient) {
-      r.patient = {
-        id: r.patientId || "P-84920",
-        name: r.patientName || "Aditi Rao",
-        age: r.age || 47,
-        gender: r.gender || "Female",
-        phone: r.phone || "+91 98765 43210",
-        mrn: r.mrn || "MRN-84920",
-      };
+  if (!db.results) {
+    db.results = [];
+    updated = true;
+  }
+
+  // Ensure every order in db.orders has a corresponding test result in db.results
+  if (db.orders && Array.isArray(db.orders)) {
+    for (const order of db.orders) {
+      const existingResult = db.results.find(
+        (r) => r.orderId === order.id || r.id === `RES-${order.id.replace("ORD-", "")}`
+      );
+      if (!existingResult) {
+        const synResult = generateTestResultForOrder(order);
+        db.results.push(synResult);
+        updated = true;
+      } else {
+        // Sync patient demographics and email
+        if (order.patient && (!existingResult.patient || !existingResult.patient.email)) {
+          existingResult.patient = { ...existingResult.patient, ...order.patient };
+          updated = true;
+        }
+      }
     }
-    if (!r.instrument) r.instrument = "Sysmex XN-1000 (Serial #SX-9941)";
-    if (!r.completedAt) r.completedAt = "11:15 AM";
-    return r as TestResult;
-  });
+  }
+
+  if (updated) {
+    writeDatabase(db);
+  }
+
+  let results = db.results && db.results.length > 0 ? db.results : [DEMO_TEST_RESULT];
 
   if (orderId) {
     return results.filter((r) => r.orderId === orderId);
@@ -511,18 +666,35 @@ export function verifyTestResult(
   comments?: string
 ): TestResult | null {
   const db = readDatabase();
-  let result = db.results.find((r) => r.id === resultId);
-  if (!result) {
-    result = db.results[0]; // default demo result if id matches general
+  const q = (resultId || "").trim().toLowerCase();
+  let result = db.results.find(
+    (r) =>
+      r.id.toLowerCase() === q ||
+      r.orderId.toLowerCase() === q ||
+      (r.sampleId && r.sampleId.toLowerCase() === q) ||
+      (r.patient?.name && r.patient.name.toLowerCase() === q)
+  );
+  if (!result && (resultId === "DEMO_TEST_RESULT" || !resultId)) {
+    result = db.results[0];
   }
+
+  if (!result) return null;
 
   result.status = "Approved";
   result.reviewer = reviewer;
   if (comments) result.comments = comments;
-  result.parameters = result.parameters.map((p) => ({ ...p, status: "Verified" }));
+  if (result.parameters) {
+    result.parameters = result.parameters.map((p) => ({ ...p, status: "Verified" }));
+  }
 
   // Advance associated sample and order
   updateSampleStage(result.sampleId, "RELEASED", reviewer, "Pathology Office", "Medical sign-off complete.");
+
+  const order = db.orders.find((o) => o.id === result?.orderId);
+  if (order) {
+    order.status = "Completed";
+    order.currentStage = "RELEASED";
+  }
 
   // Also update corresponding report
   const report = db.reports.find((r) => r.orderId === result?.orderId);
@@ -539,7 +711,7 @@ export function verifyTestResult(
     action: "RESULT_VERIFIED_SIGN_OFF",
     user: reviewer,
     role: "Pathologist",
-    details: `Test results for order ${result.orderId} digitally verified and signed by pathologist.`,
+    details: `Test results for order ${result.orderId} (${result.patient?.name || "Patient"}) digitally verified and signed by pathologist.`,
     location: "Main Pathology Department",
   });
 

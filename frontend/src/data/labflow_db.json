@@ -1,6 +1,77 @@
 {
   "orders": [
     {
+      "id": "ORD-92684",
+      "sampleId": "SMP-53838",
+      "patient": {
+        "name": "Vikas Sen",
+        "age": 38,
+        "gender": "Male",
+        "phone": "+91 98765 11223",
+        "email": "vikas.sen@example.com"
+      },
+      "tests": [
+        "Complete Blood Count (CBC)",
+        "Lipid Profile"
+      ],
+      "priority": "STAT",
+      "currentStage": "ORDERED",
+      "createdAt": "04:04 am",
+      "createdDate": "2026-09-10",
+      "tat": "15m",
+      "status": "In Progress",
+      "location": "City Center Hub",
+      "doctorName": "Dr. Priya Sharma, MD"
+    },
+    {
+      "id": "ORD-9867",
+      "sampleId": "SMP-19867",
+      "patient": {
+        "id": "P-123456",
+        "name": "ankita",
+        "age": 21,
+        "gender": "Female",
+        "phone": "7854836530",
+        "mrn": "123456",
+        "email": "abkitadas27@gmail.com"
+      },
+      "tests": [
+        "Thyroid Profile (T3/T4/TSH)"
+      ],
+      "priority": "Normal",
+      "currentStage": "RELEASED",
+      "createdAt": "03:47 am",
+      "createdDate": "2026-09-10",
+      "tat": "15m",
+      "status": "Completed",
+      "location": "Main Laboratory - Accessioning",
+      "doctorName": "Dr. V. Sharma"
+    },
+    {
+      "id": "ORD-14425",
+      "sampleId": "SMP-68567",
+      "patient": {
+        "id": "P-99901",
+        "name": "Test Patient Sharma",
+        "age": 32,
+        "gender": "Female",
+        "phone": "+91 98888 77777",
+        "mrn": "MRN-99901",
+        "email": "test.sharma@example.com"
+      },
+      "tests": [
+        "CBC (Complete Blood Count)"
+      ],
+      "priority": "Normal",
+      "currentStage": "RELEASED",
+      "createdAt": "03:40 am",
+      "createdDate": "2026-09-10",
+      "tat": "15m",
+      "status": "Completed",
+      "location": "Main Lab",
+      "doctorName": "Dr. Priya Sharma, MD"
+    },
+    {
       "id": "ORD-10294",
       "sampleId": "SMP-20491",
       "patient": {
@@ -9,18 +80,19 @@
         "age": 47,
         "gender": "Female",
         "phone": "+91 98765 43210",
-        "mrn": "MRN-84920"
+        "mrn": "MRN-84920",
+        "email": "aditi.rao@apexhealth.com"
       },
       "tests": [
         "CBC (Complete Blood Count)",
         "Random Glucose"
       ],
       "priority": "Urgent",
-      "currentStage": "REVIEW",
+      "currentStage": "RELEASED",
       "createdAt": "09:42",
       "createdDate": "2026-09-10",
       "tat": "1h 12m",
-      "status": "Pending Review",
+      "status": "Completed",
       "location": "Main Laboratory - Hematology",
       "doctorName": "Dr. V. Sharma"
     },
@@ -33,18 +105,19 @@
         "age": 68,
         "gender": "Male",
         "phone": "+91 98123 45678",
-        "mrn": "MRN-67104"
+        "mrn": "MRN-67104",
+        "email": "rahul.kumar@gmail.com"
       },
       "tests": [
         "Lipid Profile",
         "HbA1c"
       ],
       "priority": "Normal",
-      "currentStage": "REVIEW",
+      "currentStage": "RELEASED",
       "createdAt": "09:28",
       "createdDate": "2026-09-10",
       "tat": "2h 04m",
-      "status": "Pending Review",
+      "status": "Completed",
       "location": "Main Laboratory - Biochemistry",
       "doctorName": "Dr. A. Mehta"
     },
@@ -57,7 +130,8 @@
         "age": 63,
         "gender": "Male",
         "phone": "+91 99887 76655",
-        "mrn": "MRN-55219"
+        "mrn": "MRN-55219",
+        "email": "ramesh.gupta@outlook.com"
       },
       "tests": [
         "Liver Function Test (LFT)",
@@ -81,7 +155,8 @@
         "age": 34,
         "gender": "Female",
         "phone": "+91 97654 32109",
-        "mrn": "MRN-44102"
+        "mrn": "MRN-44102",
+        "email": "priya.nair@healthmail.in"
       },
       "tests": [
         "Thyroid Profile (T3, T4, TSH)"
@@ -104,7 +179,8 @@
         "age": 52,
         "gender": "Male",
         "phone": "+91 98989 12345",
-        "mrn": "MRN-33912"
+        "mrn": "MRN-33912",
+        "email": "suresh.menon@gmail.com"
       },
       "tests": [
         "Urine Routine & Microscopy"
@@ -127,7 +203,8 @@
         "age": 29,
         "gender": "Female",
         "phone": "+91 91234 56789",
-        "mrn": "MRN-22819"
+        "mrn": "MRN-22819",
+        "email": "kavita.shah@gmail.com"
       },
       "tests": [
         "D-Dimer",
@@ -145,6 +222,166 @@
   ],
   "samples": [
     {
+      "id": "SMP-53838",
+      "orderId": "ORD-92684",
+      "patient": {
+        "name": "Vikas Sen",
+        "age": 38,
+        "gender": "Male",
+        "phone": "+91 98765 11223",
+        "email": "vikas.sen@example.com"
+      },
+      "sampleType": "Whole Blood (EDTA)",
+      "test": "Complete Blood Count (CBC), Lipid Profile",
+      "currentLocation": "Phlebotomy Intake - Reception",
+      "stage": "ORDERED",
+      "collectedAt": "04:04 am",
+      "tat": "15m",
+      "status": "Collected",
+      "barcode": "LBF-undefined",
+      "volume": "3.0 mL",
+      "timeline": [
+        {
+          "id": "tl-evt-1789079698303",
+          "timestamp": "04:04 am",
+          "date": "2026-09-10",
+          "event": "Specimen Requisition & Barcode Label Printed",
+          "location": "City Center Hub",
+          "operator": "Sunita Verma",
+          "details": "Requisition entered into LabFlow LIMS database by Dr. Priya Sharma, MD. Vacuum tube prepared.",
+          "status": "active"
+        }
+      ]
+    },
+    {
+      "id": "SMP-19867",
+      "orderId": "ORD-9867",
+      "patient": {
+        "id": "P-123456",
+        "name": "ankita",
+        "age": 21,
+        "gender": "Female",
+        "phone": "7854836530",
+        "mrn": "123456",
+        "email": "abkitadas27@gmail.com"
+      },
+      "sampleType": "Serum (SST Gel)",
+      "test": "Thyroid Profile (T3/T4/TSH)",
+      "currentLocation": "Phlebotomy Intake - Reception",
+      "stage": "RELEASED",
+      "collectedAt": "03:47 am",
+      "tat": "15m",
+      "status": "Completed",
+      "barcode": "LBF-P-123456",
+      "volume": "3.0 mL",
+      "timeline": [
+        {
+          "id": "tl-adv-1789078697730",
+          "timestamp": "03:48 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: REVIEW → RELEASED",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to RELEASED via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789078692728",
+          "timestamp": "03:48 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: PROCESSING → REVIEW",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to REVIEW via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789078687161",
+          "timestamp": "03:48 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: RECEIVED → PROCESSING",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to PROCESSING via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789078681200",
+          "timestamp": "03:48 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: IN_TRANSIT → RECEIVED",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to RECEIVED via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789078674606",
+          "timestamp": "03:47 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: COLLECTED → IN_TRANSIT",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to IN_TRANSIT via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789078664517",
+          "timestamp": "03:47 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: ORDERED → COLLECTED",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to COLLECTED via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-evt-1789078635428",
+          "timestamp": "03:47 am",
+          "date": "2026-09-10",
+          "event": "Specimen Requisition & Barcode Label Printed",
+          "location": "Main Laboratory - Accessioning",
+          "operator": "Sunita Verma",
+          "details": "Requisition entered into LabFlow LIMS database by Dr. V. Sharma. Vacuum tube prepared.",
+          "status": "active"
+        }
+      ]
+    },
+    {
+      "id": "SMP-68567",
+      "orderId": "ORD-14425",
+      "patient": {
+        "id": "P-99901",
+        "name": "Test Patient Sharma",
+        "age": 32,
+        "gender": "Female",
+        "phone": "+91 98888 77777",
+        "mrn": "MRN-99901",
+        "email": "test.sharma@example.com"
+      },
+      "sampleType": "Whole Blood (EDTA)",
+      "test": "CBC (Complete Blood Count)",
+      "currentLocation": "Phlebotomy Intake - Reception",
+      "stage": "ORDERED",
+      "collectedAt": "03:40 am",
+      "tat": "15m",
+      "status": "Collected",
+      "barcode": "LBF-P-99901",
+      "volume": "3.0 mL",
+      "timeline": [
+        {
+          "id": "tl-evt-1789078230853",
+          "timestamp": "03:40 am",
+          "date": "2026-09-10",
+          "event": "Specimen Requisition & Barcode Label Printed",
+          "location": "Main Lab",
+          "operator": "Sunita Verma",
+          "details": "Requisition entered into LabFlow LIMS database by Dr. Priya Sharma, MD. Vacuum tube prepared.",
+          "status": "active"
+        }
+      ]
+    },
+    {
       "id": "SMP-20491",
       "orderId": "ORD-10294",
       "patient": {
@@ -153,7 +390,8 @@
         "age": 47,
         "gender": "Female",
         "phone": "+91 98765 43210",
-        "mrn": "MRN-84920"
+        "mrn": "MRN-84920",
+        "email": "aditi.rao@apexhealth.com"
       },
       "sampleType": "Whole Blood (EDTA)",
       "test": "CBC (Complete Blood Count)",
@@ -246,7 +484,8 @@
         "age": 68,
         "gender": "Male",
         "phone": "+91 98123 45678",
-        "mrn": "MRN-67104"
+        "mrn": "MRN-67104",
+        "email": "rahul.kumar@gmail.com"
       },
       "sampleType": "Serum (SST Tube)",
       "test": "Lipid Profile & HbA1c",
@@ -299,7 +538,8 @@
         "age": 63,
         "gender": "Male",
         "phone": "+91 99887 76655",
-        "mrn": "MRN-55219"
+        "mrn": "MRN-55219",
+        "email": "ramesh.gupta@outlook.com"
       },
       "sampleType": "Heparin Plasma",
       "test": "Liver & Kidney Function Tests",
@@ -342,7 +582,8 @@
         "age": 34,
         "gender": "Female",
         "phone": "+91 97654 32109",
-        "mrn": "MRN-44102"
+        "mrn": "MRN-44102",
+        "email": "priya.nair@healthmail.in"
       },
       "sampleType": "Serum (SST Tube)",
       "test": "Thyroid Profile (T3, T4, TSH)",
@@ -375,7 +616,8 @@
         "age": 52,
         "gender": "Male",
         "phone": "+91 98989 12345",
-        "mrn": "MRN-33912"
+        "mrn": "MRN-33912",
+        "email": "suresh.menon@gmail.com"
       },
       "sampleType": "Sterile Urine Container",
       "test": "Urine Routine & Microscopy",
@@ -408,7 +650,8 @@
         "age": 29,
         "gender": "Female",
         "phone": "+91 91234 56789",
-        "mrn": "MRN-22819"
+        "mrn": "MRN-22819",
+        "email": "kavita.shah@gmail.com"
       },
       "sampleType": "Citrate Plasma",
       "test": "D-Dimer & Serum Electrolytes",
@@ -451,7 +694,8 @@
         "age": 55,
         "gender": "Female",
         "phone": "+91 98450 11223",
-        "mrn": "MRN-19402"
+        "mrn": "MRN-19402",
+        "email": "meena.sharma@yahoo.com"
       },
       "sampleType": "Whole Blood (EDTA)",
       "test": "HbA1c Glycated Hemoglobin",
@@ -507,6 +751,81 @@
   ],
   "reports": [
     {
+      "id": "RPT-92684",
+      "orderId": "ORD-92684",
+      "sampleId": "SMP-53838",
+      "patient": {
+        "name": "Vikas Sen",
+        "age": 38,
+        "gender": "Male",
+        "phone": "+91 98765 11223",
+        "email": "vikas.sen@example.com"
+      },
+      "tests": [
+        "Complete Blood Count (CBC)",
+        "Lipid Profile"
+      ],
+      "status": "Pending Review",
+      "reviewer": "Dr. Priya Sharma, MD",
+      "createdAt": "2026-09-10 04:04 am",
+      "priority": "STAT",
+      "doctorName": "Dr. Priya Sharma, MD",
+      "sampleType": "Whole Blood (EDTA)",
+      "location": "City Center Hub",
+      "collector": "Sunita Verma"
+    },
+    {
+      "id": "RPT-9867",
+      "orderId": "ORD-9867",
+      "sampleId": "SMP-19867",
+      "patient": {
+        "id": "P-123456",
+        "name": "ankita",
+        "age": 21,
+        "gender": "Female",
+        "phone": "7854836530",
+        "mrn": "123456",
+        "email": "abkitadas27@gmail.com"
+      },
+      "tests": [
+        "Thyroid Profile (T3/T4/TSH)"
+      ],
+      "status": "Pending Review",
+      "reviewer": "Dr. V. Sharma",
+      "createdAt": "2026-09-10 03:47 am",
+      "priority": "Normal",
+      "doctorName": "Dr. V. Sharma",
+      "sampleType": "Serum (SST Gel)",
+      "location": "Main Laboratory - Accessioning",
+      "collector": "Sunita Verma"
+    },
+    {
+      "id": "RPT-14425",
+      "orderId": "ORD-14425",
+      "sampleId": "SMP-68567",
+      "patient": {
+        "id": "P-99901",
+        "name": "Test Patient Sharma",
+        "age": 32,
+        "gender": "Female",
+        "phone": "+91 98888 77777",
+        "mrn": "MRN-99901",
+        "email": "test.sharma@example.com"
+      },
+      "tests": [
+        "CBC (Complete Blood Count)"
+      ],
+      "status": "Released",
+      "reviewer": "Dr. Arvind Swaminathan, MD",
+      "createdAt": "2026-09-10 03:40 am",
+      "priority": "Normal",
+      "doctorName": "Dr. Priya Sharma, MD",
+      "sampleType": "Whole Blood (EDTA)",
+      "location": "Main Lab",
+      "collector": "Sunita Verma",
+      "releasedAt": "04:03 am"
+    },
+    {
       "id": "RPT-10294",
       "orderId": "ORD-10294",
       "sampleId": "SMP-20491",
@@ -516,20 +835,22 @@
         "age": 47,
         "gender": "Female",
         "phone": "+91 98765 43210",
-        "mrn": "MRN-84920"
+        "mrn": "MRN-84920",
+        "email": "aditi.rao@apexhealth.com"
       },
       "tests": [
         "CBC (Complete Blood Count)",
         "Random Glucose"
       ],
-      "status": "Draft",
-      "reviewer": "Dr. V. Sharma",
+      "status": "Released",
+      "reviewer": "Dr. Pathologist",
       "createdAt": "2026-09-10 09:42",
       "priority": "Urgent",
       "doctorName": "Dr. V. Sharma",
       "sampleType": "Whole Blood (EDTA)",
       "location": "Main Laboratory - Hematology",
-      "collector": "Sunita Verma"
+      "collector": "Sunita Verma",
+      "releasedAt": "04:00 am"
     },
     {
       "id": "RPT-10293",
@@ -541,20 +862,22 @@
         "age": 68,
         "gender": "Male",
         "phone": "+91 98123 45678",
-        "mrn": "MRN-67104"
+        "mrn": "MRN-67104",
+        "email": "rahul.kumar@gmail.com"
       },
       "tests": [
         "Lipid Profile",
         "HbA1c"
       ],
-      "status": "Pending Review",
-      "reviewer": "Dr. A. Mehta",
+      "status": "Released",
+      "reviewer": "Dr. Pathologist",
       "createdAt": "2026-09-10 09:28",
       "priority": "Normal",
       "doctorName": "Dr. A. Mehta",
       "sampleType": "Serum (SST Tube)",
       "location": "Main Laboratory - Biochemistry",
-      "collector": "Sunita Verma"
+      "collector": "Sunita Verma",
+      "releasedAt": "04:04 am"
     },
     {
       "id": "RPT-10292",
@@ -566,7 +889,8 @@
         "age": 63,
         "gender": "Male",
         "phone": "+91 99887 76655",
-        "mrn": "MRN-55219"
+        "mrn": "MRN-55219",
+        "email": "ramesh.gupta@outlook.com"
       },
       "tests": [
         "Liver Function Test (LFT)",
@@ -592,7 +916,8 @@
         "age": 34,
         "gender": "Female",
         "phone": "+91 97654 32109",
-        "mrn": "MRN-44102"
+        "mrn": "MRN-44102",
+        "email": "priya.nair@healthmail.in"
       },
       "tests": [
         "Thyroid Profile (T3, T4, TSH)"
@@ -616,7 +941,8 @@
         "age": 52,
         "gender": "Male",
         "phone": "+91 98989 12345",
-        "mrn": "MRN-33912"
+        "mrn": "MRN-33912",
+        "email": "suresh.menon@gmail.com"
       },
       "tests": [
         "Urine Routine & Microscopy"
@@ -640,7 +966,8 @@
         "age": 29,
         "gender": "Female",
         "phone": "+91 91234 56789",
-        "mrn": "MRN-22819"
+        "mrn": "MRN-22819",
+        "email": "kavita.shah@gmail.com"
       },
       "tests": [
         "D-Dimer",
@@ -672,7 +999,7 @@
     {
       "key": "ORDERED",
       "name": "Order Placed",
-      "count": 1,
+      "count": 4,
       "color": "bg-sky-500"
     },
     {
@@ -714,6 +1041,146 @@
   ],
   "results": [
     {
+      "id": "RES-92684",
+      "orderId": "ORD-92684",
+      "sampleId": "SMP-53838",
+      "patient": {
+        "name": "Vikas Sen",
+        "age": 38,
+        "gender": "Male",
+        "phone": "+91 98765 11223",
+        "email": "vikas.sen@example.com"
+      },
+      "testName": "Complete Blood Count (CBC), Lipid Profile",
+      "instrument": "Cobas 8000 c702 Clinical Chemistry",
+      "completedAt": "04:04 am",
+      "reviewer": "Dr. Priya Sharma, MD",
+      "status": "Pending Review",
+      "comments": "Lipid panel analysis: Moderate borderline hypercholesterolemia with elevated non-HDL lipid fractions. Dietary counseling advised.",
+      "parameters": [
+        {
+          "name": "Hemoglobin (Hb)",
+          "result": 13.4,
+          "unit": "g/dL",
+          "referenceRange": "12.0 – 16.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Total Leukocyte Count (WBC)",
+          "result": 11.2,
+          "unit": "10³/µL",
+          "referenceRange": "4.0 – 11.0",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "Platelet Count",
+          "result": 245,
+          "unit": "10³/µL",
+          "referenceRange": "150 – 450",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Red Blood Cells (RBC)",
+          "result": 4.45,
+          "unit": "10⁶/µL",
+          "referenceRange": "4.0 – 5.2",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Hematocrit (PCV)",
+          "result": 39.5,
+          "unit": "%",
+          "referenceRange": "36.0 – 46.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Neutrophils",
+          "result": 72,
+          "unit": "%",
+          "referenceRange": "40 – 70",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "Lymphocytes",
+          "result": 22,
+          "unit": "%",
+          "referenceRange": "20 – 45",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Monocytes",
+          "result": 4,
+          "unit": "%",
+          "referenceRange": "2 – 8",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Eosinophils",
+          "result": 2,
+          "unit": "%",
+          "referenceRange": "1 – 6",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Total Cholesterol",
+          "result": 218,
+          "unit": "mg/dL",
+          "referenceRange": "< 200",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "HDL Cholesterol (Good)",
+          "result": 44,
+          "unit": "mg/dL",
+          "referenceRange": "> 40",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "LDL Cholesterol (Calculated)",
+          "result": 138,
+          "unit": "mg/dL",
+          "referenceRange": "< 100",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "Serum Triglycerides",
+          "result": 175,
+          "unit": "mg/dL",
+          "referenceRange": "< 150",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "VLDL Cholesterol",
+          "result": 35,
+          "unit": "mg/dL",
+          "referenceRange": "10 – 30",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "Total / HDL Ratio",
+          "result": 4.95,
+          "unit": "Ratio",
+          "referenceRange": "< 4.5",
+          "flag": "High",
+          "status": "Pending Review"
+        }
+      ]
+    },
+    {
       "id": "RES-10294",
       "orderId": "ORD-10294",
       "sampleId": "SMP-20491",
@@ -723,14 +1190,15 @@
         "age": 47,
         "gender": "Female",
         "phone": "+91 98765 43210",
-        "mrn": "MRN-84920"
+        "mrn": "MRN-84920",
+        "email": "aditi.rao@apexhealth.com"
       },
       "testName": "CBC (Complete Blood Count)",
       "instrument": "Sysmex XN-1000 (Serial #SX-9941)",
       "completedAt": "11:15 AM",
-      "reviewer": "Dr. A. Mehta (Lead Pathologist)",
-      "status": "Pending Review",
-      "comments": "WBC slightly elevated. Platelet and RBC counts within reference limits.",
+      "reviewer": "Dr. Pathologist",
+      "status": "Approved",
+      "comments": "Verified and approved",
       "parameters": [
         {
           "name": "Hemoglobin",
@@ -746,7 +1214,7 @@
           "unit": "10³/µL",
           "referenceRange": "4.0 – 11.0",
           "flag": "High",
-          "status": "Pending Review"
+          "status": "Verified"
         },
         {
           "name": "Platelets",
@@ -778,13 +1246,575 @@
           "unit": "%",
           "referenceRange": "40 – 70",
           "flag": "High",
-          "status": "Pending Review"
+          "status": "Verified"
         },
         {
           "name": "Lymphocytes",
           "result": 20,
           "unit": "%",
           "referenceRange": "20 – 45",
+          "flag": "Normal",
+          "status": "Verified"
+        }
+      ]
+    },
+    {
+      "id": "RES-9867",
+      "orderId": "ORD-9867",
+      "sampleId": "SMP-19867",
+      "patient": {
+        "id": "P-123456",
+        "name": "ankita",
+        "age": 21,
+        "gender": "Female",
+        "phone": "7854836530",
+        "mrn": "123456",
+        "email": "abkitadas27@gmail.com"
+      },
+      "testName": "Thyroid Profile (T3/T4/TSH)",
+      "instrument": "Abbott Architect i2000SR Immunoassay",
+      "completedAt": "03:47 am",
+      "reviewer": "Dr. V. Sharma",
+      "status": "Approved",
+      "comments": "Thyroid function assessment: TSH level within standard therapeutic baseline. Free peripheral thyronine levels normal.",
+      "parameters": [
+        {
+          "name": "Total Triiodothyronine (T3)",
+          "result": 1.25,
+          "unit": "ng/mL",
+          "referenceRange": "0.80 – 2.00",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Total Thyroxine (T4)",
+          "result": 8.4,
+          "unit": "µg/dL",
+          "referenceRange": "5.1 – 14.1",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Thyroid Stimulating Hormone (TSH)",
+          "result": 2.15,
+          "unit": "µIU/mL",
+          "referenceRange": "0.27 – 4.20",
+          "flag": "Normal",
+          "status": "Verified"
+        }
+      ]
+    },
+    {
+      "id": "RES-14425",
+      "orderId": "ORD-14425",
+      "sampleId": "SMP-68567",
+      "patient": {
+        "id": "P-99901",
+        "name": "Test Patient Sharma",
+        "age": 32,
+        "gender": "Female",
+        "phone": "+91 98888 77777",
+        "mrn": "MRN-99901",
+        "email": "test.sharma@example.com"
+      },
+      "testName": "CBC (Complete Blood Count)",
+      "instrument": "Sysmex XN-1000 Automated Hematology",
+      "completedAt": "03:40 am",
+      "reviewer": "Dr. Arvind Swaminathan, MD",
+      "status": "Approved",
+      "comments": "Medical sign-off complete.",
+      "parameters": [
+        {
+          "name": "Hemoglobin (Hb)",
+          "result": 13.4,
+          "unit": "g/dL",
+          "referenceRange": "12.0 – 16.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Total Leukocyte Count (WBC)",
+          "result": 11.2,
+          "unit": "10³/µL",
+          "referenceRange": "4.0 – 11.0",
+          "flag": "High",
+          "status": "Verified"
+        },
+        {
+          "name": "Platelet Count",
+          "result": 245,
+          "unit": "10³/µL",
+          "referenceRange": "150 – 450",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Red Blood Cells (RBC)",
+          "result": 4.45,
+          "unit": "10⁶/µL",
+          "referenceRange": "4.0 – 5.2",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Hematocrit (PCV)",
+          "result": 39.5,
+          "unit": "%",
+          "referenceRange": "36.0 – 46.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Neutrophils",
+          "result": 72,
+          "unit": "%",
+          "referenceRange": "40 – 70",
+          "flag": "High",
+          "status": "Verified"
+        },
+        {
+          "name": "Lymphocytes",
+          "result": 22,
+          "unit": "%",
+          "referenceRange": "20 – 45",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Monocytes",
+          "result": 4,
+          "unit": "%",
+          "referenceRange": "2 – 8",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Eosinophils",
+          "result": 2,
+          "unit": "%",
+          "referenceRange": "1 – 6",
+          "flag": "Normal",
+          "status": "Verified"
+        }
+      ]
+    },
+    {
+      "id": "RES-10293",
+      "orderId": "ORD-10293",
+      "sampleId": "SMP-20490",
+      "patient": {
+        "id": "P-67104",
+        "name": "Rahul Kumar",
+        "age": 68,
+        "gender": "Male",
+        "phone": "+91 98123 45678",
+        "mrn": "MRN-67104",
+        "email": "rahul.kumar@gmail.com"
+      },
+      "testName": "Lipid Profile, HbA1c",
+      "instrument": "Tosoh G8 Automated HPLC Analyzer",
+      "completedAt": "09:28",
+      "reviewer": "Dr. Pathologist",
+      "status": "Approved",
+      "comments": "Biochemistry checked",
+      "parameters": [
+        {
+          "name": "Total Cholesterol",
+          "result": 218,
+          "unit": "mg/dL",
+          "referenceRange": "< 200",
+          "flag": "High",
+          "status": "Verified"
+        },
+        {
+          "name": "HDL Cholesterol (Good)",
+          "result": 44,
+          "unit": "mg/dL",
+          "referenceRange": "> 40",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "LDL Cholesterol (Calculated)",
+          "result": 138,
+          "unit": "mg/dL",
+          "referenceRange": "< 100",
+          "flag": "High",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Triglycerides",
+          "result": 175,
+          "unit": "mg/dL",
+          "referenceRange": "< 150",
+          "flag": "High",
+          "status": "Verified"
+        },
+        {
+          "name": "VLDL Cholesterol",
+          "result": 35,
+          "unit": "mg/dL",
+          "referenceRange": "10 – 30",
+          "flag": "High",
+          "status": "Verified"
+        },
+        {
+          "name": "Total / HDL Ratio",
+          "result": 4.95,
+          "unit": "Ratio",
+          "referenceRange": "< 4.5",
+          "flag": "High",
+          "status": "Verified"
+        },
+        {
+          "name": "Fasting Blood Glucose",
+          "result": 96,
+          "unit": "mg/dL",
+          "referenceRange": "70 – 99",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Glycated Hemoglobin (HbA1c)",
+          "result": 5.6,
+          "unit": "%",
+          "referenceRange": "< 5.7",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Estimated Average Glucose (eAG)",
+          "result": 114,
+          "unit": "mg/dL",
+          "referenceRange": "90 – 120",
+          "flag": "Normal",
+          "status": "Verified"
+        }
+      ]
+    },
+    {
+      "id": "RES-10292",
+      "orderId": "ORD-10292",
+      "sampleId": "SMP-20489",
+      "patient": {
+        "id": "P-55219",
+        "name": "Ramesh Gupta",
+        "age": 63,
+        "gender": "Male",
+        "phone": "+91 99887 76655",
+        "mrn": "MRN-55219",
+        "email": "ramesh.gupta@outlook.com"
+      },
+      "testName": "Liver Function Test (LFT), Kidney Function Test (KFT)",
+      "instrument": "Beckman Coulter AU5800 Analyzer",
+      "completedAt": "08:15",
+      "reviewer": "Dr. S. Kulkarni",
+      "status": "Approved",
+      "comments": "Renal function profiling: Glomerular filtration capacity normal. Serum electrolytes and nitrogenous clearance adequate.",
+      "parameters": [
+        {
+          "name": "Total Bilirubin",
+          "result": 0.85,
+          "unit": "mg/dL",
+          "referenceRange": "0.2 – 1.2",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Direct Bilirubin",
+          "result": 0.22,
+          "unit": "mg/dL",
+          "referenceRange": "0.0 – 0.3",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "SGOT / AST",
+          "result": 28,
+          "unit": "U/L",
+          "referenceRange": "10 – 40",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "SGPT / ALT",
+          "result": 32,
+          "unit": "U/L",
+          "referenceRange": "7 – 56",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Alkaline Phosphatase (ALP)",
+          "result": 84,
+          "unit": "U/L",
+          "referenceRange": "44 – 147",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Total Protein",
+          "result": 7.2,
+          "unit": "g/dL",
+          "referenceRange": "6.0 – 8.3",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Albumin",
+          "result": 4.3,
+          "unit": "g/dL",
+          "referenceRange": "3.5 – 5.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Creatinine",
+          "result": 0.92,
+          "unit": "mg/dL",
+          "referenceRange": "0.60 – 1.20",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Blood Urea Nitrogen (BUN)",
+          "result": 14.5,
+          "unit": "mg/dL",
+          "referenceRange": "7.0 – 20.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Uric Acid",
+          "result": 4.6,
+          "unit": "mg/dL",
+          "referenceRange": "3.5 – 7.2",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Sodium (Na+)",
+          "result": 140,
+          "unit": "mEq/L",
+          "referenceRange": "135 – 145",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Potassium (K+)",
+          "result": 4.2,
+          "unit": "mEq/L",
+          "referenceRange": "3.5 – 5.1",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Chloride (Cl-)",
+          "result": 101,
+          "unit": "mEq/L",
+          "referenceRange": "96 – 106",
+          "flag": "Normal",
+          "status": "Verified"
+        }
+      ]
+    },
+    {
+      "id": "RES-10291",
+      "orderId": "ORD-10291",
+      "sampleId": "SMP-20482",
+      "patient": {
+        "id": "P-44102",
+        "name": "Priya Nair",
+        "age": 34,
+        "gender": "Female",
+        "phone": "+91 97654 32109",
+        "mrn": "MRN-44102",
+        "email": "priya.nair@healthmail.in"
+      },
+      "testName": "Thyroid Profile (T3, T4, TSH)",
+      "instrument": "Abbott Architect i2000SR Immunoassay",
+      "completedAt": "10:05",
+      "reviewer": "Dr. R. Joshi",
+      "status": "Pending Review",
+      "comments": "Thyroid function assessment: TSH level within standard therapeutic baseline. Free peripheral thyronine levels normal.",
+      "parameters": [
+        {
+          "name": "Total Triiodothyronine (T3)",
+          "result": 1.25,
+          "unit": "ng/mL",
+          "referenceRange": "0.80 – 2.00",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Total Thyroxine (T4)",
+          "result": 8.4,
+          "unit": "µg/dL",
+          "referenceRange": "5.1 – 14.1",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Thyroid Stimulating Hormone (TSH)",
+          "result": 2.15,
+          "unit": "µIU/mL",
+          "referenceRange": "0.27 – 4.20",
+          "flag": "Normal",
+          "status": "Verified"
+        }
+      ]
+    },
+    {
+      "id": "RES-10290",
+      "orderId": "ORD-10290",
+      "sampleId": "SMP-20480",
+      "patient": {
+        "id": "P-33912",
+        "name": "Suresh Menon",
+        "age": 52,
+        "gender": "Male",
+        "phone": "+91 98989 12345",
+        "mrn": "MRN-33912",
+        "email": "suresh.menon@gmail.com"
+      },
+      "testName": "Urine Routine & Microscopy",
+      "instrument": "Sysmex UN-Series Automated Urinalysis",
+      "completedAt": "10:18",
+      "reviewer": "Dr. M. Patel",
+      "status": "Pending Review",
+      "comments": "Urinalysis examination: Physical and microscopic examination negative for active infection, cast formation, or nephrotic proteinuria.",
+      "parameters": [
+        {
+          "name": "Specific Gravity",
+          "result": "1.018",
+          "unit": "",
+          "referenceRange": "1.005 – 1.030",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "pH",
+          "result": "6.0",
+          "unit": "",
+          "referenceRange": "4.5 – 8.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Urine Protein",
+          "result": "Negative",
+          "unit": "",
+          "referenceRange": "Negative",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Urine Glucose",
+          "result": "Nil",
+          "unit": "",
+          "referenceRange": "Nil",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Pus Cells (WBC)",
+          "result": "1–2",
+          "unit": "/ HPF",
+          "referenceRange": "0 – 5",
+          "flag": "Normal",
+          "status": "Verified"
+        }
+      ]
+    },
+    {
+      "id": "RES-10289",
+      "orderId": "ORD-10289",
+      "sampleId": "SMP-20476",
+      "patient": {
+        "id": "P-22819",
+        "name": "Kavita Shah",
+        "age": 29,
+        "gender": "Female",
+        "phone": "+91 91234 56789",
+        "mrn": "MRN-22819",
+        "email": "kavita.shah@gmail.com"
+      },
+      "testName": "D-Dimer, Serum Electrolytes",
+      "instrument": "Stago Compact Max Coagulation",
+      "completedAt": "10:30",
+      "reviewer": "Dr. V. Sharma",
+      "status": "Pending Review",
+      "comments": "Hemostasis profile: D-Dimer levels normal. Coagulation cascade and fibrin turnover within physiological limits.",
+      "parameters": [
+        {
+          "name": "Serum Creatinine",
+          "result": 0.92,
+          "unit": "mg/dL",
+          "referenceRange": "0.60 – 1.20",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Blood Urea Nitrogen (BUN)",
+          "result": 14.5,
+          "unit": "mg/dL",
+          "referenceRange": "7.0 – 20.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Uric Acid",
+          "result": 4.6,
+          "unit": "mg/dL",
+          "referenceRange": "3.5 – 7.2",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Sodium (Na+)",
+          "result": 140,
+          "unit": "mEq/L",
+          "referenceRange": "135 – 145",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Potassium (K+)",
+          "result": 4.2,
+          "unit": "mEq/L",
+          "referenceRange": "3.5 – 5.1",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Serum Chloride (Cl-)",
+          "result": 101,
+          "unit": "mEq/L",
+          "referenceRange": "96 – 106",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "D-Dimer Quantitative",
+          "result": 0.28,
+          "unit": "µg/mL FEU",
+          "referenceRange": "< 0.50",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Prothrombin Time (PT)",
+          "result": 12.2,
+          "unit": "seconds",
+          "referenceRange": "11.0 – 13.5",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "INR Ratio",
+          "result": 1.04,
+          "unit": "Ratio",
+          "referenceRange": "0.85 – 1.15",
           "flag": "Normal",
           "status": "Verified"
         }
@@ -853,8 +1883,59 @@
       "email": "vsharma@labflow.io"
     }
   ],
-  "sentEmails": [],
-  "sentWhatsApp": [],
+  "sentEmails": [
+    {
+      "id": "eml-1789079834473",
+      "reportId": "RPT-9867",
+      "recipientEmail": "abkitadas27@gmail.com",
+      "recipientName": "ankita",
+      "patientName": "ankita",
+      "subject": "Diagnostic Laboratory Report Released: ankita (RPT-9867)",
+      "timestamp": "2026-09-10T22:37:14.473Z",
+      "status": "Pending",
+      "messageId": "MSG-EML-1789079834428-1791",
+      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Official 18-attribute PDF report attached."
+    },
+    {
+      "id": "eml-1789078764818",
+      "reportId": "RPT-9867",
+      "recipientEmail": "abkitadas27@gmail.com",
+      "recipientName": "ankita",
+      "patientName": "ankita",
+      "subject": "Diagnostic Laboratory Report Released: ankita (RPT-9867)",
+      "timestamp": "2026-09-10T22:19:24.818Z",
+      "status": "Pending",
+      "messageId": "MSG-EML-1789078764755-6741",
+      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Official 18-attribute PDF report attached."
+    },
+    {
+      "id": "eml-1789078323340",
+      "reportId": "RPT-14425",
+      "recipientEmail": "test.sharma@example.com",
+      "recipientName": "Test Patient Sharma",
+      "patientName": "Test Patient Sharma",
+      "subject": "Diagnostic Laboratory Report Released: Test Patient Sharma (RPT-14425)",
+      "timestamp": "2026-09-10T22:12:03.340Z",
+      "status": "Pending",
+      "messageId": "MSG-EML-1789078323282-8067",
+      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Official 18-attribute PDF report attached."
+    }
+  ],
+  "sentWhatsApp": [
+    {
+      "id": "wa-1789078790918",
+      "reportId": "RPT-9867",
+      "recipientPhone": "+917854836530",
+      "recipientName": "ankita",
+      "patientName": "ankita",
+      "message": "🏥 *APEX DIAGNOSTICS & PATHOLOGY*\n*ISO 15189 / NABL Certified Central Reference Laboratory*\n────────────────────────────\nDear *ankita*,\n\nThe official diagnostic test report for *ankita* (MRN: *123456*) is now ready, verified, and digitally released.\n\n📋 *Report ID*: RPT-9867\n🔬 *Order Ref*: ORD-9867\n🧪 *Tests Included*: Thyroid Profile (T3/T4/TSH)\n👨‍⚕️ *Consultant Pathologist*: Dr. V. Sharma\n📅 *Status*: Verified & Released\n🕒 *Release Time*: 03:49 am\n\n📄 *View & Download Official PDF Report*:\nhttp://localhost:3000/api/reports/RPT-9867/pdf\n\n🔒 *21 CFR Part 11 Electronic Signature*:\nSHA256: 8f92a410b00192e49c95d3\n────────────────────────────\n_For medical correlation or queries, please contact Apex 24/7 Support: +91 11 4000 8000._",
+      "timestamp": "2026-09-10T22:19:50.918Z",
+      "status": "Delivered",
+      "messageId": "MSG-WA-1789078790917-9620",
+      "directLink": "https://api.whatsapp.com/send?phone=917854836530&text=%F0%9F%8F%A5%20*APEX%20DIAGNOSTICS%20%26%20PATHOLOGY*%0A*ISO%2015189%20%2F%20NABL%20Certified%20Central%20Reference%20Laboratory*%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0ADear%20*ankita*%2C%0A%0AThe%20official%20diagnostic%20test%20report%20for%20*ankita*%20(MRN%3A%20*123456*)%20is%20now%20ready%2C%20verified%2C%20and%20digitally%20released.%0A%0A%F0%9F%93%8B%20*Report%20ID*%3A%20RPT-9867%0A%F0%9F%94%AC%20*Order%20Ref*%3A%20ORD-9867%0A%F0%9F%A7%AA%20*Tests%20Included*%3A%20Thyroid%20Profile%20(T3%2FT4%2FTSH)%0A%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F%20*Consultant%20Pathologist*%3A%20Dr.%20V.%20Sharma%0A%F0%9F%93%85%20*Status*%3A%20Verified%20%26%20Released%0A%F0%9F%95%92%20*Release%20Time*%3A%2003%3A49%20am%0A%0A%F0%9F%93%84%20*View%20%26%20Download%20Official%20PDF%20Report*%3A%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fapi%2Freports%2FRPT-9867%2Fpdf%0A%0A%F0%9F%94%92%20*21%20CFR%20Part%2011%20Electronic%20Signature*%3A%0ASHA256%3A%208f92a410b00192e49c95d3%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A_For%20medical%20correlation%20or%20queries%2C%20please%20contact%20Apex%2024%2F7%20Support%3A%20%2B91%2011%204000%208000._",
+      "notes": "Dispatched via WhatsApp Cloud Gateway to +917854836530. Real-time patient notification confirmed."
+    }
+  ],
   "settings": {
     "organization": {
       "name": "Apex Diagnostics & Reference Laboratories",
@@ -864,7 +1945,7 @@
     },
     "billing": {
       "plan": "professional",
-      "usedQuota": 3842,
+      "usedQuota": 3845,
       "maxQuota": 5000,
       "renewsAt": "2026-10-01"
     },
@@ -936,6 +2017,150 @@
   },
   "auditLogs": [
     {
+      "id": "AUD-1789079834476",
+      "timestamp": "2026-09-10T22:37:14.476Z",
+      "action": "REPORT_EMAILED_TO_PARENT",
+      "user": "Laboratory Notification Engine",
+      "role": "System",
+      "details": "Diagnostic Report RPT-9867 for patient ankita dispatched to parent/guardian at abkitadas27@gmail.com.",
+      "location": "Automated Dispatch Gateway"
+    },
+    {
+      "id": "AUD-1789079698304",
+      "timestamp": "2026-09-10T22:34:58.304Z",
+      "action": "ORDER_CREATED",
+      "user": "Dr. Priya Sharma, MD",
+      "role": "Doctor",
+      "details": "Order ORD-92684 created for patient Vikas Sen (undefined) with sample SMP-53838, report RPT-92684 & test result RES-92684.",
+      "location": "City Center Hub"
+    },
+    {
+      "id": "AUD-1789079689639",
+      "timestamp": "2026-09-10T22:34:49.639Z",
+      "action": "RESULT_VERIFIED_SIGN_OFF",
+      "user": "Dr. Pathologist",
+      "role": "Pathologist",
+      "details": "Test results for order ORD-10293 (Rahul Kumar) digitally verified and signed by pathologist.",
+      "location": "Main Pathology Department"
+    },
+    {
+      "id": "AUD-1789079624746",
+      "timestamp": "2026-09-10T22:33:44.746Z",
+      "action": "RESULT_VERIFIED_SIGN_OFF",
+      "user": "Dr. Arvind Swaminathan, MD",
+      "role": "Pathologist",
+      "details": "Test results for order ORD-14425 (Test Patient Sharma) digitally verified and signed by pathologist.",
+      "location": "Main Pathology Department"
+    },
+    {
+      "id": "AUD-1789079450184",
+      "timestamp": "2026-09-10T22:30:50.184Z",
+      "action": "RESULT_VERIFIED_SIGN_OFF",
+      "user": "Dr. Pathologist",
+      "role": "Pathologist",
+      "details": "Test results for order ORD-10294 (Aditi Rao) digitally verified and signed by pathologist.",
+      "location": "Main Pathology Department"
+    },
+    {
+      "id": "AUD-1789078790921",
+      "timestamp": "2026-09-10T22:19:50.921Z",
+      "action": "REPORT_WHATSAPP_DISPATCHED",
+      "user": "Laboratory Notification Engine",
+      "role": "System",
+      "details": "Diagnostic Report RPT-9867 for patient ankita dispatched via WhatsApp to +917854836530.",
+      "location": "WhatsApp Cloud Gateway"
+    },
+    {
+      "id": "AUD-1789078764821",
+      "timestamp": "2026-09-10T22:19:24.821Z",
+      "action": "REPORT_EMAILED_TO_PARENT",
+      "user": "Laboratory Notification Engine",
+      "role": "System",
+      "details": "Diagnostic Report RPT-9867 for patient ankita dispatched to parent/guardian at abkitadas27@gmail.com.",
+      "location": "Automated Dispatch Gateway"
+    },
+    {
+      "id": "AUD-1789078697730",
+      "timestamp": "2026-09-10T22:18:17.730Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-19867 transitioned from REVIEW to RELEASED.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789078692728",
+      "timestamp": "2026-09-10T22:18:12.728Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-19867 transitioned from PROCESSING to REVIEW.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789078687161",
+      "timestamp": "2026-09-10T22:18:07.161Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-19867 transitioned from RECEIVED to PROCESSING.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789078681200",
+      "timestamp": "2026-09-10T22:18:01.200Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-19867 transitioned from IN_TRANSIT to RECEIVED.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789078674607",
+      "timestamp": "2026-09-10T22:17:54.607Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-19867 transitioned from COLLECTED to IN_TRANSIT.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789078664518",
+      "timestamp": "2026-09-10T22:17:44.518Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-19867 transitioned from ORDERED to COLLECTED.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789078635428",
+      "timestamp": "2026-09-10T22:17:15.428Z",
+      "action": "ORDER_CREATED",
+      "user": "Dr. V. Sharma",
+      "role": "Doctor",
+      "details": "Order ORD-9867 created for patient ankita (123456) with sample SMP-19867 & report RPT-9867.",
+      "location": "Main Laboratory - Accessioning"
+    },
+    {
+      "id": "AUD-1789078323343",
+      "timestamp": "2026-09-10T22:12:03.343Z",
+      "action": "REPORT_EMAILED_TO_PARENT",
+      "user": "Laboratory Notification Engine",
+      "role": "System",
+      "details": "Diagnostic Report RPT-14425 for patient Test Patient Sharma dispatched to parent/guardian at test.sharma@example.com.",
+      "location": "Automated Dispatch Gateway"
+    },
+    {
+      "id": "AUD-1789078230853",
+      "timestamp": "2026-09-10T22:10:30.853Z",
+      "action": "ORDER_CREATED",
+      "user": "Dr. Priya Sharma, MD",
+      "role": "Doctor",
+      "details": "Order ORD-14425 created for patient Test Patient Sharma (MRN-99901) with sample SMP-68567 & report RPT-14425.",
+      "location": "Main Lab"
+    },
+    {
       "id": "AUD-1789077329548",
       "timestamp": "2026-09-10T21:55:29.548Z",
       "action": "SAMPLE_STAGE_UPDATED",
@@ -982,5 +2207,5 @@
     }
   ],
   "version": "3.0.0-synchronized",
-  "lastUpdated": "2026-09-10T21:55:29.548Z"
+  "lastUpdated": "2026-09-10T22:37:14.476Z"
 }

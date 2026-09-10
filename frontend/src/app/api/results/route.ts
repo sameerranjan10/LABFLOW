@@ -34,12 +34,19 @@ export async function POST(request: Request) {
     }
 
     // Otherwise, verify/sign-off result
-    const { resultId, reviewer, comments } = body;
-    const verified = verifyTestResult(resultId, reviewer, comments);
+    const { resultId, orderId, reviewer, comments } = body;
+    const targetId = resultId || orderId;
+    if (!targetId) {
+      return NextResponse.json(
+        { success: false, error: "resultId or orderId is required" },
+        { status: 400 }
+      );
+    }
+    const verified = verifyTestResult(targetId, reviewer, comments);
     if (!verified) {
       return NextResponse.json(
-        { success: false, error: "Failed to verify result" },
-        { status: 400 }
+        { success: false, error: "Failed to verify result for target ID: " + targetId },
+        { status: 404 }
       );
     }
 

@@ -424,7 +424,17 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
             )}
 
             {currentView === "results" && (
-              <ResultsView onNotify={addToast} />
+              <ResultsView
+                orders={orders}
+                samples={samples}
+                reports={reports}
+                searchQuery={searchQuery}
+                onNotify={addToast}
+                onNavigateToView={(view) => navigateTo(view)}
+                onReleaseReport={handleReleaseReport}
+                onSelectReport={(report) => setSelectedReportPreview(report)}
+                onSelectSample={(sample) => setSelectedSampleDetail(sample)}
+              />
             )}
 
             {currentView === "reports" && (
