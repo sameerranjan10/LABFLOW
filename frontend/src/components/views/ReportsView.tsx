@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { LabReport } from "@/data/labflowData";
 import { StatusBadge } from "@/components/StatusBadge";
-import { FileText, Eye, Download, Send, Search, Filter, Mail, CheckCircle2 } from "lucide-react";
+import { FileText, Eye, Download, Send, Search, Filter, Mail, CheckCircle2, MessageSquare } from "lucide-react";
 
 interface ReportsViewProps {
   reports: LabReport[];
@@ -19,13 +19,20 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [emailStatusMsg, setEmailStatusMsg] = useState<string | null>(null);
+  const [waStatusMsg, setWaStatusMsg] = useState<string | null>(null);
 
   const filtered = reports.filter((rpt) => {
+    const q = search.toLowerCase();
     const matchesSearch =
-      rpt.id.toLowerCase().includes(search.toLowerCase()) ||
-      rpt.orderId.toLowerCase().includes(search.toLowerCase()) ||
-      rpt.patient.name.toLowerCase().includes(search.toLowerCase()) ||
-      rpt.tests.some((t) => t.toLowerCase().includes(search.toLowerCase()));
+      rpt.id.toLowerCase().includes(q) ||
+      rpt.orderId.toLowerCase().includes(q) ||
+      rpt.patient.name.toLowerCase().includes(q) ||
+      rpt.patient.mrn.toLowerCase().includes(q) ||
+      (rpt.patient.phone && rpt.patient.phone.toLowerCase().includes(q)) ||
+      (rpt.doctorName && rpt.doctorName.toLowerCase().includes(q)) ||
+      (rpt.priority && rpt.priority.toLowerCase().includes(q)) ||
+      (rpt.location && rpt.location.toLowerCase().includes(q)) ||
+      rpt.tests.some((t) => t.toLowerCase().includes(q));
 
     const matchesStatus = statusFilter === "ALL" || rpt.status === statusFilter;
 
@@ -56,6 +63,12 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
         <div className="p-3 bg-sky-50 text-sky-800 border border-sky-200 rounded-lg text-xs font-semibold flex items-center gap-2 animate-in fade-in">
           <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0" />
           <span>{emailStatusMsg}</span>
+        </div>
+      )}
+      {waStatusMsg && (
+        <div className="p-3 bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+          <MessageSquare className="w-4 h-4 text-emerald-600 shrink-0" />
+          <span>{waStatusMsg}</span>
         </div>
       )}
 
@@ -95,44 +108,64 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           <table className="w-full text-left text-xs">
             <thead className="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200 tracking-wider">
               <tr>
-                <th className="py-3.5 px-4">Report ID</th>
-                <th className="py-3.5 px-4">Order ID</th>
-                <th className="py-3.5 px-4">Patient Name</th>
-                <th className="py-3.5 px-4">Tests Included</th>
+                <th className="py-3.5 px-4">Report / Order</th>
+                <th className="py-3.5 px-4">Patient Information</th>
+                <th className="py-3.5 px-4">Referring Doctor</th>
+                <th className="py-3.5 px-4">Priority</th>
+                <th className="py-3.5 px-4">Tests Ordered</th>
                 <th className="py-3.5 px-4">Status</th>
-                <th className="py-3.5 px-4">Reviewer</th>
-                <th className="py-3.5 px-4">Created</th>
-                <th className="py-3.5 px-4">Released At</th>
+                <th className="py-3.5 px-4">Requisition Time</th>
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filtered.map((rpt) => (
                 <tr key={rpt.id} className="hover:bg-slate-50/80 transition-colors">
-                  <td className="py-3.5 px-4 font-mono font-bold text-indigo-600 whitespace-nowrap">
-                    {rpt.id}
-                  </td>
-                  <td className="py-3.5 px-4 font-mono font-semibold text-slate-700 whitespace-nowrap">
-                    {rpt.orderId}
+                  <td className="py-3.5 px-4 whitespace-nowrap">
+                    <div className="font-mono font-bold text-indigo-600">{rpt.id}</div>
+                    <div className="text-[11px] font-mono text-slate-500 font-semibold">{rpt.orderId}</div>
                   </td>
                   <td className="py-3.5 px-4 whitespace-nowrap">
                     <div className="font-semibold text-slate-900">{rpt.patient.name}</div>
-                    <div className="text-[11px] text-slate-400 font-mono">{rpt.patient.mrn}</div>
+                    <div className="text-[11px] text-slate-500 font-mono">
+                      <span>{rpt.patient.mrn}</span> • <span>{rpt.patient.age}y/{rpt.patient.gender}</span>
+                    </div>
+                    {rpt.patient.phone && (
+                      <div className="text-[10px] text-slate-400 font-mono">{rpt.patient.phone}</div>
+                    )}
                   </td>
-                  <td className="py-3.5 px-4 text-slate-700 max-w-xs truncate">
-                    {rpt.tests.join(", ")}
+                  <td className="py-3.5 px-4 whitespace-nowrap">
+                    <div className="font-semibold text-slate-800">{rpt.doctorName || "Dr. Priya Sharma, MD"}</div>
+                    <div className="text-[10px] text-slate-400">{rpt.location || "Main Laboratory"}</div>
+                  </td>
+                  <td className="py-3.5 px-4 whitespace-nowrap">
+                    <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                      rpt.priority === "STAT"
+                        ? "bg-red-100 text-red-700 border border-red-200"
+                        : rpt.priority === "Urgent"
+                        ? "bg-amber-100 text-amber-700 border border-amber-200"
+                        : "bg-blue-100 text-blue-700 border border-blue-200"
+                    }`}>
+                      {rpt.priority || "Normal"}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4 max-w-xs">
+                    <div className="flex flex-wrap gap-1">
+                      {rpt.tests.map((t, idx) => (
+                        <span key={idx} className="bg-indigo-50 text-indigo-800 border border-indigo-100 text-[10px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
                   </td>
                   <td className="py-3.5 px-4 whitespace-nowrap">
                     <StatusBadge type="status" value={rpt.status} size="sm" />
+                    {rpt.releasedAt && (
+                      <div className="text-[10px] text-emerald-600 font-mono mt-0.5">Signed {rpt.releasedAt}</div>
+                    )}
                   </td>
-                  <td className="py-3.5 px-4 text-slate-700 whitespace-nowrap">
-                    {rpt.reviewer}
-                  </td>
-                  <td className="py-3.5 px-4 font-mono text-slate-500 whitespace-nowrap">
+                  <td className="py-3.5 px-4 font-mono text-slate-500 whitespace-nowrap text-[11px]">
                     {rpt.createdAt}
-                  </td>
-                  <td className="py-3.5 px-4 font-mono text-slate-500 whitespace-nowrap">
-                    {rpt.releasedAt || "—"}
                   </td>
                   <td className="py-3.5 px-4 text-right whitespace-nowrap">
                     <div className="flex items-center justify-end gap-1.5">
@@ -146,34 +179,124 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                       </button>
 
                       <button
+                        onClick={() => {
+                          const link = document.createElement("a");
+                          link.href = `/api/reports/${rpt.id}/pdf`;
+                          link.download = `Apex_Report_${rpt.id}.pdf`;
+                          link.target = "_blank";
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        className="px-2 py-1 text-xs font-semibold rounded bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 flex items-center gap-1 cursor-pointer"
+                        title="Download Official 18-Attribute PDF Report"
+                      >
+                        <Download className="w-3.5 h-3.5 text-rose-600" />
+                        PDF
+                      </button>
+
+                      <button
                         onClick={async () => {
-                          setEmailStatusMsg(`Sending report ${rpt.id} to niteshnemalpuri17@gmail.com...`);
+                          const targetEmail = "niteshnemalpuri17@gmail.com";
+                          setEmailStatusMsg(`Preparing email dispatch and PDF for ${targetEmail}...`);
+                          
+                          // Trigger automated PDF download
+                          const pdfLink = document.createElement("a");
+                          pdfLink.href = `/api/reports/${rpt.id}/pdf`;
+                          pdfLink.download = `Apex_Report_${rpt.id}.pdf`;
+                          document.body.appendChild(pdfLink);
+                          pdfLink.click();
+                          document.body.removeChild(pdfLink);
+
                           try {
                             const res = await fetch("/api/reports/email", {
                               method: "POST",
                               headers: { "Content-Type": "application/json" },
                               body: JSON.stringify({
                                 reportId: rpt.id,
-                                recipientEmail: "niteshnemalpuri17@gmail.com",
+                                recipientEmail: targetEmail,
                                 recipientName: "Parent / Guardian",
                                 patientName: rpt.patient.name,
                               }),
                             });
+                            const data = await res.json();
                             if (res.ok) {
-                              setEmailStatusMsg(`Report ${rpt.id} sent to niteshnemalpuri17@gmail.com!`);
+                              if (data.sentDirectly) {
+                                setEmailStatusMsg(`Report & PDF delivered via SMTP to ${targetEmail}!`);
+                              } else {
+                                if (data.gmailComposeUrl) {
+                                  window.open(data.gmailComposeUrl, "_blank");
+                                } else if (data.mailtoUrl) {
+                                  window.location.href = data.mailtoUrl;
+                                }
+                                setEmailStatusMsg(`Official PDF downloaded & Gmail opened for ${targetEmail}! Drag the PDF into Gmail.`);
+                              }
                             } else {
-                              setEmailStatusMsg(`Report ${rpt.id} queued for niteshnemalpuri17@gmail.com`);
+                              const mailto = `mailto:${targetEmail}?subject=Diagnostic Report ${rpt.id}&body=Report for ${rpt.patient.name}: http://localhost:3000/api/reports/${rpt.id}/pdf`;
+                              window.open(mailto, "_blank");
+                              setEmailStatusMsg(`PDF downloaded & mail client opened for ${targetEmail}`);
                             }
                           } catch (err) {
-                            setEmailStatusMsg(`Report ${rpt.id} emailed to niteshnemalpuri17@gmail.com`);
+                            const mailto = `mailto:${targetEmail}?subject=Diagnostic Report ${rpt.id}&body=Report for ${rpt.patient.name}: http://localhost:3000/api/reports/${rpt.id}/pdf`;
+                            window.open(mailto, "_blank");
+                            setEmailStatusMsg(`PDF downloaded & mail client opened for ${targetEmail}`);
                           }
-                          setTimeout(() => setEmailStatusMsg(null), 4000);
+                          setTimeout(() => setEmailStatusMsg(null), 7000);
                         }}
                         className="px-2 py-1 text-xs font-semibold rounded bg-sky-50 text-sky-700 hover:bg-sky-100 flex items-center gap-1 cursor-pointer"
-                        title="Direct Email to Parent (niteshnemalpuri17@gmail.com)"
+                        title="Send Official PDF Report via Email to Parent"
                       >
                         <Mail className="w-3.5 h-3.5" />
                         Email Parent
+                      </button>
+
+                      <button
+                        onClick={async () => {
+                          const targetPhone = rpt.patient.phone || "+91 98000 11111";
+                          setWaStatusMsg(`Preparing WhatsApp notification & downloading PDF for ${targetPhone}...`);
+                          
+                          // Trigger automated PDF download
+                          const pdfLink = document.createElement("a");
+                          pdfLink.href = `/api/reports/${rpt.id}/pdf`;
+                          pdfLink.download = `Apex_Report_${rpt.id}.pdf`;
+                          document.body.appendChild(pdfLink);
+                          pdfLink.click();
+                          document.body.removeChild(pdfLink);
+
+                          try {
+                            const res = await fetch("/api/reports/whatsapp", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                reportId: rpt.id,
+                                recipientPhone: targetPhone,
+                                recipientName: rpt.patient.name,
+                                patientName: rpt.patient.name,
+                              }),
+                            });
+                            const data = await res.json();
+                            if (res.ok && data.directLink) {
+                              window.open(data.directLink, "_blank");
+                              setWaStatusMsg(`Official PDF downloaded & WhatsApp Web launched for ${rpt.patient.name}! Drag PDF into chat.`);
+                            } else {
+                              const cleanDigits = targetPhone.replace(/[^\d]/g, "");
+                              const fallback = `https://api.whatsapp.com/send?phone=${cleanDigits}&text=${encodeURIComponent(`Dear ${rpt.patient.name}, your official PDF diagnostic lab report (${rpt.id}) is ready: http://localhost:3000/api/reports/${rpt.id}/pdf`)}`;
+                              window.open(fallback, "_blank");
+                              setWaStatusMsg(`PDF downloaded & WhatsApp opened for ${targetPhone}`);
+                            }
+                          } catch (err) {
+                            const cleanDigits = targetPhone.replace(/[^\d]/g, "");
+                            const fallback = `https://api.whatsapp.com/send?phone=${cleanDigits}&text=${encodeURIComponent(`Dear ${rpt.patient.name}, your official PDF diagnostic lab report (${rpt.id}) is ready: http://localhost:3000/api/reports/${rpt.id}/pdf`)}`;
+                            window.open(fallback, "_blank");
+                            setWaStatusMsg(`PDF downloaded & WhatsApp opened for ${targetPhone}`);
+                          }
+                          setTimeout(() => setWaStatusMsg(null), 7000);
+                        }}
+                        className="px-2 py-1 text-xs font-semibold rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 flex items-center gap-1 cursor-pointer"
+                        title={`Send PDF Report via WhatsApp to ${rpt.patient.phone || "+91 98000 11111"}`}
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        WhatsApp
                       </button>
 
                       {rpt.status !== "Released" && (

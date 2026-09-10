@@ -26,15 +26,16 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const body: Partial<LabOrder> = await request.json();
-    const { order, sample } = createOrder(body);
+    const body: Partial<LabOrder> & { sampleType?: string; collector?: string } = await request.json();
+    const { order, sample, report } = createOrder(body);
 
     return NextResponse.json(
       {
         success: true,
-        message: "Order requisition and sample record persisted into database",
+        message: "Order requisition, sample record, and diagnostic report persisted into database",
         order,
         sample,
+        report,
       },
       { status: 201 }
     );

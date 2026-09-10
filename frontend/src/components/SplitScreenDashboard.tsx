@@ -162,7 +162,7 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
   const [selectedReportPreview, setSelectedReportPreview] = useState<LabReport | null>(null);
 
   // HANDLERS WITH PERSISTENCE (PHASE 3)
-  const handleCreateOrderSubmit = async (newOrder: Partial<LabOrder>) => {
+  const handleCreateOrderSubmit = async (newOrder: Partial<LabOrder> & { sampleType?: string; collector?: string; scheduledTime?: string }) => {
     const createdOrder = newOrder as LabOrder;
 
     // Persist via Backend API
@@ -176,12 +176,13 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
         const data = await res.json();
         if (data.order) setOrders((prev) => [data.order, ...prev]);
         if (data.sample) setSamples((prev) => [data.sample, ...prev]);
+        if (data.report) setReports((prev) => [data.report, ...prev]);
 
         setWorkflowStages((prev) =>
           prev.map((st) => (st.key === "ORDERED" ? { ...st, count: st.count + 1 } : st))
         );
 
-        addToast("Order Persisted to Database", `Order ${createdOrder.id} & Sample ${createdOrder.sampleId} written to disk.`, "success");
+        addToast("Order & Report Persisted", `Order ${createdOrder.id} & Report created for ${createdOrder.patient.name}.`, "success");
         return;
       }
     } catch (e) {
@@ -190,11 +191,14 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
 
     // Local fallback
     setOrders((prev) => [createdOrder, ...prev]);
+    const sampleType = newOrder.sampleType || "Whole Blood (EDTA)";
+    const collector = newOrder.collector || "Sunita Verma";
+
     const createdSample: LabSample = {
       id: createdOrder.sampleId,
       orderId: createdOrder.id,
       patient: createdOrder.patient,
-      sampleType: "Whole Blood (EDTA)",
+      sampleType: sampleType,
       test: createdOrder.tests.join(", "),
       currentLocation: "Main Lab - Accessioning",
       stage: "ORDERED",
@@ -210,17 +214,35 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
           date: createdOrder.createdDate,
           event: "Order & Specimen Requisition Created",
           location: createdOrder.location,
-          operator: "Admin User",
-          details: "Barcode printed and queued for phlebotomy intake.",
+          operator: collector,
+          details: `Requisition entered into LabFlow LIMS database by ${createdOrder.doctorName}. Barcode printed.`,
           status: "active",
         },
       ],
     };
     setSamples((prev) => [createdSample, ...prev]);
+
+    const createdReport: LabReport = {
+      id: `RPT-${createdOrder.id.replace("ORD-", "")}`,
+      orderId: createdOrder.id,
+      sampleId: createdOrder.sampleId,
+      patient: createdOrder.patient,
+      tests: createdOrder.tests,
+      status: "Pending Review",
+      reviewer: createdOrder.doctorName || "Dr. Priya Sharma, MD",
+      createdAt: `${createdOrder.createdDate} ${createdOrder.createdAt}`,
+      priority: createdOrder.priority,
+      doctorName: createdOrder.doctorName,
+      sampleType: sampleType,
+      location: createdOrder.location,
+      collector: collector,
+    };
+    setReports((prev) => [createdReport, ...prev]);
+
     setWorkflowStages((prev) =>
       prev.map((st) => (st.key === "ORDERED" ? { ...st, count: st.count + 1 } : st))
     );
-    addToast("New Order Registered", `Order ${createdOrder.id} & Sample ${createdOrder.sampleId} created.`, "success");
+    addToast("New Order & Diagnostic Report Registered", `Order ${createdOrder.id} & Report created for ${createdOrder.patient.name}.`, "success");
   };
 
   const handleReleaseReport = async (reportId: string) => {
@@ -424,6 +446,7 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
 
       <ReportPreviewModal
         report={selectedReportPreview}
+        orders={orders}
         onClose={() => setSelectedReportPreview(null)}
         onReleaseReport={handleReleaseReport}
       />

@@ -5,7 +5,7 @@ import { X, CheckCircle, Plus, AlertCircle } from "lucide-react";
 interface CreateOrderModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmitOrder: (newOrder: Partial<LabOrder>) => void;
+  onSubmitOrder: (newOrder: Partial<LabOrder> & { sampleType?: string; collector?: string; scheduledTime?: string }) => void;
 }
 
 export const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
@@ -50,7 +50,7 @@ export const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
     const generatedOrderId = `ORD-${randomDigits}`;
     const generatedSampleId = `SMP-${randomDigits + 10000}`;
 
-    const newOrder: Partial<LabOrder> = {
+    const newOrder: Partial<LabOrder> & { sampleType?: string; collector?: string; scheduledTime?: string } = {
       id: generatedOrderId,
       sampleId: generatedSampleId,
       patient: {
@@ -70,6 +70,9 @@ export const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
       status: "In Progress",
       location: location,
       doctorName: doctorName,
+      sampleType: sampleType,
+      collector: collector,
+      scheduledTime: scheduledTime,
     };
 
     onSubmitOrder(newOrder);
