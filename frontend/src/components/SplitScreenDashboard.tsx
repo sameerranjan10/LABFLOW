@@ -450,6 +450,7 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
                 alerts={alerts}
                 onDismissAlert={handleDismissAlert}
                 onNavigateToView={(view) => navigateTo(view)}
+                onNotify={addToast}
               />
             )}
 

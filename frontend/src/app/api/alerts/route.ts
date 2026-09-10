@@ -26,6 +26,17 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ success: false, error: "Missing alert ID" }, { status: 400 });
     }
 
+    if (id.toLowerCase() === "all") {
+      const db = (await import("@/lib/db")).readDatabase();
+      const count = (db.alerts || []).length;
+      db.alerts = [];
+      (await import("@/lib/db")).writeDatabase(db);
+      return NextResponse.json({
+        success: true,
+        message: `All ${count} alerts dismissed`,
+      });
+    }
+
     const dismissed = dismissAlert(id);
     return NextResponse.json({
       success: dismissed,

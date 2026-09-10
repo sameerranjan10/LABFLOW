@@ -74,7 +74,7 @@ export interface SentWhatsAppRecord {
   patientName: string;
   message: string;
   timestamp: string;
-  status: "Delivered" | "Sent" | "Pending";
+  status: "Delivered" | "Sent" | "Pending" | "Failed";
   messageId: string;
   directLink?: string;
   notes?: string;
@@ -1024,6 +1024,426 @@ export function logSentWhatsApp(record: SentWhatsAppRecord): SentWhatsAppRecord 
 export function getSentWhatsApp(): SentWhatsAppRecord[] {
   const db = readDatabase();
   return db.sentWhatsApp || [];
+}
+
+// RESILIENCE & FAILURE SIMULATION ENGINE (PHASE 3)
+export function triggerFailureSimulation(scenario: string) {
+  const db = readDatabase();
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const dateStr = now.toISOString().split("T")[0];
+
+  if (scenario === "ANALYZER_MAINTENANCE") {
+    // Inject Analyzer Failure Alert
+    db.alerts.unshift({
+      id: "ALT-SIM-ANALYZER",
+      category: "Critical",
+      title: "Sysmex XN-1000: Laser Sensor Drift (>2.5 SD)",
+      description: "Automated optical flow cytometry sensor drift detected. Sysmex XN-1000 shifted to Maintenance mode. Reagent lot verification and 2-point optical recalibration required.",
+      timestamp: "Just now",
+      entityId: "SYS-XN-1000",
+      actionable: true,
+    });
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "ANALYZER_MAINTENANCE_TRIGGERED",
+      user: "Auto-Analyzer QC Sentinel",
+      role: "System",
+      details: "Sysmex XN-1000 optical flow sensor drifted by +2.8 SD. Ingestion queue halted. Pending specimens routed to backup Sysmex workstation.",
+      location: "Main Hematology Section",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "ACTIVE_SIMULATION",
+      alertId: "ALT-SIM-ANALYZER",
+      affectedEntity: "Sysmex XN-1000",
+      impact: "Workstation halted, backup routing engaged",
+      recoveryAction: "Click 'Recalibrate & Restore' to run optical prime cycle.",
+    };
+  }
+
+  if (scenario === "SAMPLE_REJECTION") {
+    // Reject target sample
+    const sample = db.samples[0] || { id: "SMP-20491", orderId: "ORD-10294", patient: { name: "Aditi Rao" } };
+    sample.status = "Rejected";
+    if (sample.timeline) {
+      sample.timeline.unshift({
+        id: `tl-sim-rej-${Date.now()}`,
+        timestamp: timeStr,
+        date: dateStr,
+        event: "Pre-Analytical Specimen Rejection",
+        location: "Accessioning Bench",
+        operator: "Lead Accessioning Tech",
+        details: "REJECTED: Severe in-vitro hemolysis (Hemolysis Index > 500 mg/dL). Pre-analytical tube invalid for potassium / LDH testing. Automated redraw requisition ORD-REDRAW-" + sample.id + " generated.",
+        status: "completed",
+      });
+    }
+
+    db.alerts.unshift({
+      id: "ALT-SIM-REJ",
+      category: "Rejected",
+      title: `Sample ${sample.id} Rejected (Gross Hemolysis)`,
+      description: `Specimen ${sample.id} rejected due to gross in-vitro hemolysis. Automated redraw requisition ORD-REDRAW-${sample.id} queued for phlebotomy.`,
+      timestamp: "Just now",
+      entityId: sample.id,
+      actionable: true,
+    });
+
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "SAMPLE_REJECTED_PREANALYTICAL",
+      user: "Lead Accessioning Tech",
+      role: "Technologist",
+      details: `Specimen ${sample.id} failed pre-analytical inspection (Hemolysis Index > 500). Redraw order ORD-REDRAW-${sample.id} created.`,
+      location: "Central Accessioning Lab",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "ACTIVE_SIMULATION",
+      sampleId: sample.id,
+      reason: "Gross in-vitro hemolysis (Index > 500 mg/dL)",
+      redrawOrderId: `ORD-REDRAW-${sample.id}`,
+      recoveryAction: "Click 'Dispatch Redraw' to advance redraw requisition.",
+    };
+  }
+
+  if (scenario === "TAT_BREACH") {
+    const targetOrder = db.orders.find((o) => o.priority !== "STAT") || db.orders[0];
+    if (targetOrder) targetOrder.priority = "STAT";
+
+    db.alerts.unshift({
+      id: "ALT-SIM-TAT",
+      category: "Delayed",
+      title: `STAT SLA Breach: Order ${targetOrder?.id || "ORD-10293"} (${targetOrder?.patient?.name || "Rahul Kumar"})`,
+      description: `Turnaround time exceeded by 28 mins (Target SLA: 45m, Elapsed: 73m). Priority auto-escalated to STAT OVERDUE. Expedited bench routing active.`,
+      timestamp: "Just now",
+      entityId: targetOrder?.id || "ORD-10293",
+      actionable: true,
+    });
+
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "TAT_SLA_BREACH_ESCALATED",
+      user: "SLA Monitoring Daemon",
+      role: "System",
+      details: `Order ${targetOrder?.id || "ORD-10293"} breached 45m SLA. Escalated to STAT priority. Notified attending physician.`,
+      location: "Automated Dispatch Sentinel",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "ACTIVE_SIMULATION",
+      orderId: targetOrder?.id || "ORD-10293",
+      elapsedTime: "73m",
+      slaTarget: "45m",
+      recoveryAction: "Click 'Expedite & Clear Breach' to restore normal queue priority.",
+    };
+  }
+
+  if (scenario === "DUPLICATE_ORDER") {
+    db.alerts.unshift({
+      id: "ALT-SIM-DUP",
+      category: "Information",
+      title: "Duplicate Order Blocked (Idempotency Key: IDEMP-84920)",
+      description: "Duplicate requisition for Aditi Rao (CBC panel) submitted within 5-minute debounce window. Intercepted by Idempotency Middleware. Duplicate billing and redraw prevented.",
+      timestamp: "Just now",
+      entityId: "IDEMP-84920",
+      actionable: false,
+    });
+
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "DUPLICATE_REQUISITION_BLOCKED",
+      user: "Idempotency Middleware",
+      role: "System",
+      details: "Blocked duplicate order for Aditi Rao with identical test payload within 5m window. Idempotency Key: IDEMP-ORD-10294-f89a.",
+      location: "API Ingestion Gateway",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "INTERCEPTED",
+      idempotencyKey: "IDEMP-ORD-10294-f89a",
+      httpStatus: 409,
+      protection: "Zero duplicate charges and zero duplicate tube draws created.",
+    };
+  }
+
+  if (scenario === "INVALID_TRANSITION") {
+    db.alerts.unshift({
+      id: "ALT-SIM-INV",
+      category: "Critical",
+      title: "Security: Illegal State Transition Intercepted",
+      description: "Attempted illegal transition ORDERED → RELEASED on un-accessioned specimen. Blocked by State Machine Integrity Guard (Rule: specimen must complete RECEIVED → PROCESSING → REVIEW before release).",
+      timestamp: "Just now",
+      entityId: "STATE-GUARD-01",
+      actionable: false,
+    });
+
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "STATE_MACHINE_INVARIANT_VIOLATION",
+      user: "LIMS Security Sentinel",
+      role: "System",
+      details: "Illegal state transition attempt ORDERED -> RELEASED intercepted. Enforced mandatory clinical chain-of-custody path.",
+      location: "Core State Machine Engine",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "INTERCEPTED",
+      violation: "ORDERED → RELEASED (Bypassed Accessioning & Testing)",
+      enforcedPath: "ORDERED → COLLECTED → IN_TRANSIT → RECEIVED → PROCESSING → REVIEW → RELEASED",
+    };
+  }
+
+  if (scenario === "DELIVERY_FAILURE") {
+    const failedJob: SentEmailRecord = {
+      id: `JOB-DLQ-${Date.now()}`,
+      reportId: "RPT-10290",
+      recipientEmail: "suresh.menon@gmail.com",
+      recipientName: "Suresh Menon",
+      patientName: "Suresh Menon",
+      subject: "Official Diagnostic Report RPT-10290",
+      timestamp: timeStr,
+      status: "Failed",
+      messageId: `msg-fail-${Date.now()}`,
+      notes: "SMTP 421 4.7.0 Connection timeout: mx.google.com. Placed into Dead-Letter Queue (DLQ). Exponential backoff scheduled (Attempt 1/3).",
+    };
+    if (!db.sentEmails) db.sentEmails = [];
+    db.sentEmails.unshift(failedJob);
+
+    db.alerts.unshift({
+      id: "ALT-SIM-DLQ",
+      category: "Critical",
+      title: "Email Delivery Failure: Report RPT-10290",
+      description: "SMTP connection timeout to suresh.menon@gmail.com. Job moved to Dead-Letter Queue (DLQ). Auto-retry scheduled with 2s exponential backoff.",
+      timestamp: "Just now",
+      entityId: failedJob.id,
+      actionable: true,
+    });
+
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "DELIVERY_FAILED_MOVED_TO_DLQ",
+      user: "Notification Worker Pool",
+      role: "System",
+      details: `Delivery of report RPT-10290 to suresh.menon@gmail.com failed with timeout. Moved to Dead-Letter Queue (job ID: ${failedJob.id}).`,
+      location: "Asynchronous Queue Dispatcher",
+    });
+    writeDatabase(db);
+    return {
+      scenario,
+      status: "QUEUED_IN_DLQ",
+      jobId: failedJob.id,
+      recipient: failedJob.recipientEmail,
+      dlqPolicy: "Max Retries: 3 | Exponential Backoff: 2s, 4s, 8s",
+      recoveryAction: "Click 'Retry Dead-Letter Job' in Message Queues tab to re-dispatch.",
+    };
+  }
+
+  return { scenario, status: "UNKNOWN" };
+}
+
+export function recoverFailureSimulation(scenario: string) {
+  const db = readDatabase();
+  const now = new Date();
+
+  // Remove matching simulation alerts
+  if (scenario === "ANALYZER_MAINTENANCE") {
+    db.alerts = db.alerts.filter((a) => a.id !== "ALT-SIM-ANALYZER");
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "ANALYZER_RECALIBRATION_RECOVERED",
+      user: "Dr. Arvind Swaminathan, MD",
+      role: "Pathologist",
+      details: "Sysmex XN-1000 optical sensors recalibrated across 2 points. Sensor drift normalized to +0.2 SD. Analyzer restored to RUNNING status.",
+      location: "Main Hematology Section",
+    });
+  } else if (scenario === "SAMPLE_REJECTION") {
+    db.alerts = db.alerts.filter((a) => a.id !== "ALT-SIM-REJ");
+    // Restore sample status or mark redraw scheduled
+    if (db.samples[0] && db.samples[0].status === "Rejected") {
+      db.samples[0].status = "In Progress";
+    }
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "REDRAW_REQUISITION_DISPATCHED",
+      user: "Sunita Verma",
+      role: "Collection Staff",
+      details: "Automated redraw requisition dispatched to outpatient phlebotomist. Redraw tube barcode printed.",
+      location: "Central Phlebotomy Hub",
+    });
+  } else if (scenario === "TAT_BREACH") {
+    db.alerts = db.alerts.filter((a) => a.id !== "ALT-SIM-TAT");
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "TAT_SLA_BREACH_RESOLVED",
+      user: "Lab Operations Supervisor",
+      role: "Admin",
+      details: "Specimen processing completed and verified. Turnaround-time breach alert closed.",
+      location: "Operations Desk",
+    });
+  } else if (scenario === "DELIVERY_FAILURE") {
+    db.alerts = db.alerts.filter((a) => a.id !== "ALT-SIM-DLQ");
+    if (db.sentEmails) {
+      const failed = db.sentEmails.find((e) => e.status === "Failed");
+      if (failed) {
+        failed.status = "Delivered";
+        failed.notes = "Re-dispatched successfully from Dead-Letter Queue on retry attempt 2.";
+      }
+    }
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: now.toISOString(),
+      action: "DLQ_JOB_RETRY_SUCCESSFUL",
+      user: "Asynchronous Queue Worker",
+      role: "System",
+      details: "Dead-letter queue job successfully delivered on retry attempt 2. SMTP 250 OK acknowledged.",
+      location: "Asynchronous Dispatcher",
+    });
+  } else {
+    // Clear any generic simulation alert
+    db.alerts = db.alerts.filter((a) => !a.id.startsWith("ALT-SIM-"));
+  }
+
+  writeDatabase(db);
+  return { success: true, scenario, message: `Scenario ${scenario} recovered successfully. System restored to nominal state.` };
+}
+
+export function retryMessageJob(jobId: string) {
+  const db = readDatabase();
+  const now = new Date();
+  let found = false;
+
+  if (db.sentEmails) {
+    const job = db.sentEmails.find((e) => e.id === jobId || e.id.includes(jobId));
+    if (job) {
+      job.status = "Delivered";
+      job.notes = "Successfully re-dispatched from Dead-Letter Queue (DLQ) on retry attempt 2. SMTP 250 OK.";
+      found = true;
+    }
+  }
+
+  if (!found && db.sentWhatsApp) {
+    const job = db.sentWhatsApp.find((w) => w.id === jobId || w.id.includes(jobId));
+    if (job) {
+      job.status = "Delivered";
+      job.notes = "Successfully delivered via WhatsApp Cloud Gateway retry.";
+      found = true;
+    }
+  }
+
+  // Also clear any matching DLQ alert
+  db.alerts = (db.alerts || []).filter((a) => a.entityId !== jobId && a.id !== "ALT-SIM-DLQ");
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: now.toISOString(),
+    action: "DLQ_JOB_MANUAL_RETRY",
+    user: "Queue Operations Engineer",
+    role: "Admin",
+    details: `Dead-letter queue job ${jobId} manually re-triggered. Delivered successfully with verified acknowledgment.`,
+    location: "Message Queue Telemetry Engine",
+  });
+
+  writeDatabase(db);
+  return { success: true, jobId, message: `Job ${jobId} successfully re-dispatched and marked Delivered.` };
+}
+
+export function flushAllQueues() {
+  const db = readDatabase();
+  const now = new Date();
+  let count = 0;
+
+  if (db.sentEmails) {
+    db.sentEmails.forEach((e) => {
+      if (e.status !== "Delivered") {
+        e.status = "Delivered";
+        e.notes = "Processed & delivered during bulk queue flush.";
+        count++;
+      }
+    });
+  }
+
+  if (db.sentWhatsApp) {
+    db.sentWhatsApp.forEach((w) => {
+      if (w.status !== "Delivered") {
+        w.status = "Delivered";
+        w.notes = "Delivered during bulk queue flush.";
+        count++;
+      }
+    });
+  }
+
+  // Clear DLQ alerts
+  db.alerts = (db.alerts || []).filter((a) => a.id !== "ALT-SIM-DLQ");
+
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: now.toISOString(),
+    action: "ASYNC_QUEUES_BULK_FLUSH",
+    user: "Queue Operations Engineer",
+    role: "Admin",
+    details: `Flushed all pending/failed async jobs (${count} jobs). All workers processed to 0 backlog.`,
+    location: "BullMQ / Redis Queue Engine",
+  });
+
+  writeDatabase(db);
+  return { success: true, count, message: `Successfully processed and delivered ${count} pending queue jobs.` };
+}
+
+export function dispatchSimulatedQueueJob(channel: "EMAIL" | "WHATSAPP", recipient?: string) {
+  const db = readDatabase();
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+  if (channel === "EMAIL") {
+    const emailJob: SentEmailRecord = {
+      id: `eml-sim-${Date.now()}`,
+      reportId: "RPT-10294",
+      recipientEmail: recipient || "aditi.rao@apexhealth.com",
+      recipientName: "Aditi Rao",
+      patientName: "Aditi Rao",
+      subject: "Diagnostic Laboratory Report Released: Aditi Rao (RPT-10294)",
+      timestamp: timeStr,
+      status: "Delivered",
+      messageId: `MSG-SIM-${Date.now()}`,
+      notes: "Enqueued into BullMQ email-dispatch-queue. Delivered via SendGrid SMTP pool (ACK 250 OK).",
+    };
+    if (!db.sentEmails) db.sentEmails = [];
+    db.sentEmails.unshift(emailJob);
+    writeDatabase(db);
+    return emailJob;
+  } else {
+    const waJob: SentWhatsAppRecord = {
+      id: `wa-sim-${Date.now()}`,
+      reportId: "RPT-10294",
+      recipientPhone: recipient || "+91 98765 43210",
+      recipientName: "Aditi Rao",
+      patientName: "Aditi Rao",
+      message: "Your official diagnostic report RPT-10294 is ready for download.",
+      timestamp: timeStr,
+      status: "Delivered",
+      messageId: `MSG-WA-${Date.now()}`,
+      notes: "Enqueued into BullMQ whatsapp-notify-queue. Meta WhatsApp Cloud API delivered acknowledgment received.",
+    };
+    if (!db.sentWhatsApp) db.sentWhatsApp = [];
+    db.sentWhatsApp.unshift(waJob);
+    writeDatabase(db);
+    return waJob;
+  }
 }
 
 

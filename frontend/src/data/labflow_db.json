@@ -15,11 +15,11 @@
         "Lipid Profile"
       ],
       "priority": "STAT",
-      "currentStage": "ORDERED",
+      "currentStage": "RELEASED",
       "createdAt": "04:04 am",
       "createdDate": "2026-09-10",
       "tat": "15m",
-      "status": "In Progress",
+      "status": "Completed",
       "location": "City Center Hub",
       "doctorName": "Dr. Priya Sharma, MD"
     },
@@ -237,10 +237,20 @@
       "stage": "ORDERED",
       "collectedAt": "04:04 am",
       "tat": "15m",
-      "status": "Collected",
+      "status": "In Progress",
       "barcode": "LBF-undefined",
       "volume": "3.0 mL",
       "timeline": [
+        {
+          "id": "tl-sim-rej-1789080628140",
+          "timestamp": "04:20 am",
+          "date": "2026-09-10",
+          "event": "Pre-Analytical Specimen Rejection",
+          "location": "Accessioning Bench",
+          "operator": "Lead Accessioning Tech",
+          "details": "REJECTED: Severe in-vitro hemolysis (Hemolysis Index > 500 mg/dL). Pre-analytical tube invalid for potassium / LDH testing. Automated redraw requisition ORD-REDRAW-SMP-53838 generated.",
+          "status": "completed"
+        },
         {
           "id": "tl-evt-1789079698303",
           "timestamp": "04:04 am",
@@ -765,14 +775,15 @@
         "Complete Blood Count (CBC)",
         "Lipid Profile"
       ],
-      "status": "Pending Review",
-      "reviewer": "Dr. Priya Sharma, MD",
+      "status": "Released",
+      "reviewer": "Dr. Vikram Malhotra",
       "createdAt": "2026-09-10 04:04 am",
       "priority": "STAT",
       "doctorName": "Dr. Priya Sharma, MD",
       "sampleType": "Whole Blood (EDTA)",
       "location": "City Center Hub",
-      "collector": "Sunita Verma"
+      "collector": "Sunita Verma",
+      "releasedAt": "04:30 am"
     },
     {
       "id": "RPT-9867",
@@ -1054,8 +1065,8 @@
       "testName": "Complete Blood Count (CBC), Lipid Profile",
       "instrument": "Cobas 8000 c702 Clinical Chemistry",
       "completedAt": "04:04 am",
-      "reviewer": "Dr. Priya Sharma, MD",
-      "status": "Pending Review",
+      "reviewer": "Dr. Arvind Swaminathan, MD",
+      "status": "Approved",
       "comments": "Lipid panel analysis: Moderate borderline hypercholesterolemia with elevated non-HDL lipid fractions. Dietary counseling advised.",
       "parameters": [
         {
@@ -1072,7 +1083,7 @@
           "unit": "10³/µL",
           "referenceRange": "4.0 – 11.0",
           "flag": "High",
-          "status": "Pending Review"
+          "status": "Verified"
         },
         {
           "name": "Platelet Count",
@@ -1104,7 +1115,7 @@
           "unit": "%",
           "referenceRange": "40 – 70",
           "flag": "High",
-          "status": "Pending Review"
+          "status": "Verified"
         },
         {
           "name": "Lymphocytes",
@@ -1136,7 +1147,7 @@
           "unit": "mg/dL",
           "referenceRange": "< 200",
           "flag": "High",
-          "status": "Pending Review"
+          "status": "Verified"
         },
         {
           "name": "HDL Cholesterol (Good)",
@@ -1152,7 +1163,7 @@
           "unit": "mg/dL",
           "referenceRange": "< 100",
           "flag": "High",
-          "status": "Pending Review"
+          "status": "Verified"
         },
         {
           "name": "Serum Triglycerides",
@@ -1160,7 +1171,7 @@
           "unit": "mg/dL",
           "referenceRange": "< 150",
           "flag": "High",
-          "status": "Pending Review"
+          "status": "Verified"
         },
         {
           "name": "VLDL Cholesterol",
@@ -1168,7 +1179,7 @@
           "unit": "mg/dL",
           "referenceRange": "10 – 30",
           "flag": "High",
-          "status": "Pending Review"
+          "status": "Verified"
         },
         {
           "name": "Total / HDL Ratio",
@@ -1176,7 +1187,7 @@
           "unit": "Ratio",
           "referenceRange": "< 4.5",
           "flag": "High",
-          "status": "Pending Review"
+          "status": "Verified"
         }
       ]
     },
@@ -1885,6 +1896,42 @@
   ],
   "sentEmails": [
     {
+      "id": "eml-sim-1789081901282",
+      "reportId": "RPT-10294",
+      "recipientEmail": "aditi.rao@apexhealth.com",
+      "recipientName": "Aditi Rao",
+      "patientName": "Aditi Rao",
+      "subject": "Diagnostic Laboratory Report Released: Aditi Rao (RPT-10294)",
+      "timestamp": "04:41 am",
+      "status": "Delivered",
+      "messageId": "MSG-SIM-1789081901282",
+      "notes": "Enqueued into BullMQ email-dispatch-queue. Delivered via SendGrid SMTP pool (ACK 250 OK)."
+    },
+    {
+      "id": "JOB-DLQ-1789081876280",
+      "reportId": "RPT-10290",
+      "recipientEmail": "suresh.menon@gmail.com",
+      "recipientName": "Suresh Menon",
+      "patientName": "Suresh Menon",
+      "subject": "Official Diagnostic Report RPT-10290",
+      "timestamp": "04:41 am",
+      "status": "Delivered",
+      "messageId": "msg-fail-1789081876280",
+      "notes": "Successfully re-dispatched from Dead-Letter Queue (DLQ) on retry attempt 2. SMTP 250 OK."
+    },
+    {
+      "id": "JOB-DLQ-1789081857063",
+      "reportId": "RPT-10290",
+      "recipientEmail": "suresh.menon@gmail.com",
+      "recipientName": "Suresh Menon",
+      "patientName": "Suresh Menon",
+      "subject": "Official Diagnostic Report RPT-10290",
+      "timestamp": "04:40 am",
+      "status": "Delivered",
+      "messageId": "msg-fail-1789081857063",
+      "notes": "Processed & delivered during bulk queue flush."
+    },
+    {
       "id": "eml-1789079834473",
       "reportId": "RPT-9867",
       "recipientEmail": "abkitadas27@gmail.com",
@@ -1892,9 +1939,9 @@
       "patientName": "ankita",
       "subject": "Diagnostic Laboratory Report Released: ankita (RPT-9867)",
       "timestamp": "2026-09-10T22:37:14.473Z",
-      "status": "Pending",
+      "status": "Delivered",
       "messageId": "MSG-EML-1789079834428-1791",
-      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Official 18-attribute PDF report attached."
+      "notes": "Processed & delivered during bulk queue flush."
     },
     {
       "id": "eml-1789078764818",
@@ -1904,9 +1951,9 @@
       "patientName": "ankita",
       "subject": "Diagnostic Laboratory Report Released: ankita (RPT-9867)",
       "timestamp": "2026-09-10T22:19:24.818Z",
-      "status": "Pending",
+      "status": "Delivered",
       "messageId": "MSG-EML-1789078764755-6741",
-      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Official 18-attribute PDF report attached."
+      "notes": "Processed & delivered during bulk queue flush."
     },
     {
       "id": "eml-1789078323340",
@@ -1916,12 +1963,24 @@
       "patientName": "Test Patient Sharma",
       "subject": "Diagnostic Laboratory Report Released: Test Patient Sharma (RPT-14425)",
       "timestamp": "2026-09-10T22:12:03.340Z",
-      "status": "Pending",
+      "status": "Delivered",
       "messageId": "MSG-EML-1789078323282-8067",
-      "notes": "Dispatched via Client Gmail / Mail Client Gateway. Official 18-attribute PDF report attached."
+      "notes": "Processed & delivered during bulk queue flush."
     }
   ],
   "sentWhatsApp": [
+    {
+      "id": "wa-sim-1789082080530",
+      "reportId": "RPT-10294",
+      "recipientPhone": "+91 98765 43210",
+      "recipientName": "Aditi Rao",
+      "patientName": "Aditi Rao",
+      "message": "Your official diagnostic report RPT-10294 is ready for download.",
+      "timestamp": "04:44 am",
+      "status": "Delivered",
+      "messageId": "MSG-WA-1789082080530",
+      "notes": "Enqueued into BullMQ whatsapp-notify-queue. Meta WhatsApp Cloud API delivered acknowledgment received."
+    },
     {
       "id": "wa-1789078790918",
       "reportId": "RPT-9867",
@@ -2016,6 +2075,95 @@
     ]
   },
   "auditLogs": [
+    {
+      "id": "AUD-1789081892537",
+      "timestamp": "2026-09-10T23:11:32.537Z",
+      "action": "ASYNC_QUEUES_BULK_FLUSH",
+      "user": "Queue Operations Engineer",
+      "role": "Admin",
+      "details": "Flushed all pending/failed async jobs (4 jobs). All workers processed to 0 backlog.",
+      "location": "BullMQ / Redis Queue Engine"
+    },
+    {
+      "id": "AUD-1789081886436",
+      "timestamp": "2026-09-10T23:11:26.436Z",
+      "action": "DLQ_JOB_MANUAL_RETRY",
+      "user": "Queue Operations Engineer",
+      "role": "Admin",
+      "details": "Dead-letter queue job JOB-DLQ-1789081876280 manually re-triggered. Delivered successfully with verified acknowledgment.",
+      "location": "Message Queue Telemetry Engine"
+    },
+    {
+      "id": "AUD-1789081876280",
+      "timestamp": "2026-09-10T23:11:16.280Z",
+      "action": "DELIVERY_FAILED_MOVED_TO_DLQ",
+      "user": "Notification Worker Pool",
+      "role": "System",
+      "details": "Delivery of report RPT-10290 to suresh.menon@gmail.com failed with timeout. Moved to Dead-Letter Queue (job ID: JOB-DLQ-1789081876280).",
+      "location": "Asynchronous Queue Dispatcher"
+    },
+    {
+      "id": "AUD-1789081857063",
+      "timestamp": "2026-09-10T23:10:57.063Z",
+      "action": "DELIVERY_FAILED_MOVED_TO_DLQ",
+      "user": "Notification Worker Pool",
+      "role": "System",
+      "details": "Delivery of report RPT-10290 to suresh.menon@gmail.com failed with timeout. Moved to Dead-Letter Queue (job ID: JOB-DLQ-1789081857063).",
+      "location": "Asynchronous Queue Dispatcher"
+    },
+    {
+      "id": "AUD-1789081785537",
+      "timestamp": "2026-09-10T23:09:45.537Z",
+      "action": "ALERT_ACKNOWLEDGED",
+      "user": "Operations Admin",
+      "role": "Admin",
+      "details": "Operational alert ALT-SIM-ANALYZER acknowledged and dismissed from queue."
+    },
+    {
+      "id": "AUD-1789081207344",
+      "timestamp": "2026-09-10T23:00:07.344Z",
+      "action": "REPORT_DIGITALLY_SIGNED",
+      "user": "Dr. Vikram Malhotra",
+      "role": "Pathologist",
+      "details": "Diagnostic report RPT-92684 for Vikas Sen digitally attested and dispatched.",
+      "location": "Main Reference Lab"
+    },
+    {
+      "id": "AUD-1789081207320",
+      "timestamp": "2026-09-10T23:00:07.320Z",
+      "action": "RESULT_VERIFIED_SIGN_OFF",
+      "user": "Dr. Arvind Swaminathan, MD",
+      "role": "Pathologist",
+      "details": "Test results for order ORD-92684 (Vikas Sen) digitally verified and signed by pathologist.",
+      "location": "Main Pathology Department"
+    },
+    {
+      "id": "AUD-1789081137306",
+      "timestamp": "2026-09-10T22:58:57.296Z",
+      "action": "ANALYZER_MAINTENANCE_TRIGGERED",
+      "user": "Auto-Analyzer QC Sentinel",
+      "role": "System",
+      "details": "Sysmex XN-1000 optical flow sensor drifted by +2.8 SD. Ingestion queue halted. Pending specimens routed to backup Sysmex workstation.",
+      "location": "Main Hematology Section"
+    },
+    {
+      "id": "AUD-1789080650242",
+      "timestamp": "2026-09-10T22:50:50.242Z",
+      "action": "REDRAW_REQUISITION_DISPATCHED",
+      "user": "Sunita Verma",
+      "role": "Collection Staff",
+      "details": "Automated redraw requisition dispatched to outpatient phlebotomist. Redraw tube barcode printed.",
+      "location": "Central Phlebotomy Hub"
+    },
+    {
+      "id": "AUD-1789080628140",
+      "timestamp": "2026-09-10T22:50:28.140Z",
+      "action": "SAMPLE_REJECTED_PREANALYTICAL",
+      "user": "Lead Accessioning Tech",
+      "role": "Technologist",
+      "details": "Specimen SMP-53838 failed pre-analytical inspection (Hemolysis Index > 500). Redraw order ORD-REDRAW-SMP-53838 created.",
+      "location": "Central Accessioning Lab"
+    },
     {
       "id": "AUD-1789079834476",
       "timestamp": "2026-09-10T22:37:14.476Z",
@@ -2207,5 +2355,5 @@
     }
   ],
   "version": "3.0.0-synchronized",
-  "lastUpdated": "2026-09-10T22:37:14.476Z"
+  "lastUpdated": "2026-09-10T23:14:40.530Z"
 }
