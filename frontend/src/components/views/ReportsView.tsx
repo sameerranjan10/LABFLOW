@@ -39,6 +39,8 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
     return matchesSearch && matchesStatus;
   });
 
+  const releasedCount = reports.filter((r) => r.status === "Released").length;
+
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* HEADER */}
@@ -54,7 +56,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-            Released Today: <strong className="text-emerald-700">84 Reports</strong>
+            Released Today: <strong className="text-emerald-700">{releasedCount} Reports</strong>
           </span>
         </div>
       </div>

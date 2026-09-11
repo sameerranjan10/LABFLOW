@@ -117,11 +117,11 @@ export const TeamView: React.FC = () => {
               Staff & Laboratory Operations Team
             </h1>
             <span className="bg-indigo-50 text-indigo-700 text-[10px] font-mono font-bold px-2 py-0.5 rounded border border-indigo-200">
-              {team.length} ROSTER MEMBERS
+              {team.length} TEAM MEMBERS
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Role-based access control (RBAC), phlebotomist schedules, and technician shift rosters.
+            Role-based access control (RBAC), phlebotomist schedules, and technician shift schedules.
           </p>
         </div>
 

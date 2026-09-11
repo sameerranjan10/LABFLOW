@@ -127,37 +127,42 @@ export const Topbar: React.FC<TopbarProps> = ({
     }
   };
 
-  // SEARCH FILTERING
+  // BACKEND API SEARCH FILTERING
+  const [apiSearchResults, setApiSearchResults] = useState<{
+    orders: LabOrder[];
+    samples: LabSample[];
+    reports: LabReport[];
+  }>({ orders: [], samples: [], reports: [] });
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setApiSearchResults({ orders: [], samples: [], reports: [] });
+      return;
+    }
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.results) {
+            setApiSearchResults({
+              orders: data.results.orders || [],
+              samples: data.results.samples || [],
+              reports: data.results.reports || [],
+            });
+          }
+        }
+      } catch (err) {
+        console.warn("Global search fetch error:", err);
+      }
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const q = searchQuery.toLowerCase().trim();
-  const matchedOrders = q
-    ? orders.filter(
-        (o) =>
-          o.id.toLowerCase().includes(q) ||
-          o.patient.name.toLowerCase().includes(q) ||
-          o.patient.mrn.toLowerCase().includes(q) ||
-          o.tests.some((t) => t.toLowerCase().includes(q))
-      ).slice(0, 4)
-    : [];
-
-  const matchedSamples = q
-    ? samples.filter(
-        (s) =>
-          s.id.toLowerCase().includes(q) ||
-          s.barcode.toLowerCase().includes(q) ||
-          s.patient.name.toLowerCase().includes(q) ||
-          s.test.toLowerCase().includes(q)
-      ).slice(0, 4)
-    : [];
-
-  const matchedReports = q
-    ? reports.filter(
-        (r) =>
-          r.id.toLowerCase().includes(q) ||
-          r.patient.name.toLowerCase().includes(q) ||
-          r.reviewer.toLowerCase().includes(q) ||
-          r.tests.some((t) => t.toLowerCase().includes(q))
-      ).slice(0, 4)
-    : [];
+  const matchedOrders = apiSearchResults.orders.length > 0 ? apiSearchResults.orders : (q ? orders.filter((o) => o.id.toLowerCase().includes(q) || o.patient.name.toLowerCase().includes(q)).slice(0, 4) : []);
+  const matchedSamples = apiSearchResults.samples.length > 0 ? apiSearchResults.samples : (q ? samples.filter((s) => s.id.toLowerCase().includes(q) || s.patient.name.toLowerCase().includes(q)).slice(0, 4) : []);
+  const matchedReports = apiSearchResults.reports.length > 0 ? apiSearchResults.reports : (q ? reports.filter((r) => r.id.toLowerCase().includes(q) || r.patient.name.toLowerCase().includes(q)).slice(0, 4) : []);
 
   const totalResults = matchedOrders.length + matchedSamples.length + matchedReports.length;
 
@@ -358,14 +363,14 @@ export const Topbar: React.FC<TopbarProps> = ({
           )}
         </button>
 
-        {/* RBAC ROLE / PERSONA SELECTOR */}
+        {/* LOGGED IN USER PROFILE CARD */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
             className="flex items-center gap-2.5 p-1.5 pl-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer shadow-2xs"
           >
-            <div className="w-7 h-7 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center">
-              {getRoleIcon(currentUser.role)}
+            <div className="w-7 h-7 rounded-full bg-sky-600 text-white font-bold text-xs flex items-center justify-center">
+              {currentUser.avatarInitials || currentUser.name.slice(0, 2).toUpperCase()}
             </div>
             <div className="text-left hidden sm:block">
               <div className="text-xs font-bold text-slate-900 leading-none">
@@ -378,54 +383,58 @@ export const Topbar: React.FC<TopbarProps> = ({
             <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1" />
           </button>
 
-          {/* PERSONA SWITCHER DROPDOWN MENU */}
+          {/* USER PROFILE & SIGN OUT DROPDOWN MENU */}
           {roleDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-64 rounded-xl bg-white shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-100">
-              <div className="px-3 py-1.5 border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                Switch Operational Persona
-              </div>
-              <div className="py-1">
-                {(Object.keys(PRESET_LAB_USERS) as LabRole[]).map((roleKey) => {
-                  const u = PRESET_LAB_USERS[roleKey];
-                  const isCurrent = currentUser.role === roleKey;
-                  return (
-                    <button
-                      key={roleKey}
-                      onClick={() => {
-                        onSelectUser(u);
-                        setRoleDropdownOpen(false);
-                      }}
-                      className={`w-full px-3 py-2 text-left flex items-center gap-2.5 text-xs transition-colors cursor-pointer ${
-                        isCurrent
-                          ? "bg-indigo-50/70 text-indigo-900 font-semibold"
-                          : "text-slate-700 hover:bg-slate-50"
-                      }`}
-                    >
-                      <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-                        {getRoleIcon(roleKey)}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="font-semibold truncate">{u.name}</div>
-                        <div className="text-[10px] text-slate-400 truncate">{u.title}</div>
-                      </div>
-                      {isCurrent && (
-                        <div className="w-2 h-2 rounded-full bg-indigo-600 shrink-0"></div>
-                      )}
-                    </button>
-                  );
-                })}
+            <div className="absolute right-0 mt-2 w-64 rounded-xl bg-white shadow-xl border border-slate-200 py-3 px-3 z-50 animate-in fade-in zoom-in-95 duration-100 space-y-3">
+              <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
+                <div className="w-10 h-10 rounded-full bg-sky-600 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">
+                  {currentUser.avatarInitials || currentUser.name.slice(0, 2).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-xs font-extrabold text-slate-900 truncate">
+                    {currentUser.name}
+                  </div>
+                  <div className="text-[10px] text-slate-500 truncate mt-0.5">
+                    {currentUser.email || `${currentUser.name.toLowerCase().replace(/\s+/g, ".")}@labflow.com`}
+                  </div>
+                  <span className="inline-block mt-1.5 px-2 py-0.5 rounded-md bg-sky-50 border border-sky-200 text-sky-700 text-[10px] font-bold">
+                    {currentUser.badge || currentUser.role}
+                  </span>
+                </div>
               </div>
 
-              <div className="border-t border-slate-100 mt-1 pt-1">
+              <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-400 font-medium">Department:</span>
+                  <span className="font-semibold text-slate-800 truncate max-w-[120px]">
+                    {currentUser.department || "Clinical Laboratory"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-400 font-medium">Workstation:</span>
+                  <span className="font-semibold text-slate-800 truncate max-w-[120px]">
+                    {currentUser.location || "Main Reference Lab"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-400 font-medium">Session Status:</span>
+                  <span className="font-semibold text-emerald-600 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Authenticated
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-1">
                 <button
                   onClick={() => {
                     setRoleDropdownOpen(false);
                     if (onNavigate) onNavigate("login");
                   }}
-                  className="w-full px-3 py-2 text-left flex items-center gap-2.5 text-xs text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer font-semibold"
+                  className="w-full px-3 py-2 text-left flex items-center justify-center gap-2 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors cursor-pointer border border-rose-200/80"
                 >
-                  <LogIn className="w-4 h-4 text-indigo-600" />
-                  Sign Out / Sign In
+                  <LogIn className="w-4 h-4 text-rose-600" />
+                  Sign Out of Session
                 </button>
               </div>
             </div>

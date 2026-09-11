@@ -87,11 +87,11 @@
         "Thyroid Profile (T3, T4, TSH)"
       ],
       "priority": "Normal",
-      "currentStage": "COLLECTED",
+      "currentStage": "REVIEW",
       "createdAt": "10:05",
       "createdDate": "2026-09-10",
       "tat": "42m",
-      "status": "In Progress",
+      "status": "Pending Review",
       "location": "Collection Center B",
       "doctorName": "Dr. R. Joshi"
     },
@@ -251,13 +251,23 @@
       "sampleType": "Serum (SST Tube)",
       "test": "Lipid Profile & HbA1c",
       "currentLocation": "Biochemistry Lab - Cobas c501",
-      "stage": "PROCESSING",
+      "stage": "REVIEW",
       "collectedAt": "09:28",
       "tat": "2h 04m",
       "status": "Processing",
       "barcode": "LBF-67104-B",
       "volume": "5.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789078519620",
+          "timestamp": "03:45 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: PROCESSING → REVIEW",
+          "location": "Biochemistry Lab - Cobas c501",
+          "operator": "Batch Auto-Ingestion Engine",
+          "details": "Batch analyzer run completed. Results transmitted to review queue.",
+          "status": "completed"
+        },
         {
           "id": "tl-1",
           "timestamp": "09:28",
@@ -347,13 +357,23 @@
       "sampleType": "Serum (SST Tube)",
       "test": "Thyroid Profile (T3, T4, TSH)",
       "currentLocation": "Immunology Lab - Abbott Architect i2000",
-      "stage": "PROCESSING",
+      "stage": "REVIEW",
       "collectedAt": "10:05",
       "tat": "42m",
       "status": "Processing",
       "barcode": "LBF-44102-D",
       "volume": "4.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789078529008",
+          "timestamp": "03:45 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: PROCESSING → REVIEW",
+          "location": "Immunology Lab - Abbott Architect i2000",
+          "operator": "Auto-Analyzer High-Throughput Line",
+          "details": "Automated test run finished. Quantitative metrics transmitted via HL7 v2.5 to Pathologist review queue.",
+          "status": "completed"
+        },
         {
           "id": "tl-1",
           "timestamp": "10:05",
@@ -714,6 +734,100 @@
   ],
   "results": [
     {
+      "id": "RES-10291",
+      "orderId": "ORD-10291",
+      "sampleId": "SMP-20482",
+      "patient": {
+        "id": "P-44102",
+        "name": "Priya Nair",
+        "age": 34,
+        "gender": "Female",
+        "phone": "+91 97654 32109",
+        "mrn": "MRN-44102"
+      },
+      "testName": "Thyroid Profile (T3, T4, TSH)",
+      "instrument": "Immunology Lab - Abbott Architect i2000",
+      "completedAt": "03:45 am",
+      "status": "Pending Review",
+      "parameters": [
+        {
+          "name": "Primary Diagnostic Assay",
+          "result": 104,
+          "unit": "U/L",
+          "referenceRange": "60 - 120",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Secondary Confirmatory Marker",
+          "result": 22.8,
+          "unit": "mg/L",
+          "referenceRange": "10.0 - 30.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Analyzer Precision Index",
+          "result": 99.6,
+          "unit": "%",
+          "referenceRange": "> 98.0",
+          "flag": "Normal",
+          "status": "Verified"
+        }
+      ]
+    },
+    {
+      "id": "RES-10293",
+      "orderId": "ORD-10293",
+      "sampleId": "SMP-20490",
+      "patient": {
+        "id": "P-67104",
+        "name": "Rahul Kumar",
+        "age": 68,
+        "gender": "Male",
+        "phone": "+91 98123 45678",
+        "mrn": "MRN-67104"
+      },
+      "testName": "Lipid Profile & HbA1c",
+      "instrument": "Biochemistry Lab - Cobas c501",
+      "completedAt": "03:45 am",
+      "status": "Pending Review",
+      "parameters": [
+        {
+          "name": "Total Cholesterol",
+          "result": 215,
+          "unit": "mg/dL",
+          "referenceRange": "< 200",
+          "flag": "High",
+          "status": "Verified"
+        },
+        {
+          "name": "HDL Cholesterol",
+          "result": 48,
+          "unit": "mg/dL",
+          "referenceRange": "> 40",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "LDL Cholesterol (Direct)",
+          "result": 138,
+          "unit": "mg/dL",
+          "referenceRange": "< 100",
+          "flag": "High",
+          "status": "Verified"
+        },
+        {
+          "name": "Triglycerides",
+          "result": 165,
+          "unit": "mg/dL",
+          "referenceRange": "< 150",
+          "flag": "High",
+          "status": "Verified"
+        }
+      ]
+    },
+    {
       "id": "RES-10294",
       "orderId": "ORD-10294",
       "sampleId": "SMP-20491",
@@ -936,6 +1050,42 @@
   },
   "auditLogs": [
     {
+      "id": "AUD-1789078529040",
+      "timestamp": "2026-09-10T22:15:29.040Z",
+      "action": "ANALYZER_RESULT_INGESTED",
+      "user": "Immunology Lab - Abbott Architect i2000",
+      "role": "Analyzer",
+      "details": "Automated test parameters ingested for order ORD-10291 (Thyroid Profile (T3, T4, TSH)) on Immunology Lab - Abbott Architect i2000.",
+      "location": "Main Automated Laboratory"
+    },
+    {
+      "id": "AUD-1789078529008",
+      "timestamp": "2026-09-10T22:15:29.008Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Auto-Analyzer High-Throughput Line",
+      "role": "Technologist",
+      "details": "Sample SMP-20482 transitioned from PROCESSING to REVIEW.",
+      "location": "Immunology Lab - Abbott Architect i2000"
+    },
+    {
+      "id": "AUD-1789078519799",
+      "timestamp": "2026-09-10T22:15:19.799Z",
+      "action": "ANALYZER_RESULT_INGESTED",
+      "user": "Biochemistry Lab - Cobas c501",
+      "role": "Analyzer",
+      "details": "Automated test parameters ingested for order ORD-10293 (Lipid Profile & HbA1c) on Biochemistry Lab - Cobas c501.",
+      "location": "Main Automated Laboratory"
+    },
+    {
+      "id": "AUD-1789078519630",
+      "timestamp": "2026-09-10T22:15:19.630Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Batch Auto-Ingestion Engine",
+      "role": "Technologist",
+      "details": "Sample SMP-20490 transitioned from PROCESSING to REVIEW.",
+      "location": "Biochemistry Lab - Cobas c501"
+    },
+    {
       "id": "AUD-1789077329548",
       "timestamp": "2026-09-10T21:55:29.548Z",
       "action": "SAMPLE_STAGE_UPDATED",
@@ -982,5 +1132,5 @@
     }
   ],
   "version": "3.0.0-synchronized",
-  "lastUpdated": "2026-09-10T21:55:29.548Z"
+  "lastUpdated": "2026-09-10T22:15:29.040Z"
 }

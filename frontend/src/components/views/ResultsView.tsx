@@ -9,12 +9,14 @@ interface ResultsViewProps {
 
 export const ResultsView: React.FC<ResultsViewProps> = ({ onNotify }) => {
   const [allResults, setAllResults] = useState<TestResult[]>([]);
-  const [result, setResult] = useState<TestResult>(DEMO_TEST_RESULT);
-  const [comments, setComments] = useState(result.comments || "");
-  const [isApproved, setIsApproved] = useState(result.status === "Approved");
+  const [result, setResult] = useState<TestResult | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState("");
+  const [isApproved, setIsApproved] = useState(false);
 
   React.useEffect(() => {
     async function loadResult() {
+      setLoading(true);
       try {
         const res = await fetch("/api/results");
         if (res.ok) {
@@ -25,23 +27,32 @@ export const ResultsView: React.FC<ResultsViewProps> = ({ onNotify }) => {
             setResult(first);
             setComments(first.comments || "");
             setIsApproved(first.status === "Approved");
+          } else {
+            setAllResults([]);
+            setResult(null);
           }
         }
       } catch (e) {
-        console.warn("Results fetch fallback:", e);
+        console.warn("Results fetch error:", e);
+      } finally {
+        setLoading(false);
       }
     }
     loadResult();
   }, []);
 
   const handleApprove = async () => {
+    if (!result) return;
     setIsApproved(true);
-    setResult((prev) => ({
-      ...prev,
-      status: "Approved",
-      comments: comments,
-      parameters: prev.parameters.map((p) => ({ ...p, status: "Verified" })),
-    }));
+    setResult((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        status: "Approved",
+        comments: comments,
+        parameters: prev.parameters ? prev.parameters.map((p) => ({ ...p, status: "Verified" })) : [],
+      };
+    });
 
     try {
       const res = await fetch("/api/results", {
@@ -54,41 +65,63 @@ export const ResultsView: React.FC<ResultsViewProps> = ({ onNotify }) => {
         }),
       });
       if (res.ok) {
-        const pName = result?.patient?.name || (result as any)?.patientName || "Aditi Rao";
-        onNotify("Result Approved & Persisted in Database", `Test result for ${pName} (${result?.orderId || "ORD-10294"}) verified and pushed to Report Release queue.`, "success");
+        const pName = result.patient?.name || (result as any).patientName || "Aditi Rao";
+        onNotify("Result Approved & Persisted in Database", `Test result for ${pName} (${result.orderId || "ORD-10294"}) verified and pushed to Report Release queue.`, "success");
         return;
       }
     } catch (err) {
       console.warn("Backend result sync error:", err);
     }
-    const pName = result?.patient?.name || (result as any)?.patientName || "Aditi Rao";
-    onNotify("Result Approved Successfully", `Test result for ${pName} (${result?.orderId || "ORD-10294"}) approved.`, "success");
+    const pName = result.patient?.name || (result as any).patientName || "Aditi Rao";
+    onNotify("Result Approved Successfully", `Test result for ${pName} (${result.orderId || "ORD-10294"}) approved.`, "success");
   };
 
   const handleRequestRecheck = async () => {
-    setResult((prev) => ({
-      ...prev,
-      status: "Recheck Requested",
-      comments: comments || "Recheck requested due to parameter deviation.",
-    }));
+    if (!result) return;
+    setResult((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        status: "Recheck Requested",
+        comments: comments || "Recheck requested due to parameter deviation.",
+      };
+    });
 
     try {
-      await fetch("/api/samples", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sampleId: result.sampleId,
-          nextStage: "PROCESSING",
-          operator: "Pathologist",
-          notes: "Analyzer rerun requested by pathologist.",
-        }),
-      });
+      if (result.sampleId) {
+        await fetch("/api/samples", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sampleId: result.sampleId,
+            nextStage: "PROCESSING",
+            operator: "Pathologist",
+            notes: "Analyzer rerun requested by pathologist.",
+          }),
+        });
+      }
     } catch (err) {
       console.warn("Rerun sample sync error:", err);
     }
 
-    onNotify("Recheck Requested & Sample Queued", `Sample ${result.sampleId} flagged for rerun on Sysmex analyzer.`, "warning");
+    onNotify("Recheck Requested & Sample Queued", `Sample ${result.sampleId || result.id} flagged for rerun on Sysmex analyzer.`, "warning");
   };
+
+  if (loading) {
+    return (
+      <div className="p-12 text-center text-xs text-slate-500 font-medium">
+        Loading test results from database...
+      </div>
+    );
+  }
+
+  if (!result) {
+    return (
+      <div className="p-12 text-center text-xs text-slate-500 font-medium labflow-card max-w-7xl mx-auto my-6">
+        No test results found in database. Processing workbench or analyzer lines have not ingested assay results yet.
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">

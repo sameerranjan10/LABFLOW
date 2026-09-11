@@ -79,6 +79,28 @@ export interface SentWhatsAppRecord {
   notes?: string;
 }
 
+export interface PatientRecord {
+  id: string;
+  name: string;
+  age: number;
+  gender: string;
+  phone: string;
+  email?: string;
+  mrn: string;
+  address?: string;
+  allergies?: string[];
+  vitals?: {
+    bp: string;
+    hr: number;
+    spo2: string;
+    temp: string;
+  };
+  activeMeds?: string[];
+  createdAt?: string;
+  orderCount?: number;
+  latestActivity?: string;
+}
+
 export interface LabDatabase {
   orders: LabOrder[];
   samples: LabSample[];
@@ -88,6 +110,7 @@ export interface LabDatabase {
   workflowStages: WorkflowStageMetric[];
   results: TestResult[];
   team: TeamMember[];
+  patients?: PatientRecord[];
   sentEmails: SentEmailRecord[];
   sentWhatsApp?: SentWhatsAppRecord[];
   settings: LabSettings;
@@ -852,6 +875,314 @@ export function logSentWhatsApp(record: SentWhatsAppRecord): SentWhatsAppRecord 
 export function getSentWhatsApp(): SentWhatsAppRecord[] {
   const db = readDatabase();
   return db.sentWhatsApp || [];
+}
+
+// PATIENT OPERATIONS
+export function getPatients(query?: string, page: number = 1, limit: number = 20): { patients: PatientRecord[]; total: number; page: number; limit: number } {
+  const db = readDatabase();
+  const patientMap = new Map<string, PatientRecord>();
+
+  // Aggregate patients stored in db.patients
+  if (db.patients && Array.isArray(db.patients)) {
+    for (const p of db.patients) {
+      patientMap.set(p.id, { ...p, orderCount: 0, latestActivity: p.latestActivity || "Registered" });
+    }
+  }
+
+  // Aggregate patients from orders
+  if (db.orders && Array.isArray(db.orders)) {
+    for (const ord of db.orders) {
+      if (!ord.patient) continue;
+      const pid = ord.patient.id || ord.patient.mrn;
+      const existing = patientMap.get(pid);
+      if (existing) {
+        existing.orderCount = (existing.orderCount || 0) + 1;
+        existing.latestActivity = `Order ${ord.id} (${ord.status})`;
+      } else {
+        patientMap.set(pid, {
+          id: ord.patient.id || `PAT-${Math.floor(1000 + Math.random() * 9000)}`,
+          name: ord.patient.name,
+          age: ord.patient.age,
+          gender: ord.patient.gender,
+          phone: ord.patient.phone,
+          email: `${ord.patient.name.toLowerCase().replace(/\s+/g, ".")}@example.com`,
+          mrn: ord.patient.mrn,
+          orderCount: 1,
+          latestActivity: `Order ${ord.id} (${ord.status})`,
+          createdAt: ord.createdDate,
+        });
+      }
+    }
+  }
+
+  let list = Array.from(patientMap.values());
+
+  if (query) {
+    const q = query.toLowerCase();
+    list = list.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.mrn.toLowerCase().includes(q) ||
+        p.phone.includes(q) ||
+        (p.email && p.email.toLowerCase().includes(q)) ||
+        p.id.toLowerCase().includes(q)
+    );
+  }
+
+  const total = list.length;
+  const startIndex = (page - 1) * limit;
+  const paginated = list.slice(startIndex, startIndex + limit);
+
+  return { patients: paginated, total, page, limit };
+}
+
+export function getPatientById(id: string): PatientRecord | null {
+  const { patients } = getPatients();
+  const found = patients.find((p) => p.id === id || p.mrn === id);
+  return found || null;
+}
+
+export function getPatientOrders(id: string): LabOrder[] {
+  const db = readDatabase();
+  return db.orders.filter((o) => o.patient.id === id || o.patient.mrn === id);
+}
+
+export function createPatient(patientData: Partial<PatientRecord>): PatientRecord {
+  const db = readDatabase();
+  if (!db.patients) db.patients = [];
+
+  const newPatient: PatientRecord = {
+    id: patientData.id || `PAT-${Date.now().toString().slice(-4)}`,
+    name: patientData.name || "Unnamed Patient",
+    age: patientData.age || 35,
+    gender: patientData.gender || "Other",
+    phone: patientData.phone || "+91 90000 00000",
+    email: patientData.email || `${(patientData.name || "patient").toLowerCase().replace(/\s+/g, ".")}@example.com`,
+    mrn: patientData.mrn || `MRN-${Math.floor(100000 + Math.random() * 900000)}`,
+    address: patientData.address || "Main City District",
+    allergies: patientData.allergies || [],
+    vitals: patientData.vitals || { bp: "120/80", hr: 72, spo2: "98%", temp: "98.6°F" },
+    activeMeds: patientData.activeMeds || [],
+    createdAt: new Date().toISOString().split("T")[0],
+    orderCount: 0,
+    latestActivity: "Patient registered in database",
+  };
+
+  db.patients.unshift(newPatient);
+  db.auditLogs.unshift({
+    id: `AUD-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    action: "PATIENT_REGISTERED",
+    user: "Registration Desk",
+    role: "Intake",
+    details: `Patient ${newPatient.name} (${newPatient.mrn}) registered in database.`,
+  });
+
+  writeDatabase(db);
+  return newPatient;
+}
+
+// DASHBOARD SUMMARY & CHARTS
+export function getDashboardSummary() {
+  const db = readDatabase();
+  const orders = db.orders || [];
+  const samples = db.samples || [];
+  const { total: totalPatients } = getPatients();
+
+  const totalOrders = orders.length;
+  const pendingOrders = orders.filter((o) => o.currentStage !== "RELEASED" && o.status !== "Completed").length;
+  const processingOrders = orders.filter((o) => o.currentStage === "PROCESSING" || o.currentStage === "RECEIVED").length;
+  const completedOrders = orders.filter((o) => o.currentStage === "RELEASED" || o.status === "Completed").length;
+  const urgentOrders = orders.filter((o) => o.priority === "STAT" || o.priority === "Urgent").length;
+  const overdueOrders = orders.filter((o) => o.status === "Delayed" || o.tat.includes("overdue")).length;
+
+  const ordersByStatus: Record<string, number> = {
+    ORDERED: orders.filter((o) => o.currentStage === "ORDERED").length,
+    COLLECTED: orders.filter((o) => o.currentStage === "COLLECTED").length,
+    IN_TRANSIT: orders.filter((o) => o.currentStage === "IN_TRANSIT").length,
+    RECEIVED: orders.filter((o) => o.currentStage === "RECEIVED").length,
+    PROCESSING: orders.filter((o) => o.currentStage === "PROCESSING").length,
+    REVIEW: orders.filter((o) => o.currentStage === "REVIEW").length,
+    RELEASED: orders.filter((o) => o.currentStage === "RELEASED").length,
+  };
+
+  const ordersByPriority: Record<string, number> = {
+    Normal: orders.filter((o) => o.priority === "Normal").length,
+    Urgent: orders.filter((o) => o.priority === "Urgent").length,
+    STAT: orders.filter((o) => o.priority === "STAT").length,
+  };
+
+  // Group daily orders
+  const dailyOrdersMap = new Map<string, number>();
+  for (const o of orders) {
+    const d = o.createdDate || "2026-09-10";
+    dailyOrdersMap.set(d, (dailyOrdersMap.get(d) || 0) + 1);
+  }
+  const dailyOrders = Array.from(dailyOrdersMap.entries()).map(([date, count]) => ({ date, count }));
+
+  // Test distribution
+  const testDistMap = new Map<string, number>();
+  for (const o of orders) {
+    for (const t of o.tests) {
+      testDistMap.set(t, (testDistMap.get(t) || 0) + 1);
+    }
+  }
+  const testDistribution = Array.from(testDistMap.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
+
+  return {
+    summary: {
+      totalPatients,
+      totalOrders,
+      pendingOrders,
+      processingOrders,
+      completedOrders,
+      urgentOrders,
+      overdueOrders,
+      averageTat: "45m",
+    },
+    charts: {
+      ordersByStatus,
+      ordersByPriority,
+      dailyOrders,
+      testDistribution,
+    },
+    recentOrders: orders.slice(0, 10),
+    workflowStages: db.workflowStages,
+    exceptions: db.exceptions,
+  };
+}
+
+// TEST CATALOG MANAGEMENT
+export function getTestCatalog() {
+  const db = readDatabase();
+  return db.settings?.testCatalog || [];
+}
+
+export function updateTestCatalogItem(code: string, updated: Partial<{ name: string; loinc: string; dept: string; tat: string; price: string; status: string }>) {
+  const db = readDatabase();
+  if (!db.settings.testCatalog) db.settings.testCatalog = [];
+  const idx = db.settings.testCatalog.findIndex((t) => t.code.toUpperCase() === code.toUpperCase());
+  if (idx !== -1) {
+    db.settings.testCatalog[idx] = { ...db.settings.testCatalog[idx], ...updated };
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      action: "TEST_CATALOG_UPDATED",
+      user: "Lab Manager",
+      role: "Admin",
+      details: `Test panel ${code} updated in diagnostic menu.`,
+    });
+    writeDatabase(db);
+    return db.settings.testCatalog[idx];
+  }
+  return null;
+}
+
+export function deleteTestCatalogItem(code: string) {
+  const db = readDatabase();
+  if (!db.settings.testCatalog) return false;
+  const idx = db.settings.testCatalog.findIndex((t) => t.code.toUpperCase() === code.toUpperCase());
+  if (idx !== -1) {
+    db.settings.testCatalog.splice(idx, 1);
+    db.auditLogs.unshift({
+      id: `AUD-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      action: "TEST_CATALOG_DELETED",
+      user: "Lab Manager",
+      role: "Admin",
+      details: `Test panel ${code} removed from catalog.`,
+    });
+    writeDatabase(db);
+    return true;
+  }
+  return false;
+}
+
+// LOOKUP UTILITIES
+export function getOrderById(id: string): LabOrder | null {
+  const db = readDatabase();
+  return db.orders.find((o) => o.id === id) || null;
+}
+
+export function getOrderTimeline(id: string) {
+  const db = readDatabase();
+  const sample = db.samples.find((s) => s.orderId === id);
+  if (sample && sample.timeline) {
+    return sample.timeline;
+  }
+  const order = db.orders.find((o) => o.id === id);
+  if (!order) return [];
+  return [
+    {
+      id: `tl-${order.id}`,
+      timestamp: order.createdAt,
+      date: order.createdDate,
+      event: "Requisition Registered in Database",
+      location: order.location,
+      operator: order.doctorName,
+      details: `Order created for ${order.patient.name} (${order.tests.join(", ")}).`,
+      status: "active",
+    },
+  ];
+}
+
+export function getSampleById(id: string): LabSample | null {
+  const db = readDatabase();
+  return db.samples.find((s) => s.id === id) || null;
+}
+
+// GLOBAL SEARCH
+export function globalSearch(query: string) {
+  const db = readDatabase();
+  const q = query.toLowerCase().trim();
+  if (!q) return { patients: [], orders: [], samples: [], reports: [], tests: [] };
+
+  const { patients: allPatients } = getPatients(q);
+  const matchedPatients = allPatients.slice(0, 5);
+
+  const matchedOrders = db.orders
+    .filter(
+      (o) =>
+        o.id.toLowerCase().includes(q) ||
+        o.patient.name.toLowerCase().includes(q) ||
+        o.patient.mrn.toLowerCase().includes(q) ||
+        o.tests.some((t) => t.toLowerCase().includes(q))
+    )
+    .slice(0, 5);
+
+  const matchedSamples = db.samples
+    .filter(
+      (s) =>
+        s.id.toLowerCase().includes(q) ||
+        s.barcode.toLowerCase().includes(q) ||
+        s.patient.name.toLowerCase().includes(q) ||
+        s.test.toLowerCase().includes(q)
+    )
+    .slice(0, 5);
+
+  const matchedReports = db.reports
+    .filter(
+      (r) =>
+        r.id.toLowerCase().includes(q) ||
+        r.patient.name.toLowerCase().includes(q) ||
+        r.reviewer.toLowerCase().includes(q) ||
+        r.tests.some((t) => t.toLowerCase().includes(q))
+    )
+    .slice(0, 5);
+
+  const matchedTests = (db.settings.testCatalog || [])
+    .filter((t) => t.name.toLowerCase().includes(q) || t.code.toLowerCase().includes(q) || t.loinc.toLowerCase().includes(q))
+    .slice(0, 5);
+
+  return {
+    patients: matchedPatients,
+    orders: matchedOrders,
+    samples: matchedSamples,
+    reports: matchedReports,
+    tests: matchedTests,
+  };
 }
 
 
