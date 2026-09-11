@@ -15,11 +15,11 @@
         "Lipid Profile"
       ],
       "priority": "STAT",
-      "currentStage": "ORDERED",
+      "currentStage": "RELEASED",
       "createdAt": "04:04 am",
       "createdDate": "2026-09-10",
       "tat": "15m",
-      "status": "In Progress",
+      "status": "Completed",
       "location": "City Center Hub",
       "doctorName": "Dr. Priya Sharma, MD"
     },
@@ -234,13 +234,73 @@
       "sampleType": "Whole Blood (EDTA)",
       "test": "Complete Blood Count (CBC), Lipid Profile",
       "currentLocation": "Phlebotomy Intake - Reception",
-      "stage": "ORDERED",
+      "stage": "RELEASED",
       "collectedAt": "04:04 am",
       "tat": "15m",
-      "status": "Collected",
+      "status": "Completed",
       "barcode": "LBF-undefined",
       "volume": "3.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789094879106",
+          "timestamp": "08:17 am",
+          "date": "2026-09-11",
+          "event": "Custody Advancement: REVIEW → RELEASED",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to RELEASED via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789094878297",
+          "timestamp": "08:17 am",
+          "date": "2026-09-11",
+          "event": "Custody Advancement: PROCESSING → REVIEW",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to REVIEW via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789094877556",
+          "timestamp": "08:17 am",
+          "date": "2026-09-11",
+          "event": "Custody Advancement: RECEIVED → PROCESSING",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to PROCESSING via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789094877032",
+          "timestamp": "08:17 am",
+          "date": "2026-09-11",
+          "event": "Custody Advancement: IN_TRANSIT → RECEIVED",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to RECEIVED via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789094876283",
+          "timestamp": "08:17 am",
+          "date": "2026-09-11",
+          "event": "Custody Advancement: COLLECTED → IN_TRANSIT",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to IN_TRANSIT via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
+        {
+          "id": "tl-adv-1789094874479",
+          "timestamp": "08:17 am",
+          "date": "2026-09-11",
+          "event": "Custody Advancement: ORDERED → COLLECTED",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to COLLECTED via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
         {
           "id": "tl-adv-1789093564708",
           "timestamp": "07:56 am",
@@ -2344,6 +2404,60 @@
   },
   "auditLogs": [
     {
+      "id": "AUD-1789094879106",
+      "timestamp": "2026-09-11T02:47:59.106Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-53838 transitioned from REVIEW to RELEASED.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789094878297",
+      "timestamp": "2026-09-11T02:47:58.297Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-53838 transitioned from PROCESSING to REVIEW.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789094877557",
+      "timestamp": "2026-09-11T02:47:57.557Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-53838 transitioned from RECEIVED to PROCESSING.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789094877032",
+      "timestamp": "2026-09-11T02:47:57.032Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-53838 transitioned from IN_TRANSIT to RECEIVED.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789094876283",
+      "timestamp": "2026-09-11T02:47:56.283Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-53838 transitioned from COLLECTED to IN_TRANSIT.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789094874479",
+      "timestamp": "2026-09-11T02:47:54.479Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-53838 transitioned from ORDERED to COLLECTED.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
       "id": "AUD-1789093564709",
       "timestamp": "2026-09-11T02:26:04.709Z",
       "action": "SAMPLE_STAGE_UPDATED",
@@ -2462,5 +2576,5 @@
     }
   ],
   "version": "3.0.0-synchronized",
-  "lastUpdated": "2026-09-11T02:26:04.709Z"
+  "lastUpdated": "2026-09-11T02:47:59.106Z"
 }
