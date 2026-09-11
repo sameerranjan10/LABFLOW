@@ -21,6 +21,7 @@ import {
 
 export type NavView =
   | "dashboard"
+  | "patients"
   | "orders"
   | "samples"
   | "processing"
@@ -34,7 +35,7 @@ export type NavView =
   | "signup"
   | "landing";
 
-import { LabRole } from "@/lib/roles";
+import { LabRole, LabUser } from "@/lib/roles";
 
 interface SidebarProps {
   currentView: NavView;
@@ -43,6 +44,7 @@ interface SidebarProps {
   onToggleCollapse: () => void;
   unreadAlertCount?: number;
   currentRole?: LabRole;
+  currentUser?: LabUser;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -52,25 +54,89 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onToggleCollapse,
   unreadAlertCount = 5,
   currentRole = "administrator",
+  currentUser,
 }) => {
-  const operationsNav = [
-    { id: "dashboard" as NavView, label: "Dashboard", icon: LayoutDashboard },
-    { id: "orders" as NavView, label: "Orders", icon: FileSpreadsheet },
-    { id: "samples" as NavView, label: "Samples", icon: TestTube2 },
-    { id: "processing" as NavView, label: "Processing", icon: Cpu },
-    { id: "results" as NavView, label: "Results", icon: FileCheck2 },
-    { id: "reports" as NavView, label: "Reports", icon: FileText },
-  ];
+  const userRole = currentUser?.role || currentRole || "administrator";
 
-  const monitoringNav = [
-    { id: "alerts" as NavView, label: "Alerts", icon: Bell, badge: unreadAlertCount },
-    { id: "audit" as NavView, label: "Audit Trail", icon: History },
-  ];
+  const getOperationsNav = () => {
+    switch (userRole) {
+      case "patient":
+        return [
+          { id: "reports" as NavView, label: "My Diagnostic Reports", icon: FileText },
+        ];
+      case "doctor":
+        return [
+          { id: "dashboard" as NavView, label: "Physician Overview", icon: LayoutDashboard },
+          { id: "patients" as NavView, label: "Patient Directory", icon: Users },
+          { id: "orders" as NavView, label: "Patient Orders", icon: FileSpreadsheet },
+          { id: "reports" as NavView, label: "Released Reports", icon: FileText },
+        ];
+      case "pathologist":
+        return [
+          { id: "dashboard" as NavView, label: "Pathology Overview", icon: LayoutDashboard },
+          { id: "patients" as NavView, label: "Patient Directory", icon: Users },
+          { id: "results" as NavView, label: "Result Sign-off", icon: FileCheck2 },
+          { id: "reports" as NavView, label: "Report Release", icon: FileText },
+        ];
+      case "lab_technician":
+        return [
+          { id: "dashboard" as NavView, label: "Workbench Overview", icon: LayoutDashboard },
+          { id: "samples" as NavView, label: "Specimen Intake", icon: TestTube2 },
+          { id: "processing" as NavView, label: "Analyzer Line", icon: Cpu },
+          { id: "results" as NavView, label: "Assay Results", icon: FileCheck2 },
+        ];
+      case "collection_staff":
+        return [
+          { id: "dashboard" as NavView, label: "Phlebotomy Overview", icon: LayoutDashboard },
+          { id: "patients" as NavView, label: "Patient Directory", icon: Users },
+          { id: "orders" as NavView, label: "Intake Orders", icon: FileSpreadsheet },
+          { id: "samples" as NavView, label: "Sample Collection", icon: TestTube2 },
+        ];
+      case "administrator":
+      default:
+        return [
+          { id: "dashboard" as NavView, label: "Operations Dashboard", icon: LayoutDashboard },
+          { id: "patients" as NavView, label: "Patient Directory", icon: Users },
+          { id: "orders" as NavView, label: "Orders Management", icon: FileSpreadsheet },
+          { id: "samples" as NavView, label: "Sample Tracking", icon: TestTube2 },
+          { id: "processing" as NavView, label: "Processing Workbench", icon: Cpu },
+          { id: "results" as NavView, label: "Results Review", icon: FileCheck2 },
+          { id: "reports" as NavView, label: "Diagnostic Reports", icon: FileText },
+        ];
+    }
+  };
 
-  const adminNav = [
-    { id: "team" as NavView, label: "Team", icon: Users },
-    { id: "settings" as NavView, label: "Settings", icon: Settings },
-  ];
+  const getMonitoringNav = () => {
+    switch (userRole) {
+      case "patient":
+        return [{ id: "alerts" as NavView, label: "Health Alerts", icon: Bell, badge: unreadAlertCount }];
+      case "lab_technician":
+      case "collection_staff":
+        return [{ id: "alerts" as NavView, label: "Operational Alerts", icon: Bell, badge: unreadAlertCount }];
+      case "doctor":
+      case "pathologist":
+      case "administrator":
+      default:
+        return [
+          { id: "alerts" as NavView, label: "Alerts", icon: Bell, badge: unreadAlertCount },
+          { id: "audit" as NavView, label: "Audit Trail", icon: History },
+        ];
+    }
+  };
+
+  const getAdminNav = () => {
+    if (userRole === "administrator") {
+      return [
+        { id: "team" as NavView, label: "Team", icon: Users },
+        { id: "settings" as NavView, label: "Platform Settings", icon: Settings },
+      ];
+    }
+    return [];
+  };
+
+  const operationsNav = getOperationsNav();
+  const monitoringNav = getMonitoringNav();
+  const adminNav = getAdminNav();
 
   return (
     <aside
@@ -218,34 +284,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* ADMINISTRATION */}
-        <div>
-          {!collapsed && (
-            <h4 className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Administration
-            </h4>
-          )}
-          <nav className="space-y-0.5">
-            {adminNav.map((item) => {
-              const Icon = item.icon;
-              const active = currentView === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onNavigate(item.id)}
-                  title={collapsed ? item.label : undefined}
-                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                    active
-                      ? "bg-indigo-50 text-indigo-700 font-bold border border-indigo-200/60"
-                      : "text-slate-600 hover:bg-slate-100/80 hover:text-slate-900"
-                  }`}
-                >
-                  <Icon className={`w-4 h-4 shrink-0 ${active ? "text-indigo-600" : "text-slate-400"}`} />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
+        {adminNav.length > 0 && (
+          <div>
+            {!collapsed && (
+              <h4 className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                Administration
+              </h4>
+            )}
+            <nav className="space-y-0.5">
+              {adminNav.map((item) => {
+                const Icon = item.icon;
+                const active = currentView === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => onNavigate(item.id)}
+                    title={collapsed ? item.label : undefined}
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      active
+                        ? "bg-indigo-50 text-indigo-700 font-bold border border-indigo-200/60"
+                        : "text-slate-600 hover:bg-slate-100/80 hover:text-slate-900"
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 shrink-0 ${active ? "text-indigo-600" : "text-slate-400"}`} />
+                    {!collapsed && <span className="truncate">{item.label}</span>}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+        )}
         </>
         )}
 
@@ -277,16 +345,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <div className="flex items-center justify-between pt-1">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-slate-800 text-white font-bold text-xs flex items-center justify-center shrink-0">
-              AU
+            <div className="w-8 h-8 rounded-full bg-sky-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+              {currentUser?.avatarInitials || currentUser?.name?.slice(0, 2).toUpperCase() || "AU"}
             </div>
             {!collapsed && (
               <div className="min-w-0">
                 <span className="text-xs font-bold text-slate-900 block truncate">
-                  Admin User
+                  {currentUser?.name || "Admin User"}
                 </span>
-                <span className="text-[10px] text-slate-500 block truncate">
-                  Lab Operations Manager
+                <span className="text-[10px] text-slate-500 block truncate font-medium">
+                  {currentUser?.badge || currentUser?.title || "Lab Operations Manager"}
                 </span>
               </div>
             )}

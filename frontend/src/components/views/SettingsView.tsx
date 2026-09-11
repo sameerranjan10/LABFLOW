@@ -3,12 +3,8 @@
 import React, { useState, useEffect } from "react";
 import {
   Building2,
-  MapPin,
   TestTube2,
-  GitFork,
-  Bell,
   ShieldCheck,
-  Plug,
   Save,
   CreditCard,
   CheckCircle2,
@@ -31,15 +27,6 @@ interface TestCatalogItem {
   status: string;
 }
 
-interface CollectionCenterItem {
-  code: string;
-  name: string;
-  address: string;
-  phone: string;
-  capacity: string;
-  status: string;
-}
-
 const INITIAL_TEST_CATALOG: TestCatalogItem[] = [
   { code: "CBC-01", name: "Complete Blood Count (CBC)", loinc: "58410-2", dept: "Hematology", tat: "45m", price: "$28", status: "Active" },
   { code: "CMP-02", name: "Comprehensive Metabolic Panel", loinc: "24323-8", dept: "Biochemistry", tat: "60m", price: "$42", status: "Active" },
@@ -51,22 +38,11 @@ const INITIAL_TEST_CATALOG: TestCatalogItem[] = [
   { code: "COV-08", name: "RT-PCR Viral Multiplex Panel", loinc: "94500-6", dept: "Molecular Lab", tat: "120m", price: "$65", status: "Active" },
 ];
 
-const INITIAL_COLLECTION_CENTERS: CollectionCenterItem[] = [
-  { code: "CC-01", name: "Main Reference Lab (Central Processing)", address: "Plot 14, Health Park", phone: "+91 80 4920 1100", capacity: "1,500/day", status: "Primary Hub" },
-  { code: "CC-02", name: "City Center Collection Hub", address: "Suite 302, Metro Towers", phone: "+91 80 4920 1102", capacity: "400/day", status: "Active Branch" },
-  { code: "CC-03", name: "Westside Outpatient Clinic Center", address: "19 West End Ave, 1st Floor", phone: "+91 80 4920 1103", capacity: "350/day", status: "Active Branch" },
-  { code: "CC-04", name: "Emergency Hospital Satellite Lab", address: "Wing B, Trauma Floor", phone: "+91 80 4920 1199", capacity: "600/day", status: "STAT Only" },
-];
-
 const TABS = [
   { id: "Billing", label: "Billing & Monetization", icon: CreditCard },
   { id: "Organization", label: "Organization Profile", icon: Building2 },
   { id: "Test Types", label: "Diagnostic Test Catalog", icon: TestTube2 },
-  { id: "Locations", label: "Collection Centers", icon: MapPin },
   { id: "Roles & Permissions", label: "RBAC & Permissions", icon: ShieldCheck },
-  { id: "Workflow", label: "LIMS Workflow Rules", icon: GitFork },
-  { id: "Notifications", label: "Multi-Channel Alerts", icon: Bell },
-  { id: "Integrations", label: "Analyzer & HL7 Bridges", icon: Plug },
 ];
 
 export const SettingsView: React.FC = () => {
@@ -82,11 +58,9 @@ export const SettingsView: React.FC = () => {
   const [maxQuota, setMaxQuota] = useState(5000);
 
   const [testCatalog, setTestCatalog] = useState<TestCatalogItem[]>(INITIAL_TEST_CATALOG);
-  const [collectionCenters, setCollectionCenters] = useState<CollectionCenterItem[]>(INITIAL_COLLECTION_CENTERS);
 
   // Modals
   const [isAddTestOpen, setIsAddTestOpen] = useState(false);
-  const [isAddCenterOpen, setIsAddCenterOpen] = useState(false);
 
   // Add Test Form State
   const [newTestCode, setNewTestCode] = useState("");
@@ -95,13 +69,6 @@ export const SettingsView: React.FC = () => {
   const [newTestDept, setNewTestDept] = useState("Hematology");
   const [newTestTat, setNewTestTat] = useState("45m");
   const [newTestPrice, setNewTestPrice] = useState("$30");
-
-  // Add Center Form State
-  const [newCenterCode, setNewCenterCode] = useState("");
-  const [newCenterName, setNewCenterName] = useState("");
-  const [newCenterAddress, setNewCenterAddress] = useState("");
-  const [newCenterPhone, setNewCenterPhone] = useState("+91 80 4920 ");
-  const [newCenterCapacity, setNewCenterCapacity] = useState("300/day");
 
   useEffect(() => {
     async function loadSettings() {
@@ -123,9 +90,6 @@ export const SettingsView: React.FC = () => {
             }
             if (data.settings.testCatalog && data.settings.testCatalog.length > 0) {
               setTestCatalog(data.settings.testCatalog);
-            }
-            if (data.settings.collectionCenters && data.settings.collectionCenters.length > 0) {
-              setCollectionCenters(data.settings.collectionCenters);
             }
           }
         }
@@ -157,7 +121,6 @@ export const SettingsView: React.FC = () => {
             renewsAt: "2026-10-01",
           },
           testCatalog,
-          collectionCenters,
         }),
       });
     } catch (e) {
@@ -221,40 +184,6 @@ export const SettingsView: React.FC = () => {
     setNewTestCode("");
     setNewTestName("");
     setNewTestLoinc("");
-  };
-
-  const handleAddCenterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newCenterCode || !newCenterName) return;
-
-    const newCenter: CollectionCenterItem = {
-      code: newCenterCode.toUpperCase(),
-      name: newCenterName,
-      address: newCenterAddress || "Central District Hub",
-      phone: newCenterPhone,
-      capacity: newCenterCapacity,
-      status: "Active Branch",
-    };
-
-    const updatedCenters = [newCenter, ...collectionCenters];
-    setCollectionCenters(updatedCenters);
-    setIsAddCenterOpen(false);
-
-    try {
-      await fetch("/api/settings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ collectionCenters: updatedCenters }),
-      });
-      setSaveToast(true);
-      setTimeout(() => setSaveToast(false), 3000);
-    } catch (e) {
-      console.warn("Collection center persist error:", e);
-    }
-
-    setNewCenterCode("");
-    setNewCenterName("");
-    setNewCenterAddress("");
   };
 
   const handleDownloadInvoice = (invoiceId: string) => {
@@ -668,54 +597,6 @@ Verified via 21 CFR Part 11 Electronic Billing Ledger.
             </div>
           )}
 
-          {/* COLLECTION CENTERS */}
-          {activeTab === "Locations" && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                <div>
-                  <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                    Configured Laboratory Branches & Phlebotomy Hubs
-                  </h2>
-                  <p className="text-xs text-slate-500">
-                    Multi-center network routing specimens to central and satellite processing workstations.
-                  </p>
-                </div>
-                <button
-                  onClick={() => setIsAddCenterOpen(true)}
-                  className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-xs flex items-center gap-1 cursor-pointer"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  + Register Center
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {collectionCenters.map((cc) => (
-                  <div key={cc.code} className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold text-indigo-600">{cc.code}</span>
-                      <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
-                          cc.status === "Primary Hub"
-                            ? "bg-indigo-50 text-indigo-700 border-indigo-200"
-                            : "bg-emerald-50 text-emerald-700 border-emerald-200"
-                        }`}
-                      >
-                        {cc.status}
-                      </span>
-                    </div>
-                    <h3 className="text-xs font-bold text-slate-900">{cc.name}</h3>
-                    <p className="text-[11px] text-slate-500">{cc.address}</p>
-                    <div className="pt-2 border-t border-slate-200/60 flex justify-between items-center text-[11px] text-slate-600 font-mono">
-                      <span>Daily Intake: {cc.capacity}</span>
-                      <span>{cc.phone}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* RBAC MATRIX */}
           {activeTab === "Roles & Permissions" && (
             <div className="space-y-4">
@@ -768,82 +649,6 @@ Verified via 21 CFR Part 11 Electronic Billing Ledger.
                     </div>
                   );
                 })}
-              </div>
-            </div>
-          )}
-
-          {/* WORKFLOW */}
-          {activeTab === "Workflow" && (
-            <div className="space-y-4 text-xs">
-              <h2 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-2 uppercase tracking-wider">
-                Automated LIMS Workflow & Panic Threshold Rules
-              </h2>
-              <div className="space-y-3">
-                <label className="flex items-center gap-2 font-semibold text-slate-800">
-                  <input type="checkbox" defaultChecked className="rounded text-indigo-600" />
-                  Auto-flag critical panic result values (e.g. Troponin &gt; 0.04 ng/mL)
-                </label>
-                <label className="flex items-center gap-2 font-semibold text-slate-800">
-                  <input type="checkbox" defaultChecked className="rounded text-indigo-600" />
-                  Enforce strict barcode verification before sample accessioning
-                </label>
-                <label className="flex items-center gap-2 font-semibold text-slate-800">
-                  <input type="checkbox" defaultChecked className="rounded text-indigo-600" />
-                  Trigger SMS / WhatsApp notification to patient upon report release
-                </label>
-                <label className="flex items-center gap-2 font-semibold text-slate-800">
-                  <input type="checkbox" defaultChecked className="rounded text-indigo-600" />
-                  Auto-route rejected hemolyzed specimens for immediate redraw scheduling
-                </label>
-              </div>
-            </div>
-          )}
-
-          {/* NOTIFICATIONS */}
-          {activeTab === "Notifications" && (
-            <div className="space-y-4 text-xs">
-              <h2 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-2 uppercase tracking-wider">
-                Automated Multi-Channel Alert Dispatch
-              </h2>
-              <div className="space-y-3">
-                <label className="flex items-center gap-2 font-semibold text-slate-800">
-                  <input type="checkbox" defaultChecked className="rounded text-indigo-600" />
-                  STAT Panic Value Alerts via In-App Popover & Push Notification
-                </label>
-                <label className="flex items-center gap-2 font-semibold text-slate-800">
-                  <input type="checkbox" defaultChecked className="rounded text-indigo-600" />
-                  Email dispatch of signed reports to ordering clinician
-                </label>
-                <label className="flex items-center gap-2 font-semibold text-slate-800">
-                  <input type="checkbox" defaultChecked className="rounded text-indigo-600" />
-                  SMS link notification to patient when diagnostic report is published
-                </label>
-              </div>
-            </div>
-          )}
-
-          {/* INTEGRATIONS */}
-          {activeTab === "Integrations" && (
-            <div className="space-y-4 text-xs">
-              <h2 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-2 uppercase tracking-wider">
-                LIMS Interoperability & Analyzer ASTM/HL7 Bridges
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
-                  <span className="font-bold text-slate-900 block">Cobas 6000 Chemistry Analyzer</span>
-                  <span className="text-[11px] text-slate-500 font-mono">ASTM 1394-97 / RS232-TCP</span>
-                  <span className="text-emerald-700 font-bold block text-[10px]">Connected (Port 5001)</span>
-                </div>
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
-                  <span className="font-bold text-slate-900 block">Sysmex XN-1000 Hematology</span>
-                  <span className="text-[11px] text-slate-500 font-mono">HL7 v2.5.1 MLLP</span>
-                  <span className="text-emerald-700 font-bold block text-[10px]">Connected (Port 2575)</span>
-                </div>
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
-                  <span className="font-bold text-slate-900 block">ABDM Health Information Provider (HIP)</span>
-                  <span className="text-[11px] text-slate-500 font-mono">FHIR R4 DiagnosticReport API</span>
-                  <span className="text-emerald-700 font-bold block text-[10px]">Active Production Node</span>
-                </div>
               </div>
             </div>
           )}
@@ -943,90 +748,6 @@ Verified via 21 CFR Part 11 Electronic Billing Ledger.
                   className="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
                 >
                   Save Test Panel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ADD CENTER MODAL */}
-      {isAddCenterOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-5 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900">Register Specimen Collection Center</h3>
-              <button onClick={() => setIsAddCenterOpen(false)} className="text-slate-400 hover:text-slate-600 p-1">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <form onSubmit={handleAddCenterSubmit} className="p-5 space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Center Code *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. CC-05"
-                    value={newCenterCode}
-                    onChange={(e) => setNewCenterCode(e.target.value)}
-                    className="w-full p-2 border border-slate-300 rounded-lg uppercase font-mono"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Intake Capacity</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 250/day"
-                    value={newCenterCapacity}
-                    onChange={(e) => setNewCenterCapacity(e.target.value)}
-                    className="w-full p-2 border border-slate-300 rounded-lg"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Center Name *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Northside Satellite Phlebotomy Hub"
-                  value={newCenterName}
-                  onChange={(e) => setNewCenterName(e.target.value)}
-                  className="w-full p-2 border border-slate-300 rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Street Address</label>
-                <input
-                  type="text"
-                  placeholder="e.g. 45 North Avenue, Sector 9"
-                  value={newCenterAddress}
-                  onChange={(e) => setNewCenterAddress(e.target.value)}
-                  className="w-full p-2 border border-slate-300 rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Dispatch Contact Phone</label>
-                <input
-                  type="text"
-                  value={newCenterPhone}
-                  onChange={(e) => setNewCenterPhone(e.target.value)}
-                  className="w-full p-2 border border-slate-300 rounded-lg font-mono"
-                />
-              </div>
-              <div className="pt-3 border-t border-slate-200 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsAddCenterOpen(false)}
-                  className="px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 font-semibold"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
-                >
-                  Register Center
                 </button>
               </div>
             </form>

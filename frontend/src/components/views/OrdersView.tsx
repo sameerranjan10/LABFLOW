@@ -182,8 +182,12 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
                 </tr>
               ) : (
                 filtered.map((ord) => (
-                  <tr key={ord.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3.5 px-4 font-mono font-bold text-indigo-600 whitespace-nowrap">
+                  <tr
+                    key={ord.id}
+                    onClick={() => onSelectOrder(ord)}
+                    className="hover:bg-slate-50/80 transition-colors cursor-pointer"
+                  >
+                    <td className="py-3.5 px-4 font-mono font-bold text-sky-600 whitespace-nowrap">
                       {ord.id}
                     </td>
                     <td className="py-3.5 px-4 whitespace-nowrap">
@@ -220,9 +224,13 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
                     </td>
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <button
-                        onClick={() => onSelectOrder(ord)}
-                        className="px-2.5 py-1 text-xs font-semibold rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectOrder(ord);
+                        }}
+                        className="px-3 py-1.5 text-xs font-bold rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition-colors cursor-pointer flex items-center gap-1.5 ml-auto"
                       >
+                        <Eye className="w-3.5 h-3.5 text-sky-600" />
                         View Order
                       </button>
                     </td>

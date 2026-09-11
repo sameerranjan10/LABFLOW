@@ -162,11 +162,11 @@
         "Thyroid Profile (T3, T4, TSH)"
       ],
       "priority": "Normal",
-      "currentStage": "COLLECTED",
+      "currentStage": "REVIEW",
       "createdAt": "10:05",
       "createdDate": "2026-09-10",
       "tat": "42m",
-      "status": "In Progress",
+      "status": "Pending Review",
       "location": "Collection Center B",
       "doctorName": "Dr. R. Joshi"
     },
@@ -500,13 +500,23 @@
       "sampleType": "Serum (SST Tube)",
       "test": "Lipid Profile & HbA1c",
       "currentLocation": "Biochemistry Lab - Cobas c501",
-      "stage": "PROCESSING",
+      "stage": "REVIEW",
       "collectedAt": "09:28",
       "tat": "2h 04m",
       "status": "Processing",
       "barcode": "LBF-67104-B",
       "volume": "5.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789078519620",
+          "timestamp": "03:45 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: PROCESSING → REVIEW",
+          "location": "Biochemistry Lab - Cobas c501",
+          "operator": "Batch Auto-Ingestion Engine",
+          "details": "Batch analyzer run completed. Results transmitted to review queue.",
+          "status": "completed"
+        },
         {
           "id": "tl-1",
           "timestamp": "09:28",
@@ -598,13 +608,23 @@
       "sampleType": "Serum (SST Tube)",
       "test": "Thyroid Profile (T3, T4, TSH)",
       "currentLocation": "Immunology Lab - Abbott Architect i2000",
-      "stage": "PROCESSING",
+      "stage": "REVIEW",
       "collectedAt": "10:05",
       "tat": "42m",
       "status": "Processing",
       "barcode": "LBF-44102-D",
       "volume": "4.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789078529008",
+          "timestamp": "03:45 am",
+          "date": "2026-09-10",
+          "event": "Custody Advancement: PROCESSING → REVIEW",
+          "location": "Immunology Lab - Abbott Architect i2000",
+          "operator": "Auto-Analyzer High-Throughput Line",
+          "details": "Automated test run finished. Quantitative metrics transmitted via HL7 v2.5 to Pathologist review queue.",
+          "status": "completed"
+        },
         {
           "id": "tl-1",
           "timestamp": "10:05",
@@ -1052,113 +1072,83 @@
   ],
   "results": [
     {
-      "id": "RES-92684",
-      "orderId": "ORD-92684",
-      "sampleId": "SMP-53838",
+      "id": "RES-10291",
+      "orderId": "ORD-10291",
+      "sampleId": "SMP-20482",
       "patient": {
-        "name": "Vikas Sen",
-        "age": 38,
-        "gender": "Male",
-        "phone": "+91 98765 11223",
-        "email": "vikas.sen@example.com"
+        "id": "P-44102",
+        "name": "Priya Nair",
+        "age": 34,
+        "gender": "Female",
+        "phone": "+91 97654 32109",
+        "mrn": "MRN-44102"
       },
-      "testName": "Complete Blood Count (CBC), Lipid Profile",
-      "instrument": "Cobas 8000 c702 Clinical Chemistry",
-      "completedAt": "04:04 am",
-      "reviewer": "Dr. Arvind Swaminathan, MD",
-      "status": "Approved",
-      "comments": "Lipid panel analysis: Moderate borderline hypercholesterolemia with elevated non-HDL lipid fractions. Dietary counseling advised.",
+      "testName": "Thyroid Profile (T3, T4, TSH)",
+      "instrument": "Immunology Lab - Abbott Architect i2000",
+      "completedAt": "03:45 am",
+      "status": "Pending Review",
       "parameters": [
         {
-          "name": "Hemoglobin (Hb)",
-          "result": 13.4,
-          "unit": "g/dL",
-          "referenceRange": "12.0 – 16.0",
+          "name": "Primary Diagnostic Assay",
+          "result": 104,
+          "unit": "U/L",
+          "referenceRange": "60 - 120",
           "flag": "Normal",
           "status": "Verified"
         },
         {
-          "name": "Total Leukocyte Count (WBC)",
-          "result": 11.2,
-          "unit": "10³/µL",
-          "referenceRange": "4.0 – 11.0",
-          "flag": "High",
-          "status": "Verified"
-        },
-        {
-          "name": "Platelet Count",
-          "result": 245,
-          "unit": "10³/µL",
-          "referenceRange": "150 – 450",
+          "name": "Secondary Confirmatory Marker",
+          "result": 22.8,
+          "unit": "mg/L",
+          "referenceRange": "10.0 - 30.0",
           "flag": "Normal",
           "status": "Verified"
         },
         {
-          "name": "Red Blood Cells (RBC)",
-          "result": 4.45,
-          "unit": "10⁶/µL",
-          "referenceRange": "4.0 – 5.2",
-          "flag": "Normal",
-          "status": "Verified"
-        },
-        {
-          "name": "Hematocrit (PCV)",
-          "result": 39.5,
+          "name": "Analyzer Precision Index",
+          "result": 99.6,
           "unit": "%",
-          "referenceRange": "36.0 – 46.0",
+          "referenceRange": "> 98.0",
           "flag": "Normal",
           "status": "Verified"
-        },
-        {
-          "name": "Neutrophils",
-          "result": 72,
-          "unit": "%",
-          "referenceRange": "40 – 70",
-          "flag": "High",
-          "status": "Verified"
-        },
-        {
-          "name": "Lymphocytes",
-          "result": 22,
-          "unit": "%",
-          "referenceRange": "20 – 45",
-          "flag": "Normal",
-          "status": "Verified"
-        },
-        {
-          "name": "Monocytes",
-          "result": 4,
-          "unit": "%",
-          "referenceRange": "2 – 8",
-          "flag": "Normal",
-          "status": "Verified"
-        },
-        {
-          "name": "Eosinophils",
-          "result": 2,
-          "unit": "%",
-          "referenceRange": "1 – 6",
-          "flag": "Normal",
-          "status": "Verified"
-        },
+        }
+      ]
+    },
+    {
+      "id": "RES-10293",
+      "orderId": "ORD-10293",
+      "sampleId": "SMP-20490",
+      "patient": {
+        "id": "P-67104",
+        "name": "Rahul Kumar",
+        "age": 68,
+        "gender": "Male",
+        "phone": "+91 98123 45678",
+        "mrn": "MRN-67104"
+      },
+      "testName": "Lipid Profile & HbA1c",
+      "instrument": "Biochemistry Lab - Cobas c501",
+      "completedAt": "03:45 am",
+      "status": "Pending Review",
+      "parameters": [
         {
           "name": "Total Cholesterol",
-          "result": 218,
+          "result": 215,
           "unit": "mg/dL",
           "referenceRange": "< 200",
           "flag": "High",
           "status": "Verified"
         },
         {
-          "name": "HDL Cholesterol (Good)",
-          "result": 44,
+          "name": "HDL Cholesterol",
+          "result": 48,
           "unit": "mg/dL",
           "referenceRange": "> 40",
           "flag": "Normal",
           "status": "Verified"
         },
         {
-          "name": "LDL Cholesterol (Calculated)",
+          "name": "LDL Cholesterol (Direct)",
           "result": 138,
           "unit": "mg/dL",
           "referenceRange": "< 100",
@@ -1166,26 +1156,10 @@
           "status": "Verified"
         },
         {
-          "name": "Serum Triglycerides",
-          "result": 175,
+          "name": "Triglycerides",
+          "result": 165,
           "unit": "mg/dL",
           "referenceRange": "< 150",
-          "flag": "High",
-          "status": "Verified"
-        },
-        {
-          "name": "VLDL Cholesterol",
-          "result": 35,
-          "unit": "mg/dL",
-          "referenceRange": "10 – 30",
-          "flag": "High",
-          "status": "Verified"
-        },
-        {
-          "name": "Total / HDL Ratio",
-          "result": 4.95,
-          "unit": "Ratio",
-          "referenceRange": "< 4.5",
           "flag": "High",
           "status": "Verified"
         }
@@ -2076,237 +2050,40 @@
   },
   "auditLogs": [
     {
-      "id": "AUD-1789081892537",
-      "timestamp": "2026-09-10T23:11:32.537Z",
-      "action": "ASYNC_QUEUES_BULK_FLUSH",
-      "user": "Queue Operations Engineer",
-      "role": "Admin",
-      "details": "Flushed all pending/failed async jobs (4 jobs). All workers processed to 0 backlog.",
-      "location": "BullMQ / Redis Queue Engine"
+      "id": "AUD-1789078529040",
+      "timestamp": "2026-09-10T22:15:29.040Z",
+      "action": "ANALYZER_RESULT_INGESTED",
+      "user": "Immunology Lab - Abbott Architect i2000",
+      "role": "Analyzer",
+      "details": "Automated test parameters ingested for order ORD-10291 (Thyroid Profile (T3, T4, TSH)) on Immunology Lab - Abbott Architect i2000.",
+      "location": "Main Automated Laboratory"
     },
     {
-      "id": "AUD-1789081886436",
-      "timestamp": "2026-09-10T23:11:26.436Z",
-      "action": "DLQ_JOB_MANUAL_RETRY",
-      "user": "Queue Operations Engineer",
-      "role": "Admin",
-      "details": "Dead-letter queue job JOB-DLQ-1789081876280 manually re-triggered. Delivered successfully with verified acknowledgment.",
-      "location": "Message Queue Telemetry Engine"
-    },
-    {
-      "id": "AUD-1789081876280",
-      "timestamp": "2026-09-10T23:11:16.280Z",
-      "action": "DELIVERY_FAILED_MOVED_TO_DLQ",
-      "user": "Notification Worker Pool",
-      "role": "System",
-      "details": "Delivery of report RPT-10290 to suresh.menon@gmail.com failed with timeout. Moved to Dead-Letter Queue (job ID: JOB-DLQ-1789081876280).",
-      "location": "Asynchronous Queue Dispatcher"
-    },
-    {
-      "id": "AUD-1789081857063",
-      "timestamp": "2026-09-10T23:10:57.063Z",
-      "action": "DELIVERY_FAILED_MOVED_TO_DLQ",
-      "user": "Notification Worker Pool",
-      "role": "System",
-      "details": "Delivery of report RPT-10290 to suresh.menon@gmail.com failed with timeout. Moved to Dead-Letter Queue (job ID: JOB-DLQ-1789081857063).",
-      "location": "Asynchronous Queue Dispatcher"
-    },
-    {
-      "id": "AUD-1789081785537",
-      "timestamp": "2026-09-10T23:09:45.537Z",
-      "action": "ALERT_ACKNOWLEDGED",
-      "user": "Operations Admin",
-      "role": "Admin",
-      "details": "Operational alert ALT-SIM-ANALYZER acknowledged and dismissed from queue."
-    },
-    {
-      "id": "AUD-1789081207344",
-      "timestamp": "2026-09-10T23:00:07.344Z",
-      "action": "REPORT_DIGITALLY_SIGNED",
-      "user": "Dr. Vikram Malhotra",
-      "role": "Pathologist",
-      "details": "Diagnostic report RPT-92684 for Vikas Sen digitally attested and dispatched.",
-      "location": "Main Reference Lab"
-    },
-    {
-      "id": "AUD-1789081207320",
-      "timestamp": "2026-09-10T23:00:07.320Z",
-      "action": "RESULT_VERIFIED_SIGN_OFF",
-      "user": "Dr. Arvind Swaminathan, MD",
-      "role": "Pathologist",
-      "details": "Test results for order ORD-92684 (Vikas Sen) digitally verified and signed by pathologist.",
-      "location": "Main Pathology Department"
-    },
-    {
-      "id": "AUD-1789081137306",
-      "timestamp": "2026-09-10T22:58:57.296Z",
-      "action": "ANALYZER_MAINTENANCE_TRIGGERED",
-      "user": "Auto-Analyzer QC Sentinel",
-      "role": "System",
-      "details": "Sysmex XN-1000 optical flow sensor drifted by +2.8 SD. Ingestion queue halted. Pending specimens routed to backup Sysmex workstation.",
-      "location": "Main Hematology Section"
-    },
-    {
-      "id": "AUD-1789080650242",
-      "timestamp": "2026-09-10T22:50:50.242Z",
-      "action": "REDRAW_REQUISITION_DISPATCHED",
-      "user": "Sunita Verma",
-      "role": "Collection Staff",
-      "details": "Automated redraw requisition dispatched to outpatient phlebotomist. Redraw tube barcode printed.",
-      "location": "Central Phlebotomy Hub"
-    },
-    {
-      "id": "AUD-1789080628140",
-      "timestamp": "2026-09-10T22:50:28.140Z",
-      "action": "SAMPLE_REJECTED_PREANALYTICAL",
-      "user": "Lead Accessioning Tech",
-      "role": "Technologist",
-      "details": "Specimen SMP-53838 failed pre-analytical inspection (Hemolysis Index > 500). Redraw order ORD-REDRAW-SMP-53838 created.",
-      "location": "Central Accessioning Lab"
-    },
-    {
-      "id": "AUD-1789079834476",
-      "timestamp": "2026-09-10T22:37:14.476Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-9867 for patient ankita dispatched to parent/guardian at abkitadas27@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789079698304",
-      "timestamp": "2026-09-10T22:34:58.304Z",
-      "action": "ORDER_CREATED",
-      "user": "Dr. Priya Sharma, MD",
-      "role": "Doctor",
-      "details": "Order ORD-92684 created for patient Vikas Sen (undefined) with sample SMP-53838, report RPT-92684 & test result RES-92684.",
-      "location": "City Center Hub"
-    },
-    {
-      "id": "AUD-1789079689639",
-      "timestamp": "2026-09-10T22:34:49.639Z",
-      "action": "RESULT_VERIFIED_SIGN_OFF",
-      "user": "Dr. Pathologist",
-      "role": "Pathologist",
-      "details": "Test results for order ORD-10293 (Rahul Kumar) digitally verified and signed by pathologist.",
-      "location": "Main Pathology Department"
-    },
-    {
-      "id": "AUD-1789079624746",
-      "timestamp": "2026-09-10T22:33:44.746Z",
-      "action": "RESULT_VERIFIED_SIGN_OFF",
-      "user": "Dr. Arvind Swaminathan, MD",
-      "role": "Pathologist",
-      "details": "Test results for order ORD-14425 (Test Patient Sharma) digitally verified and signed by pathologist.",
-      "location": "Main Pathology Department"
-    },
-    {
-      "id": "AUD-1789079450184",
-      "timestamp": "2026-09-10T22:30:50.184Z",
-      "action": "RESULT_VERIFIED_SIGN_OFF",
-      "user": "Dr. Pathologist",
-      "role": "Pathologist",
-      "details": "Test results for order ORD-10294 (Aditi Rao) digitally verified and signed by pathologist.",
-      "location": "Main Pathology Department"
-    },
-    {
-      "id": "AUD-1789078790921",
-      "timestamp": "2026-09-10T22:19:50.921Z",
-      "action": "REPORT_WHATSAPP_DISPATCHED",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-9867 for patient ankita dispatched via WhatsApp to +917854836530.",
-      "location": "WhatsApp Cloud Gateway"
-    },
-    {
-      "id": "AUD-1789078764821",
-      "timestamp": "2026-09-10T22:19:24.821Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-9867 for patient ankita dispatched to parent/guardian at abkitadas27@gmail.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789078697730",
-      "timestamp": "2026-09-10T22:18:17.730Z",
+      "id": "AUD-1789078529008",
+      "timestamp": "2026-09-10T22:15:29.008Z",
       "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
+      "user": "Auto-Analyzer High-Throughput Line",
       "role": "Technologist",
-      "details": "Sample SMP-19867 transitioned from REVIEW to RELEASED.",
-      "location": "Phlebotomy Intake - Reception"
+      "details": "Sample SMP-20482 transitioned from PROCESSING to REVIEW.",
+      "location": "Immunology Lab - Abbott Architect i2000"
     },
     {
-      "id": "AUD-1789078692728",
-      "timestamp": "2026-09-10T22:18:12.728Z",
+      "id": "AUD-1789078519799",
+      "timestamp": "2026-09-10T22:15:19.799Z",
+      "action": "ANALYZER_RESULT_INGESTED",
+      "user": "Biochemistry Lab - Cobas c501",
+      "role": "Analyzer",
+      "details": "Automated test parameters ingested for order ORD-10293 (Lipid Profile & HbA1c) on Biochemistry Lab - Cobas c501.",
+      "location": "Main Automated Laboratory"
+    },
+    {
+      "id": "AUD-1789078519630",
+      "timestamp": "2026-09-10T22:15:19.630Z",
       "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
+      "user": "Batch Auto-Ingestion Engine",
       "role": "Technologist",
-      "details": "Sample SMP-19867 transitioned from PROCESSING to REVIEW.",
-      "location": "Phlebotomy Intake - Reception"
-    },
-    {
-      "id": "AUD-1789078687161",
-      "timestamp": "2026-09-10T22:18:07.161Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-19867 transitioned from RECEIVED to PROCESSING.",
-      "location": "Phlebotomy Intake - Reception"
-    },
-    {
-      "id": "AUD-1789078681200",
-      "timestamp": "2026-09-10T22:18:01.200Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-19867 transitioned from IN_TRANSIT to RECEIVED.",
-      "location": "Phlebotomy Intake - Reception"
-    },
-    {
-      "id": "AUD-1789078674607",
-      "timestamp": "2026-09-10T22:17:54.607Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-19867 transitioned from COLLECTED to IN_TRANSIT.",
-      "location": "Phlebotomy Intake - Reception"
-    },
-    {
-      "id": "AUD-1789078664518",
-      "timestamp": "2026-09-10T22:17:44.518Z",
-      "action": "SAMPLE_STAGE_UPDATED",
-      "user": "Laboratory Technologist",
-      "role": "Technologist",
-      "details": "Sample SMP-19867 transitioned from ORDERED to COLLECTED.",
-      "location": "Phlebotomy Intake - Reception"
-    },
-    {
-      "id": "AUD-1789078635428",
-      "timestamp": "2026-09-10T22:17:15.428Z",
-      "action": "ORDER_CREATED",
-      "user": "Dr. V. Sharma",
-      "role": "Doctor",
-      "details": "Order ORD-9867 created for patient ankita (123456) with sample SMP-19867 & report RPT-9867.",
-      "location": "Main Laboratory - Accessioning"
-    },
-    {
-      "id": "AUD-1789078323343",
-      "timestamp": "2026-09-10T22:12:03.343Z",
-      "action": "REPORT_EMAILED_TO_PARENT",
-      "user": "Laboratory Notification Engine",
-      "role": "System",
-      "details": "Diagnostic Report RPT-14425 for patient Test Patient Sharma dispatched to parent/guardian at test.sharma@example.com.",
-      "location": "Automated Dispatch Gateway"
-    },
-    {
-      "id": "AUD-1789078230853",
-      "timestamp": "2026-09-10T22:10:30.853Z",
-      "action": "ORDER_CREATED",
-      "user": "Dr. Priya Sharma, MD",
-      "role": "Doctor",
-      "details": "Order ORD-14425 created for patient Test Patient Sharma (MRN-99901) with sample SMP-68567 & report RPT-14425.",
-      "location": "Main Lab"
+      "details": "Sample SMP-20490 transitioned from PROCESSING to REVIEW.",
+      "location": "Biochemistry Lab - Cobas c501"
     },
     {
       "id": "AUD-1789077329548",
@@ -2355,5 +2132,5 @@
     }
   ],
   "version": "3.0.0-synchronized",
-  "lastUpdated": "2026-09-10T23:14:40.530Z"
+  "lastUpdated": "2026-09-10T22:15:29.040Z"
 }

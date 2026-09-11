@@ -6,6 +6,7 @@ import { Topbar } from "@/components/Topbar";
 import { ToastContainer, ToastMessage } from "@/components/Toast";
 
 import { DashboardView } from "@/components/views/DashboardView";
+import { PatientsView } from "@/components/views/PatientsView";
 import { OrdersView } from "@/components/views/OrdersView";
 import { SamplesView } from "@/components/views/SamplesView";
 import { ProcessingView } from "@/components/views/ProcessingView";
@@ -22,6 +23,7 @@ import { LandingPage } from "@/components/views/LandingPage";
 import { CreateOrderModal } from "@/components/CreateOrderModal";
 import { SampleDetailModal } from "@/components/SampleDetailModal";
 import { ReportPreviewModal } from "@/components/ReportPreviewModal";
+import { OrderDetailModal } from "@/components/OrderDetailModal";
 
 import {
   INITIAL_ORDERS,
@@ -34,6 +36,7 @@ import {
   LabSample,
   LabReport,
   AlertItem,
+  WorkflowStageMetric,
 } from "@/data/labflowData";
 import { LabUser, PRESET_LAB_USERS } from "@/lib/roles";
 
@@ -42,7 +45,7 @@ interface SplitScreenDashboardProps {
 }
 
 export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
-  initialView = "dashboard",
+  initialView = "landing",
 }) => {
   const [currentView, setCurrentView] = useState<NavView>(initialView);
   const [currentUser, setCurrentUser] = useState<LabUser>(PRESET_LAB_USERS.administrator);
@@ -56,11 +59,13 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
     if (typeof window !== "undefined") {
       const rawPath = window.location.pathname.replace(/^\//, "");
       const validViews: NavView[] = [
-        "dashboard", "orders", "samples", "processing", "results",
+        "dashboard", "patients", "orders", "samples", "processing", "results",
         "reports", "alerts", "audit", "team", "settings", "login", "signup", "landing"
       ];
       if (rawPath && validViews.includes(rawPath as NavView)) {
         setCurrentView(rawPath as NavView);
+      } else if (!rawPath) {
+        setCurrentView(initialView || "landing");
       }
 
       const handlePopState = () => {
@@ -68,7 +73,7 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
         if (path && validViews.includes(path)) {
           setCurrentView(path);
         } else if (!path) {
-          setCurrentView(initialView || "dashboard");
+          setCurrentView(initialView || "landing");
         }
       };
       window.addEventListener("popstate", handlePopState);
@@ -79,7 +84,7 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
   const navigateTo = (view: NavView) => {
     setCurrentView(view);
     if (typeof window !== "undefined") {
-      const targetPath = view === "dashboard" ? "/" : `/${view}`;
+      const targetPath = view === "landing" ? "/" : `/${view}`;
       window.history.pushState(null, "", targetPath);
     }
   };
@@ -126,27 +131,45 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
   useEffect(() => {
     async function loadDataFromDb() {
       try {
-        const [ordersRes, samplesRes, reportsRes] = await Promise.all([
+        const [ordersRes, samplesRes, reportsRes, alertsRes] = await Promise.all([
           fetch("/api/orders"),
           fetch("/api/samples"),
           fetch("/api/reports"),
+          fetch("/api/alerts"),
         ]);
         if (ordersRes.ok) {
           const ordData = await ordersRes.json();
-          if (ordData.orders && ordData.orders.length > 0) {
+          if (ordData.orders) {
             setOrders(ordData.orders);
+            // Calculate dynamic workflow stages
+            const currentOrders: LabOrder[] = ordData.orders;
+            setWorkflowStages([
+              { key: "ORDERED", label: "Ordered", count: currentOrders.filter((o) => o.currentStage === "ORDERED").length, avgTime: "12m" },
+              { key: "COLLECTED", label: "Collected", count: currentOrders.filter((o) => o.currentStage === "COLLECTED").length, avgTime: "18m" },
+              { key: "IN_TRANSIT", label: "In Transit", count: currentOrders.filter((o) => o.currentStage === "IN_TRANSIT").length, avgTime: "32m" },
+              { key: "RECEIVED", label: "Received", count: currentOrders.filter((o) => o.currentStage === "RECEIVED").length, avgTime: "10m" },
+              { key: "PROCESSING", label: "Processing", count: currentOrders.filter((o) => o.currentStage === "PROCESSING").length, avgTime: "45m" },
+              { key: "REVIEW", label: "Review", count: currentOrders.filter((o) => o.currentStage === "REVIEW").length, avgTime: "16m" },
+              { key: "RELEASED", label: "Released", count: currentOrders.filter((o) => o.currentStage === "RELEASED").length, avgTime: "2h" },
+            ]);
           }
         }
         if (samplesRes.ok) {
           const smpData = await samplesRes.json();
-          if (smpData.samples && smpData.samples.length > 0) {
+          if (smpData.samples) {
             setSamples(smpData.samples);
           }
         }
         if (reportsRes.ok) {
           const repData = await reportsRes.json();
-          if (repData.reports && repData.reports.length > 0) {
+          if (repData.reports) {
             setReports(repData.reports);
+          }
+        }
+        if (alertsRes.ok) {
+          const altData = await alertsRes.json();
+          if (altData.alerts) {
+            setAlerts(altData.alerts);
           }
         }
       } catch (err) {
@@ -160,6 +183,7 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
   const [isCreateOrderOpen, setIsCreateOrderOpen] = useState(false);
   const [selectedSampleDetail, setSelectedSampleDetail] = useState<LabSample | null>(null);
   const [selectedReportPreview, setSelectedReportPreview] = useState<LabReport | null>(null);
+  const [selectedOrderDetail, setSelectedOrderDetail] = useState<LabOrder | null>(null);
 
   // HANDLERS WITH PERSISTENCE (PHASE 3)
   const handleCreateOrderSubmit = async (newOrder: Partial<LabOrder> & { sampleType?: string; collector?: string; scheduledTime?: string }) => {
@@ -357,6 +381,7 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
             onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
             unreadAlertCount={alerts.length}
             currentRole={currentUser.role}
+            currentUser={currentUser}
           />
         </div>
 
@@ -392,16 +417,21 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
                 workflowStages={workflowStages}
                 onOpenCreateOrder={() => setIsCreateOrderOpen(true)}
                 onSelectSample={(sample) => setSelectedSampleDetail(sample)}
-                onSelectOrder={() => navigateTo("orders")}
+                onSelectOrder={(order) => setSelectedOrderDetail(order)}
                 onNavigateToView={(view) => navigateTo(view)}
+                currentUser={currentUser}
               />
+            )}
+
+            {currentView === "patients" && (
+              <PatientsView onSelectOrder={(order) => setSelectedOrderDetail(order)} />
             )}
 
             {currentView === "orders" && (
               <OrdersView
                 orders={orders}
                 onOpenCreateOrder={() => setIsCreateOrderOpen(true)}
-                onSelectOrder={() => addToast("Order Selected", "Viewing order requisition details.", "info")}
+                onSelectOrder={(order) => setSelectedOrderDetail(order)}
               />
             )}
 
@@ -491,6 +521,16 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
         orders={orders}
         onClose={() => setSelectedReportPreview(null)}
         onReleaseReport={handleReleaseReport}
+      />
+
+      <OrderDetailModal
+        order={selectedOrderDetail}
+        sample={samples.find((s) => s.orderId === selectedOrderDetail?.id || s.id === selectedOrderDetail?.sampleId) || null}
+        onClose={() => setSelectedOrderDetail(null)}
+        onOpenSampleDetail={(sample) => {
+          setSelectedOrderDetail(null);
+          setSelectedSampleDetail(sample);
+        }}
       />
 
       {/* TOAST CONTAINER */}
