@@ -542,7 +542,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                 <p className="text-[11px] text-slate-400 mt-1">Try changing your search keywords or filter pills.</p>
               </div>
             ) : (
-              filteredResults.map((r) => {
+              filteredResults.map((r, idx) => {
                 const isSelected = r.id === currentResult?.id || r.orderId === currentResult?.orderId;
                 const patientName = r.patient?.name || (r as any).patientName || "Patient";
                 const patientMrn = r.patient?.mrn || (r as any).mrn || "MRN-Unknown";
@@ -553,7 +553,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
 
                 return (
                   <div
-                    key={r.id}
+                    key={`${r.id}-${idx}`}
                     onClick={() => {
                       setSelectedResultId(r.id);
                       setComments(r.comments || "");

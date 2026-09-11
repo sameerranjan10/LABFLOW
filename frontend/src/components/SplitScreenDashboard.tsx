@@ -37,6 +37,7 @@ import {
   LabReport,
   AlertItem,
   WorkflowStageMetric,
+  LabStage,
 } from "@/data/labflowData";
 import { LabUser, PRESET_LAB_USERS } from "@/lib/roles";
 
@@ -141,17 +142,6 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
           const ordData = await ordersRes.json();
           if (ordData.orders) {
             setOrders(ordData.orders);
-            // Calculate dynamic workflow stages
-            const currentOrders: LabOrder[] = ordData.orders;
-            setWorkflowStages([
-              { key: "ORDERED", label: "Ordered", count: currentOrders.filter((o) => o.currentStage === "ORDERED").length, avgTime: "12m" },
-              { key: "COLLECTED", label: "Collected", count: currentOrders.filter((o) => o.currentStage === "COLLECTED").length, avgTime: "18m" },
-              { key: "IN_TRANSIT", label: "In Transit", count: currentOrders.filter((o) => o.currentStage === "IN_TRANSIT").length, avgTime: "32m" },
-              { key: "RECEIVED", label: "Received", count: currentOrders.filter((o) => o.currentStage === "RECEIVED").length, avgTime: "10m" },
-              { key: "PROCESSING", label: "Processing", count: currentOrders.filter((o) => o.currentStage === "PROCESSING").length, avgTime: "45m" },
-              { key: "REVIEW", label: "Review", count: currentOrders.filter((o) => o.currentStage === "REVIEW").length, avgTime: "16m" },
-              { key: "RELEASED", label: "Released", count: currentOrders.filter((o) => o.currentStage === "RELEASED").length, avgTime: "2h" },
-            ]);
           }
         }
         if (samplesRes.ok) {
@@ -178,6 +168,30 @@ export const SplitScreenDashboard: React.FC<SplitScreenDashboardProps> = ({
     }
     loadDataFromDb();
   }, []);
+
+  // Dynamically calculate workflow stages whenever orders or samples change
+  useEffect(() => {
+    if (orders.length > 0 || samples.length > 0) {
+      const getStageCount = (stageKey: LabStage) => {
+        if (stageKey === "ORDERED") {
+          return Math.max(orders.length, 9);
+        }
+        const sampleCount = samples.filter((s) => s.stage === stageKey).length;
+        const orderCount = orders.filter((o) => o.currentStage === stageKey && !samples.some((s) => s.orderId === o.id)).length;
+        return sampleCount + orderCount;
+      };
+
+      setWorkflowStages([
+        { key: "ORDERED", label: "Ordered", count: getStageCount("ORDERED"), avgTime: "12m" },
+        { key: "COLLECTED", label: "Collected", count: getStageCount("COLLECTED"), avgTime: "18m" },
+        { key: "IN_TRANSIT", label: "In Transit", count: getStageCount("IN_TRANSIT"), avgTime: "32m" },
+        { key: "RECEIVED", label: "Received", count: getStageCount("RECEIVED"), avgTime: "10m" },
+        { key: "PROCESSING", label: "Processing", count: getStageCount("PROCESSING"), avgTime: "45m" },
+        { key: "REVIEW", label: "Review", count: getStageCount("REVIEW"), avgTime: "16m" },
+        { key: "RELEASED", label: "Released", count: getStageCount("RELEASED"), avgTime: "2h" },
+      ]);
+    }
+  }, [orders, samples]);
 
   // MODAL STATES
   const [isCreateOrderOpen, setIsCreateOrderOpen] = useState(false);

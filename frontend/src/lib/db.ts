@@ -1467,6 +1467,8 @@ export function dispatchSimulatedQueueJob(channel: "EMAIL" | "WHATSAPP", recipie
     writeDatabase(db);
     return waJob;
   }
+}
+
 // PATIENT OPERATIONS
 export function getPatients(query?: string, page: number = 1, limit: number = 20): { patients: PatientRecord[]; total: number; page: number; limit: number } {
   const db = readDatabase();

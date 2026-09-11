@@ -126,12 +126,12 @@ export const SampleDetailModal: React.FC<SampleDetailModalProps> = ({
               Patient
             </span>
             <span className="font-semibold text-slate-900 block mt-0.5">
-              {sample.patient.name} ({sample.patient.gender}, {sample.patient.age}y)
+              {sample.patient?.name || "Unknown Patient"} ({sample.patient?.gender || "U"}, {sample.patient?.age ?? "--"}y)
             </span>
             <span className="text-slate-500 font-mono text-[11px]">
-              {sample.patient.mrn}
+              {sample.patient?.mrn || sample.patient?.id || "MRN-UNKNOWN"}
             </span>
-            {sample.patient.email && (
+            {sample.patient?.email && (
               <span className="text-indigo-600 font-sans text-[11px] block truncate" title={sample.patient.email}>
                 ✉ {sample.patient.email}
               </span>

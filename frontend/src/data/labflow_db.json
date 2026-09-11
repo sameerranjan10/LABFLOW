@@ -15,11 +15,11 @@
         "Lipid Profile"
       ],
       "priority": "STAT",
-      "currentStage": "RELEASED",
+      "currentStage": "ORDERED",
       "createdAt": "04:04 am",
       "createdDate": "2026-09-10",
       "tat": "15m",
-      "status": "Completed",
+      "status": "In Progress",
       "location": "City Center Hub",
       "doctorName": "Dr. Priya Sharma, MD"
     },
@@ -39,7 +39,7 @@
         "Thyroid Profile (T3/T4/TSH)"
       ],
       "priority": "Normal",
-      "currentStage": "RELEASED",
+      "currentStage": "COLLECTED",
       "createdAt": "03:47 am",
       "createdDate": "2026-09-10",
       "tat": "15m",
@@ -113,7 +113,7 @@
         "HbA1c"
       ],
       "priority": "Normal",
-      "currentStage": "RELEASED",
+      "currentStage": "REVIEW",
       "createdAt": "09:28",
       "createdDate": "2026-09-10",
       "tat": "2h 04m",
@@ -162,7 +162,7 @@
         "Thyroid Profile (T3, T4, TSH)"
       ],
       "priority": "Normal",
-      "currentStage": "REVIEW",
+      "currentStage": "PROCESSING",
       "createdAt": "10:05",
       "createdDate": "2026-09-10",
       "tat": "42m",
@@ -211,7 +211,7 @@
         "Serum Electrolytes"
       ],
       "priority": "STAT",
-      "currentStage": "REVIEW",
+      "currentStage": "RECEIVED",
       "createdAt": "10:30",
       "createdDate": "2026-09-10",
       "tat": "15m",
@@ -237,10 +237,20 @@
       "stage": "ORDERED",
       "collectedAt": "04:04 am",
       "tat": "15m",
-      "status": "In Progress",
+      "status": "Collected",
       "barcode": "LBF-undefined",
       "volume": "3.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789093564708",
+          "timestamp": "07:56 am",
+          "date": "2026-09-11",
+          "event": "Custody Advancement: ORDERED → COLLECTED",
+          "location": "Phlebotomy Intake - Reception",
+          "operator": "Laboratory Technologist",
+          "details": "Advanced to COLLECTED via Chain-of-Custody Modal.",
+          "status": "completed"
+        },
         {
           "id": "tl-sim-rej-1789080628140",
           "timestamp": "04:20 am",
@@ -278,7 +288,7 @@
       "sampleType": "Serum (SST Gel)",
       "test": "Thyroid Profile (T3/T4/TSH)",
       "currentLocation": "Phlebotomy Intake - Reception",
-      "stage": "RELEASED",
+      "stage": "COLLECTED",
       "collectedAt": "03:47 am",
       "tat": "15m",
       "status": "Completed",
@@ -372,7 +382,7 @@
       "sampleType": "Whole Blood (EDTA)",
       "test": "CBC (Complete Blood Count)",
       "currentLocation": "Phlebotomy Intake - Reception",
-      "stage": "ORDERED",
+      "stage": "RELEASED",
       "collectedAt": "03:40 am",
       "tat": "15m",
       "status": "Collected",
@@ -406,7 +416,7 @@
       "sampleType": "Whole Blood (EDTA)",
       "test": "CBC (Complete Blood Count)",
       "currentLocation": "Hematology Lab - Sysmex XN-1000",
-      "stage": "REVIEW",
+      "stage": "RELEASED",
       "collectedAt": "09:42",
       "tat": "1h 18m",
       "status": "Processing",
@@ -608,7 +618,7 @@
       "sampleType": "Serum (SST Tube)",
       "test": "Thyroid Profile (T3, T4, TSH)",
       "currentLocation": "Immunology Lab - Abbott Architect i2000",
-      "stage": "REVIEW",
+      "stage": "PROCESSING",
       "collectedAt": "10:05",
       "tat": "42m",
       "status": "Processing",
@@ -730,13 +740,23 @@
       "sampleType": "Whole Blood (EDTA)",
       "test": "HbA1c Glycated Hemoglobin",
       "currentLocation": "HPLC Workstation - Bio-Rad Variant II",
-      "stage": "PROCESSING",
+      "stage": "REVIEW",
       "collectedAt": "10:45",
       "tat": "20m",
       "status": "Processing",
       "barcode": "LBF-19402-G",
       "volume": "2.0 mL",
       "timeline": [
+        {
+          "id": "tl-adv-1789093430280",
+          "timestamp": "07:53 am",
+          "date": "2026-09-11",
+          "event": "Custody Advancement: PROCESSING → REVIEW",
+          "location": "HPLC Workstation - Bio-Rad Variant II",
+          "operator": "Auto-Analyzer High-Throughput Line",
+          "details": "Automated test run finished. Quantitative metrics transmitted via HL7 v2.5 to Pathologist review queue.",
+          "status": "completed"
+        },
         {
           "id": "tl-hplc-1",
           "timestamp": "10:45",
@@ -748,6 +768,60 @@
           "status": "completed"
         }
       ]
+    },
+    {
+      "id": "SMP-20488",
+      "orderId": "ORD-10288-A",
+      "patient": {
+        "id": "P-10288",
+        "name": "Sanjay Gupta",
+        "age": 52,
+        "gender": "Male",
+        "phone": "+91 98111 22233",
+        "mrn": "MRN-10288"
+      },
+      "sampleType": "Whole Blood (EDTA)",
+      "test": "Complete Blood Count",
+      "currentLocation": "Archive / Released",
+      "stage": "RELEASED",
+      "collectedAt": "08:00 am",
+      "tat": "1h 10m"
+    },
+    {
+      "id": "SMP-20487",
+      "orderId": "ORD-10287-A",
+      "patient": {
+        "id": "P-10287",
+        "name": "Anita Verma",
+        "age": 41,
+        "gender": "Female",
+        "phone": "+91 98222 33344",
+        "mrn": "MRN-10287"
+      },
+      "sampleType": "Serum (SST)",
+      "test": "Lipid Profile",
+      "currentLocation": "Archive / Released",
+      "stage": "RELEASED",
+      "collectedAt": "08:30 am",
+      "tat": "1h 25m"
+    },
+    {
+      "id": "SMP-20486",
+      "orderId": "ORD-10286-A",
+      "patient": {
+        "id": "P-10286",
+        "name": "Kavita Roy",
+        "age": 29,
+        "gender": "Female",
+        "phone": "+91 98333 44455",
+        "mrn": "MRN-10286"
+      },
+      "sampleType": "Plasma (Fluoride)",
+      "test": "Fasting Blood Sugar",
+      "currentLocation": "Archive / Released",
+      "stage": "RELEASED",
+      "collectedAt": "09:00 am",
+      "tat": "55m"
     }
   ],
   "alerts": [
@@ -1030,7 +1104,7 @@
     {
       "key": "ORDERED",
       "name": "Order Placed",
-      "count": 4,
+      "count": 1,
       "color": "bg-sky-500"
     },
     {
@@ -1060,17 +1134,95 @@
     {
       "key": "REVIEW",
       "name": "Under Review",
-      "count": 1,
+      "count": 2,
       "color": "bg-rose-500"
     },
     {
       "key": "RELEASED",
       "name": "Report Released",
-      "count": 1,
+      "count": 6,
       "color": "bg-emerald-500"
     }
   ],
   "results": [
+    {
+      "id": "RES-10288",
+      "orderId": "ORD-10288",
+      "sampleId": "SMP-20485",
+      "patient": {
+        "id": "P-19402",
+        "name": "Meena Sharma",
+        "age": 55,
+        "gender": "Female",
+        "phone": "+91 98450 11223",
+        "mrn": "MRN-19402",
+        "email": "meena.sharma@yahoo.com"
+      },
+      "testName": "HbA1c Glycated Hemoglobin",
+      "instrument": "HPLC Workstation - Bio-Rad Variant II",
+      "completedAt": "07:53 AM",
+      "status": "Approved",
+      "parameters": [
+        {
+          "name": "Hemoglobin",
+          "result": 13.8,
+          "unit": "g/dL",
+          "referenceRange": "12.0 - 16.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "White Blood Cells (WBC)",
+          "result": 7.4,
+          "unit": "x10^3/µL",
+          "referenceRange": "4.0 - 11.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Platelet Count",
+          "result": 245,
+          "unit": "x10^3/µL",
+          "referenceRange": "150 - 450",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Hematocrit (HCT)",
+          "result": 41.2,
+          "unit": "%",
+          "referenceRange": "36.0 - 48.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "RBC Count",
+          "result": 4.65,
+          "unit": "x10^6/µL",
+          "referenceRange": "4.0 - 5.5",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Neutrophils %",
+          "result": 62,
+          "unit": "%",
+          "referenceRange": "40.0 - 70.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Lymphocytes %",
+          "result": 29.5,
+          "unit": "%",
+          "referenceRange": "20.0 - 45.0",
+          "flag": "Normal",
+          "status": "Verified"
+        }
+      ],
+      "reviewer": "Dr. Arvind Swaminathan, MD",
+      "comments": "Pathologist medical review verified. All panic thresholds cleared."
+    },
     {
       "id": "RES-10291",
       "orderId": "ORD-10291",
@@ -1081,7 +1233,8 @@
         "age": 34,
         "gender": "Female",
         "phone": "+91 97654 32109",
-        "mrn": "MRN-44102"
+        "mrn": "MRN-44102",
+        "email": "priya.nair@healthmail.in"
       },
       "testName": "Thyroid Profile (T3, T4, TSH)",
       "instrument": "Immunology Lab - Abbott Architect i2000",
@@ -1124,7 +1277,8 @@
         "age": 68,
         "gender": "Male",
         "phone": "+91 98123 45678",
-        "mrn": "MRN-67104"
+        "mrn": "MRN-67104",
+        "email": "rahul.kumar@gmail.com"
       },
       "testName": "Lipid Profile & HbA1c",
       "instrument": "Biochemistry Lab - Cobas c501",
@@ -1384,7 +1538,7 @@
       ]
     },
     {
-      "id": "RES-10293",
+      "id": "RES-10293-2",
       "orderId": "ORD-10293",
       "sampleId": "SMP-20490",
       "patient": {
@@ -1804,6 +1958,146 @@
           "status": "Verified"
         }
       ]
+    },
+    {
+      "id": "RES-92684",
+      "orderId": "ORD-92684",
+      "sampleId": "SMP-53838",
+      "patient": {
+        "name": "Vikas Sen",
+        "age": 38,
+        "gender": "Male",
+        "phone": "+91 98765 11223",
+        "email": "vikas.sen@example.com"
+      },
+      "testName": "Complete Blood Count (CBC), Lipid Profile",
+      "instrument": "Cobas 8000 c702 Clinical Chemistry",
+      "completedAt": "04:04 am",
+      "reviewer": "Dr. Priya Sharma, MD",
+      "status": "Approved",
+      "comments": "Lipid panel analysis: Moderate borderline hypercholesterolemia with elevated non-HDL lipid fractions. Dietary counseling advised.",
+      "parameters": [
+        {
+          "name": "Hemoglobin (Hb)",
+          "result": 13.4,
+          "unit": "g/dL",
+          "referenceRange": "12.0 – 16.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Total Leukocyte Count (WBC)",
+          "result": 11.2,
+          "unit": "10³/µL",
+          "referenceRange": "4.0 – 11.0",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "Platelet Count",
+          "result": 245,
+          "unit": "10³/µL",
+          "referenceRange": "150 – 450",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Red Blood Cells (RBC)",
+          "result": 4.45,
+          "unit": "10⁶/µL",
+          "referenceRange": "4.0 – 5.2",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Hematocrit (PCV)",
+          "result": 39.5,
+          "unit": "%",
+          "referenceRange": "36.0 – 46.0",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Neutrophils",
+          "result": 72,
+          "unit": "%",
+          "referenceRange": "40 – 70",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "Lymphocytes",
+          "result": 22,
+          "unit": "%",
+          "referenceRange": "20 – 45",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Monocytes",
+          "result": 4,
+          "unit": "%",
+          "referenceRange": "2 – 8",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Eosinophils",
+          "result": 2,
+          "unit": "%",
+          "referenceRange": "1 – 6",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "Total Cholesterol",
+          "result": 218,
+          "unit": "mg/dL",
+          "referenceRange": "< 200",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "HDL Cholesterol (Good)",
+          "result": 44,
+          "unit": "mg/dL",
+          "referenceRange": "> 40",
+          "flag": "Normal",
+          "status": "Verified"
+        },
+        {
+          "name": "LDL Cholesterol (Calculated)",
+          "result": 138,
+          "unit": "mg/dL",
+          "referenceRange": "< 100",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "Serum Triglycerides",
+          "result": 175,
+          "unit": "mg/dL",
+          "referenceRange": "< 150",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "VLDL Cholesterol",
+          "result": 35,
+          "unit": "mg/dL",
+          "referenceRange": "10 – 30",
+          "flag": "High",
+          "status": "Pending Review"
+        },
+        {
+          "name": "Total / HDL Ratio",
+          "result": 4.95,
+          "unit": "Ratio",
+          "referenceRange": "< 4.5",
+          "flag": "High",
+          "status": "Pending Review"
+        }
+      ]
     }
   ],
   "team": [
@@ -2050,6 +2344,42 @@
   },
   "auditLogs": [
     {
+      "id": "AUD-1789093564709",
+      "timestamp": "2026-09-11T02:26:04.709Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Laboratory Technologist",
+      "role": "Technologist",
+      "details": "Sample SMP-53838 transitioned from ORDERED to COLLECTED.",
+      "location": "Phlebotomy Intake - Reception"
+    },
+    {
+      "id": "AUD-1789093437135",
+      "timestamp": "2026-09-11T02:23:57.135Z",
+      "action": "RESULT_VERIFIED_SIGN_OFF",
+      "user": "Dr. Arvind Swaminathan, MD",
+      "role": "Pathologist",
+      "details": "Test results for order ORD-10288 (Meena Sharma) digitally verified and signed by pathologist.",
+      "location": "Main Pathology Department"
+    },
+    {
+      "id": "AUD-1789093431255",
+      "timestamp": "2026-09-11T02:23:51.255Z",
+      "action": "ANALYZER_RESULT_INGESTED",
+      "user": "HPLC Workstation - Bio-Rad Variant II",
+      "role": "Analyzer",
+      "details": "Automated test parameters ingested for order ORD-10288 (HbA1c Glycated Hemoglobin) on HPLC Workstation - Bio-Rad Variant II.",
+      "location": "Main Automated Laboratory"
+    },
+    {
+      "id": "AUD-1789093430331",
+      "timestamp": "2026-09-11T02:23:50.331Z",
+      "action": "SAMPLE_STAGE_UPDATED",
+      "user": "Auto-Analyzer High-Throughput Line",
+      "role": "Technologist",
+      "details": "Sample SMP-20485 transitioned from PROCESSING to REVIEW.",
+      "location": "HPLC Workstation - Bio-Rad Variant II"
+    },
+    {
       "id": "AUD-1789078529040",
       "timestamp": "2026-09-10T22:15:29.040Z",
       "action": "ANALYZER_RESULT_INGESTED",
@@ -2132,5 +2462,5 @@
     }
   ],
   "version": "3.0.0-synchronized",
-  "lastUpdated": "2026-09-10T22:15:29.040Z"
+  "lastUpdated": "2026-09-11T02:26:04.709Z"
 }

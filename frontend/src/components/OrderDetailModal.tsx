@@ -33,6 +33,11 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
 }) => {
   if (!order) return null;
 
+  const patient = order.patient || { name: "Unknown Patient", mrn: "MRN-84920", age: 0, gender: "Unspecified", phone: "", id: "P-84920" };
+  const mrnVal = patient.mrn || patient.id || "MRN-84920";
+  const barcodeTag = mrnVal.toString().replace("MRN-", "");
+  const testsList = order.tests || [];
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
@@ -76,25 +81,25 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                   Patient Demographics
                 </span>
                 <span className="text-[10px] font-mono bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-bold">
-                  {order.patient.mrn}
+                  {mrnVal}
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs pt-1">
                 <div>
                   <span className="text-slate-400 block text-[10px]">Full Name</span>
-                  <span className="font-bold text-slate-900">{order.patient.name}</span>
+                  <span className="font-bold text-slate-900">{patient.name}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[10px]">Age / Gender</span>
-                  <span className="font-semibold text-slate-800">{order.patient.age} Yrs / {order.patient.gender}</span>
+                  <span className="font-semibold text-slate-800">{patient.age} Yrs / {patient.gender}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[10px]">Contact Phone</span>
-                  <span className="font-mono text-slate-700">{order.patient.phone || "+91 98765 43210"}</span>
+                  <span className="font-mono text-slate-700">{patient.phone || "+91 98765 43210"}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[10px]">Patient ID</span>
-                  <span className="font-mono text-slate-700">{order.patient.id || "P-84920"}</span>
+                  <span className="font-mono text-slate-700">{patient.id || "P-84920"}</span>
                 </div>
               </div>
             </div>
@@ -136,12 +141,12 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
                 <TestTube2 className="w-4 h-4 text-sky-600" />
-                Requested Laboratory Tests ({order.tests.length})
+                Requested Laboratory Tests ({testsList.length})
               </h3>
               <span className="text-[11px] text-slate-400">Biological Reference Interval Checks Active</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {order.tests.map((testName, idx) => (
+              {testsList.map((testName, idx) => (
                 <div key={idx} className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -167,7 +172,7 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                     Associated Specimen: {order.sampleId}
                   </span>
                   <span className="text-[10px] font-mono bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-bold">
-                    LBF-{order.patient.mrn.replace("MRN-", "")}-A
+                    LBF-{barcodeTag}-A
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-600 mt-0.5">
